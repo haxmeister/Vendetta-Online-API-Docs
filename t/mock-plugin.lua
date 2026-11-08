@@ -20,7 +20,7 @@ function GetActiveShipHealth()
 end
 function GetTargetInfo()
     calls.target = calls.target + 1
-    return "private player name\\nwith newline", 0.5, 100, nil
+    return "private player name\nwith newline", 0.5, 100, nil
 end
 function GetTargetDistance()
     calls.distance = calls.distance + 1
