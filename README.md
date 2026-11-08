@@ -8,7 +8,7 @@ events, argument types, and observed behavior using evidence from the game.
 The reference is still being built. Start with our
 [12 observed getter signatures](docs/functions/observed-getters.md), the
 [398-name function survey](docs/research/2026-11-08-full-function-survey.md),
-and the [latest capture report](docs/research/capture-summary.md).
+and the [first 65-capture review](docs/research/2026-11-08-observation-review.md).
 
 Our first tool is a local **capture collector**, which saves observations to
 files without copying text out of the game UI.
@@ -121,16 +121,18 @@ After collecting observations, generate a complete, readable report:
 perl tools/share-observations.pl
 ~~~
 
-This writes `docs/research/capture-summary.md`. It includes **all available
-recorded data** from function inspections (including return values and error
-messages), non-chat event captures, function-name snapshots, and notes.
-Actual text can only appear if the game plugin recorded it; older inspection
-captures stored only the lengths of returned strings.
+This creates a **temporary handoff** at `docs/research/capture-summary.md`.
+It includes available recorded values and errors, non-chat event observations,
+snapshots, and notes. The generator skips captures at or before the last
+reviewed timestamp in `data/reviewed-through.txt`; use `--all` if you
+specifically need to re-export earlier captures. Old inspection captures
+contain only string lengths where the game never recorded the text.
 
-**Chat payloads are the exception:** events with names starting `CHAT_`,
-and `COMMAND` or `EMOTE_ENTERED`, retain only event names, argument counts
-and Lua argument types. Their values are redacted in the report. The local
-`captures/` files remain intact and ignored by Git.
+**Chat payloads are the exception:** `CHAT_*`, `ACTIVATE_CHAT_*`,
+`COMMAND` and `EMOTE_ENTERED` retain only event names, argument counts,
+and types. Their values are redacted both by the latest APIProbe and by
+the report generator. The local `captures/` files remain intact and
+Git-ignored.
 
 To publish the updated report for ChatGPT to read:
 
@@ -145,9 +147,15 @@ private information that the chat-event filter cannot detect. A push may
 also publish other commits that are pending locally. Nothing is uploaded
 automatically from the game.
 
-Once pushed, tell ChatGPT to review `docs/research/capture-summary.md`
-directly. If you need a private full-fidelity diagnostic review, you can
-still upload one TAR archive without publishing it to GitHub.
+Once pushed, ask ChatGPT to review the report. After the observations have
+been incorporated into the permanent function/event reference, **delete the
+temporary report from the current Git tree** and advance
+`data/reviewed-through.txt`. This keeps the working repository lean.
+Deleting a Git file does not erase its earlier versions from Git history.
+For private diagnostics, upload a single TAR file instead of publishing.
+
+A `--push` attempts `git pull --rebase` before pushing, but unrelated local
+changes or conflicts may still require manual Git reconciliation.
 
 ## APIProbe (in-game discovery)
 
@@ -164,7 +172,8 @@ plugins/
 └── APIProbe/
     ├── main.lua
     ├── candidates.lua
-    └── inspections.lua
+    ├── inspections.lua
+    └── events.lua
 ~~~
 
 **Linux symlink installation:** VO resolves sibling paths such as
@@ -180,7 +189,7 @@ PLUGINS="$HOME/.vendetta/plugins"  # adjust to your VO installation
 # Only for a currently symlinked APIProbe directory:
 [ -L "$PLUGINS/APIProbe" ] && unlink "$PLUGINS/APIProbe"
 mkdir -p "$PLUGINS/APIProbe"
-for file in main.lua candidates.lua inspections.lua; do
+for file in main.lua candidates.lua inspections.lua events.lua; do
     ln -sfn "$SOURCE/$file" "$PLUGINS/APIProbe/$file"
 done
 ~~~
@@ -200,7 +209,10 @@ Nothing is sent automatically. Use these commands in the VO chat console:
 | /apidocs inspect GetCurrentSectorid | Call one approved getter and record return types |
 | /apidocs inspect all | Inspect all 12 approved getters once |
 | /apidocs watch SECTOR_LOADED | Observe up to 20 occurrences of one event |
-| /apidocs unwatch SECTOR_LOADED | Stop watching the event |
+| /apidocs watch all | Watch 214 historical event names with bounded aggregation |
+| /apidocs flush | Save new broad-watch event signatures as a few snapshots |
+| /apidocs unwatch all | Flush and unregister broad watches |
+| /apidocs unwatch SECTOR_LOADED | Stop watching one event |
 | /apidocs status | Report connection and watch count |
 | /apidocs stop | Unregister all watches and disconnect |
 
@@ -287,8 +299,12 @@ See [function-inspector.md](docs/research/function-inspector.md) for the
 whitelist and output format. Copy **all three** APIProbe Lua files when
 updating the installed plugin.
 
-Event observation is **opt-in per event**. Watch events you explicitly want
-to investigate; this tool does not enumerate all possible event names.
+Event observation is opt-in. You can watch one event in detail or use
+`/apidocs watch all` to register 214 unique historical names at once.
+Broad watching buffers at most two unique argument-type signatures per event,
+then `/apidocs flush` or `/apidocs stop` sends them in bounded snapshots.
+This is not a runtime discovery of undocumented event names; see
+[the broad event watcher](docs/events/broad-watch.md).
 For strings, it records quoted Lua text (with newline escapes), byte lengths,
 and argument types. Tables receive a bounded shallow type preview. Large
 events are truncated, and each event watch is limited to 20 observations.
