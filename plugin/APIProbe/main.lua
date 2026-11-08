@@ -196,8 +196,8 @@ local function scan()
 end
 
 
--- Return-type observations. Strings are never recorded, only their byte
--- lengths. Tables/userdata are not traversed; no arbitrary tostring hooks.
+-- Return-value observations. String contents from approved state getters are
+-- recorded (bounded to 1024 bytes); tables/userdata are never traversed.
 local MAX_INSPECT_RETURNS = 24
 local function summarize_returns(...)
     local count = select("#", ...)
@@ -207,7 +207,12 @@ local function summarize_returns(...)
         local kind = type(value)
         local line = "return" .. i .. " type=" .. kind
         if kind == "string" then
-            line = line .. " bytes=" .. #value
+            -- This allowlist contains state getters, not chat-log readers.
+            -- Preserve the text for documentation, with a per-value bound.
+            local text = string.sub(value, 1, 1024)
+            line = line .. " value=" .. string.format("%q", text)
+                .. " bytes=" .. #value
+            if #value > 1024 then line = line .. " truncated=true" end
         elseif kind == "number" or kind == "boolean" then
             line = line .. " value=" .. tostring(value)
         end
