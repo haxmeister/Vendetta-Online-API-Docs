@@ -72,6 +72,9 @@ dofile = function(path)
     if path == "inspections.lua" then
         return load_in_env("plugin/APIProbe/inspections.lua")
     end
+    if path == "events.lua" then
+        return load_in_env("plugin/APIProbe/events.lua")
+    end
     return real_dofile(path)
 end
 load_in_env("plugin/APIProbe/main.lua")
@@ -192,6 +195,60 @@ for i = before_all + 1, #frames do
     assert(string.find(body, "source=approved-no-arg", 1, true))
 end
 
+-- Broad watch: 214 unique historical event names, few aggregated files.
+local known_events = load_in_env("plugin/APIProbe/events.lua")
+assert(#known_events == 214, "unexpected historical event count")
+run("watch", "all")
+local registered = 0
+for _, event in ipairs(known_events) do
+    assert(watched[event], "missing broad event watch for " .. event)
+    registered = registered + 1
+end
+assert(registered == 214)
+local baseline = #frames
+watched.TARGET_CHANGED:OnEvent("TARGET_CHANGED")
+watched.TARGET_CHANGED:OnEvent("TARGET_CHANGED", "Asteroid", 12)
+watched.TARGET_CHANGED:OnEvent("TARGET_CHANGED", "Another target", 13)
+watched.SECTOR_CHANGED:OnEvent("SECTOR_CHANGED", 5597)
+watched.CHAT_MSG_PRIVATE:OnEvent("CHAT_MSG_PRIVATE", "private conversation")
+watched.ACTIVATE_CHAT_PRIVATE:OnEvent("ACTIVATE_CHAT_PRIVATE", "private recipient")
+for i = 1, 30 do
+    watched.HUD_UPDATE:OnEvent("HUD_UPDATE", i)
+end
+assert(#frames == baseline, "broad watch must buffer observations")
+run("flush")
+assert(#frames > baseline, "flush must generate event summary")
+local whole = ""
+for i = baseline + 1, #frames do
+    category, name, body = decode(frames[i])
+    assert(category == "snapshot" and name == "event-watch")
+    assert(string.find(body, "format=api-event-watch-v1", 1, true))
+    assert(string.find(body, "candidate_count=214", 1, true))
+    whole = whole .. body
+end
+assert(string.find(whole, "event=TARGET_CHANGED", 1, true))
+assert(string.find(whole, "event=SECTOR_CHANGED", 1, true))
+assert(string.find(whole, "occurrences=30", 1, true))
+assert(string.find(whole, "Asteroid", 1, true), "non-chat samples retain values")
+assert(string.find(whole, "event=CHAT_MSG_PRIVATE", 1, true))
+assert(not string.find(whole, "private conversation", 1, true),
+    "chat content must not be collected")
+assert(not string.find(whole, "private recipient", 1, true),
+    "chat activation must not expose recipient")
+local after_flush = #frames
+run("flush")
+assert(#frames == after_flush, "unchanged signatures should not be sent twice")
+run("unwatch", "all")
+assert(next(watched) == nil, "unwatch all should release broad watches")
+run("watch", "CHAT_MSG_PRIVATE")
+watched.CHAT_MSG_PRIVATE:OnEvent("CHAT_MSG_PRIVATE", "secret explicit chat")
+category, name, body = decode(frames[#frames])
+assert(category == "event" and name == "CHAT_MSG_PRIVATE")
+assert(string.find(body, "arg1 type=string", 1, true))
+assert(not string.find(body, "secret explicit chat", 1, true),
+    "explicit chat capture must also be type-only")
+run("unwatch", "CHAT_MSG_PRIVATE")
+
 run("stop")
 assert(next(watched) == nil)
-print("PASS: APIProbe strict-global scan, allowlisted getter inspection, and events")
+print("PASS: APIProbe strict-global scan, getters, and bounded all-event capture")
