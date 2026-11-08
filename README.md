@@ -109,6 +109,60 @@ name, and capture timestamp come from the directory and filename.
 Captured data can contain player information or chat. Review files before
 publishing or sharing them.
 
+## APIProbe (in-game discovery)
+
+The first discovery plugin is in [plugin/APIProbe](plugin/APIProbe).
+It uses the already-installed [TCP plugin](https://github.com/haxmeister/TCP);
+it does not include a second copy of TCP.
+
+Copy the **APIProbe** directory into your Vendetta Online plugins folder:
+
+~~~text
+plugins/
+├── TCP/
+│   └── client.lua
+└── APIProbe/
+    └── main.lua
+~~~
+
+Start the Perl collector first, then launch VO (or reload the interface).
+Nothing is sent automatically. Use these commands in the VO chat console:
+
+| Command | Purpose |
+| --- | --- |
+| /apidocs connect | Connect to the local collector |
+| /apidocs test | Send a two-line test observation |
+| /apidocs scan | Inventory globally visible functions and functions one level inside global tables |
+| /apidocs watch SECTOR_LOADED | Observe up to 20 occurrences of one event |
+| /apidocs unwatch SECTOR_LOADED | Stop watching the event |
+| /apidocs status | Report connection and watch count |
+| /apidocs stop | Unregister all watches and disconnect |
+
+**First live test:** Run /apidocs connect, wait for the connected message,
+then run /apidocs test. Look for a new file under
+captures/note/connection_test/ on the Perl side. Next, run /apidocs scan
+and inspect captures/snapshot/functions/.
+
+The scanner lists names only. It never calls the discovered functions.
+It can include functions from other installed plugins; do not interpret the
+inventory as a verified list of native VO API functions. A snapshot may be
+split across multiple timestamped files.
+
+Event observation is **opt-in per event**. Watch events you explicitly want
+to investigate; this tool does not enumerate all possible event names.
+For strings, it records quoted Lua text (with newline escapes), byte lengths,
+and argument types. Tables receive a bounded shallow type preview. Large
+events are truncated, and each event watch is limited to 20 observations.
+
+Observations may include sensitive player information if you watch chat or
+other player-facing events. Captures stay local and are not committed to Git.
+
+A local Lua mock test is available:
+
+~~~sh
+texlua t/mock-plugin.lua
+~~~
+
 ## Licenses
 
 Original reference documentation: CC BY 4.0.
