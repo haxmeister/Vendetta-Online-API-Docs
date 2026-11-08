@@ -260,6 +260,10 @@ assert(string.find(whole, '["comment"]="Different shape"', 1, true),
     "changed table fields should be captured automatically")
 assert(string.find(whole, "shape=", 1, true),
     "snapshots must record table shape metadata")
+local route_samples = select(2, string.gsub(whole, "event=NAVROUTE_CHANGED", ""))
+assert(route_samples == 3, "expect 2 distinct values plus 1 changed table shape")
+local speed_samples = select(2, string.gsub(whole, "event=HUD_UPDATE", ""))
+assert(speed_samples == 2, "noisy numeric events must be capped per shape")
 assert(string.find(whole, '["length"]=2', 1, true),
     "nested table preview should record numeric values")
 assert(string.find(whole, '["valid"]=true', 1, true),
