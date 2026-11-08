@@ -3,6 +3,7 @@ use strict;
 use warnings;
 use FindBin;
 use File::Path qw(make_path);
+use File::Copy qw(copy);
 use File::Spec;
 use File::Temp qw(tempdir);
 use Test::More;
@@ -86,4 +87,40 @@ like($text, qr/Function records: 2/, 'function count');
 like($text, qr/Event records: 3/, 'event count');
 like($text, qr/Snapshots: 1/, 'snapshot count');
 like($text, qr/Notes: 1/, 'note count');
+# The default handoff should skip recordings already promoted to docs.
+my $isolated = File::Spec->catdir($tmp, 'isolated');
+my $isolated_tools = File::Spec->catdir($isolated, 'tools');
+my $isolated_data = File::Spec->catdir($isolated, 'data');
+make_path($isolated_tools, $isolated_data);
+my $isolated_script = File::Spec->catfile($isolated_tools, 'share-observations.pl');
+ok(copy($tool, $isolated_script), 'copy tool for default-path cutoff test');
+open my $reviewed, '>', File::Spec->catfile($isolated_data, 'reviewed-through.txt')
+    or die $!;
+print {$reviewed} "# latest extracted capture\n20261108T220410.123515Z\n";
+close $reviewed;
+my $default_dir = File::Spec->catdir($isolated, 'captures', 'function', 'GetCurrentSectorid');
+make_path($default_dir);
+for my $example (
+    ['20261108T220409.000000Z-1-000001.txt', 13],
+    ['20261108T220411.000000Z-1-000002.txt', 22],
+) {
+    my $file = File::Spec->catfile($default_dir, $example->[0]);
+    open my $out, '>', $file or die $!;
+    print {$out} "format=api-inspect-v1\nfunction=GetCurrentSectorid\n",
+        "result=ok\nreturns=1\nreturn1 type=number value=$example->[1]\n";
+    close $out;
+}
+is(system($^X, $isolated_script), 0, 'default report respects review cutoff');
+my $isolated_report = File::Spec->catfile($isolated, 'docs', 'research', 'capture-summary.md');
+open my $r, '<', $isolated_report or die $!;
+my $cutoff_text = do { local $/; <$r> };
+close $r;
+like($cutoff_text, qr/value=22/, 'keeps newer capture values');
+unlike($cutoff_text, qr/value=13/, 'excludes already reviewed capture');
+is(system($^X, $isolated_script, '--all'), 0, '--all overrides review cutoff');
+open $r, '<', $isolated_report or die $!;
+my $all_text = do { local $/; <$r> };
+close $r;
+like($all_text, qr/value=13/, '--all restores older values');
+
 done_testing;
