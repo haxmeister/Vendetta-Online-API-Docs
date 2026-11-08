@@ -10,7 +10,7 @@ Each page reports callback arguments, representative values, and available table
 
 | Event | Evidence status |
 | --- | --- |
-| [`ACTIVATE_CHAT_CHANNEL`](./ACTIVATE_CHAT_CHANNEL.md) | Observed (1 occurrences) |
+| [`ACTIVATE_CHAT_CHANNEL`](./ACTIVATE_CHAT_CHANNEL.md) | Observed (1 occurrence) |
 | [`ACTIVATE_CHAT_GROUP`](./ACTIVATE_CHAT_GROUP.md) | Historical candidate — not yet observed |
 | [`ACTIVATE_CHAT_GUILD`](./ACTIVATE_CHAT_GUILD.md) | Historical candidate — not yet observed |
 | [`ACTIVATE_CHAT_MISSION`](./ACTIVATE_CHAT_MISSION.md) | Historical candidate — not yet observed |
@@ -22,16 +22,16 @@ Each page reports callback arguments, representative values, and available table
 | [`AUTOAIM_MODE_CHANGED`](./AUTOAIM_MODE_CHANGED.md) | Historical candidate — not yet observed |
 | [`CHANGE_ACTIVE_CHATTAB`](./CHANGE_ACTIVE_CHATTAB.md) | Historical candidate — not yet observed |
 | [`CHARINFOMENU_TOGGLE`](./CHARINFOMENU_TOGGLE.md) | Historical candidate — not yet observed |
-| [`CHAT_CANCELLED`](./CHAT_CANCELLED.md) | Observed (1 occurrences) |
-| [`CHAT_DONE`](./CHAT_DONE.md) | Observed (1 occurrences) |
+| [`CHAT_CANCELLED`](./CHAT_CANCELLED.md) | Observed (1 occurrence) |
+| [`CHAT_DONE`](./CHAT_DONE.md) | Observed (1 occurrence) |
 | [`CHAT_ENTERED`](./CHAT_ENTERED.md) | Historical candidate — not yet observed |
 | [`CHAT_MSG_BAR1`](./CHAT_MSG_BAR1.md) | Historical candidate — not yet observed |
 | [`CHAT_MSG_BAR2`](./CHAT_MSG_BAR2.md) | Historical candidate — not yet observed |
 | [`CHAT_MSG_BAR3`](./CHAT_MSG_BAR3.md) | Historical candidate — not yet observed |
 | [`CHAT_MSG_BAR`](./CHAT_MSG_BAR.md) | Historical candidate — not yet observed |
-| [`CHAT_MSG_BARENTER`](./CHAT_MSG_BARENTER.md) | Observed (1 occurrences) |
+| [`CHAT_MSG_BARENTER`](./CHAT_MSG_BARENTER.md) | Observed (1 occurrence) |
 | [`CHAT_MSG_BARLEAVE`](./CHAT_MSG_BARLEAVE.md) | Historical candidate — not yet observed |
-| [`CHAT_MSG_BARLIST`](./CHAT_MSG_BARLIST.md) | Observed (1 occurrences) |
+| [`CHAT_MSG_BARLIST`](./CHAT_MSG_BARLIST.md) | Observed (1 occurrence) |
 | [`CHAT_MSG_BAR_EMOTE1`](./CHAT_MSG_BAR_EMOTE1.md) | Historical candidate — not yet observed |
 | [`CHAT_MSG_BAR_EMOTE2`](./CHAT_MSG_BAR_EMOTE2.md) | Historical candidate — not yet observed |
 | [`CHAT_MSG_BAR_EMOTE3`](./CHAT_MSG_BAR_EMOTE3.md) | Historical candidate — not yet observed |
@@ -62,7 +62,7 @@ Each page reports callback arguments, representative values, and available table
 | [`CHAT_MSG_SECTOR`](./CHAT_MSG_SECTOR.md) | Historical candidate — not yet observed |
 | [`CHAT_MSG_SECTORD`](./CHAT_MSG_SECTORD.md) | Historical candidate — not yet observed |
 | [`CHAT_MSG_SECTORD_MISSION`](./CHAT_MSG_SECTORD_MISSION.md) | Historical candidate — not yet observed |
-| [`CHAT_MSG_SECTORD_SECTOR`](./CHAT_MSG_SECTORD_SECTOR.md) | Observed (1 occurrences) |
+| [`CHAT_MSG_SECTORD_SECTOR`](./CHAT_MSG_SECTORD_SECTOR.md) | Observed (1 occurrence) |
 | [`CHAT_MSG_SECTOR_EMOTE`](./CHAT_MSG_SECTOR_EMOTE.md) | Historical candidate — not yet observed |
 | [`CHAT_MSG_SERVER`](./CHAT_MSG_SERVER.md) | Historical candidate — not yet observed |
 | [`CHAT_MSG_SERVER_CHANNEL`](./CHAT_MSG_SERVER_CHANNEL.md) | Historical candidate — not yet observed |
@@ -77,9 +77,9 @@ Each page reports callback arguments, representative values, and available table
 | [`CONQUERED_SECTORS_UPDATED`](./CONQUERED_SECTORS_UPDATED.md) | Historical candidate — not yet observed |
 | [`DESIRED_SPEED_CHANGED`](./DESIRED_SPEED_CHANGED.md) | Observed (120 occurrences) |
 | [`EMOTE_ENTERED`](./EMOTE_ENTERED.md) | Historical candidate — not yet observed |
-| [`ENTERED_STATION`](./ENTERED_STATION.md) | Observed (1 occurrences) |
-| [`ENTERING_STATION`](./ENTERING_STATION.md) | Observed (1 occurrences) |
-| [`ENTER_ZONE_dock`](./ENTER_ZONE_dock.md) | Observed (1 occurrences) |
+| [`ENTERED_STATION`](./ENTERED_STATION.md) | Observed (1 occurrence) |
+| [`ENTERING_STATION`](./ENTERING_STATION.md) | Observed (1 occurrence) |
+| [`ENTER_ZONE_dock`](./ENTER_ZONE_dock.md) | Observed (1 occurrence) |
 | [`ENTER_ZONE_NFZ`](./ENTER_ZONE_NFZ.md) | Observed (2 occurrences) |
 | [`ENTER_ZONE_wormhole`](./ENTER_ZONE_wormhole.md) | Observed (2 occurrences) |
 | [`FLIGHT_MODE_CHANGED`](./FLIGHT_MODE_CHANGED.md) | Historical candidate — not yet observed |
@@ -128,10 +128,10 @@ Each page reports callback arguments, representative values, and available table
 | [`KEYADDED`](./KEYADDED.md) | Historical candidate — not yet observed |
 | [`KEYINFO_DIALOG`](./KEYINFO_DIALOG.md) | Historical candidate — not yet observed |
 | [`KEYREMOVED`](./KEYREMOVED.md) | Historical candidate — not yet observed |
-| [`LEAVE_ZONE_dock`](./LEAVE_ZONE_dock.md) | Observed (1 occurrences) |
+| [`LEAVE_ZONE_dock`](./LEAVE_ZONE_dock.md) | Observed (1 occurrence) |
 | [`LEAVE_ZONE_NFZ`](./LEAVE_ZONE_NFZ.md) | Observed (2 occurrences) |
-| [`LEAVE_ZONE_wormhole`](./LEAVE_ZONE_wormhole.md) | Observed (1 occurrences) |
-| [`LEAVING_STATION`](./LEAVING_STATION.md) | Observed (1 occurrences) |
+| [`LEAVE_ZONE_wormhole`](./LEAVE_ZONE_wormhole.md) | Observed (1 occurrence) |
+| [`LEAVING_STATION`](./LEAVING_STATION.md) | Observed (1 occurrence) |
 | [`LOGIN_FAILED`](./LOGIN_FAILED.md) | Historical candidate — not yet observed |
 | [`LOGIN_SUCCESSFUL`](./LOGIN_SUCCESSFUL.md) | Historical candidate — not yet observed |
 | [`MISSIONLIST_UPDATED`](./MISSIONLIST_UPDATED.md) | Observed (12 occurrences) |
@@ -144,14 +144,14 @@ Each page reports callback arguments, representative values, and available table
 | [`MISSION_UPDATED`](./MISSION_UPDATED.md) | Historical candidate — not yet observed |
 | [`MSG_LOGOFF_TIMER`](./MSG_LOGOFF_TIMER.md) | Historical candidate — not yet observed |
 | [`MSG_NOTIFICATION`](./MSG_NOTIFICATION.md) | Observed (3 occurrences) |
-| [`NAVMENU_TOGGLE`](./NAVMENU_TOGGLE.md) | Observed (1 occurrences) |
+| [`NAVMENU_TOGGLE`](./NAVMENU_TOGGLE.md) | Observed (1 occurrence) |
 | [`NAVROUTE_ADD`](./NAVROUTE_ADD.md) | Historical candidate — not yet observed |
 | [`NAVROUTE_CHANGED`](./NAVROUTE_CHANGED.md) | Observed (2 occurrences) |
 | [`NAVROUTE_SAVE`](./NAVROUTE_SAVE.md) | Historical candidate — not yet observed |
 | [`NAVROUTE_UNDOLAST`](./NAVROUTE_UNDOLAST.md) | Historical candidate — not yet observed |
 | [`OBJECT_INFO_UPDATED`](./OBJECT_INFO_UPDATED.md) | Historical candidate — not yet observed |
 | [`OPEN_SURVEY`](./OPEN_SURVEY.md) | Historical candidate — not yet observed |
-| [`PLAYERLIST_CLOSE`](./PLAYERLIST_CLOSE.md) | Observed (1 occurrences) |
+| [`PLAYERLIST_CLOSE`](./PLAYERLIST_CLOSE.md) | Observed (1 occurrence) |
 | [`PLAYERLIST_TOGGLE`](./PLAYERLIST_TOGGLE.md) | Historical candidate — not yet observed |
 | [`PLAYER_DEATH_CINEMATIC_FINISHED`](./PLAYER_DEATH_CINEMATIC_FINISHED.md) | Historical candidate — not yet observed |
 | [`PLAYER_DIED`](./PLAYER_DIED.md) | Historical candidate — not yet observed |
@@ -183,14 +183,14 @@ Each page reports callback arguments, representative values, and available table
 | [`SHIP_SPAWNED`](./SHIP_SPAWNED.md) | Observed (5 occurrences) |
 | [`SHIP_SPAWN_CINEMATIC_FINISHED`](./SHIP_SPAWN_CINEMATIC_FINISHED.md) | Observed (5 occurrences) |
 | [`SHIP_UPDATED`](./SHIP_UPDATED.md) | Historical candidate — not yet observed |
-| [`SHOW_STATION`](./SHOW_STATION.md) | Observed (1 occurrences) |
+| [`SHOW_STATION`](./SHOW_STATION.md) | Observed (1 occurrence) |
 | [`START`](./START.md) | Historical candidate — not yet observed |
 | [`STATION_TURRET_HEALTH_UPDATE`](./STATION_TURRET_HEALTH_UPDATE.md) | Historical candidate — not yet observed |
 | [`STATION_UPDATED`](./STATION_UPDATED.md) | Historical candidate — not yet observed |
 | [`STATION_UPDATE_DESIREDITEMS`](./STATION_UPDATE_DESIREDITEMS.md) | Historical candidate — not yet observed |
 | [`STATION_UPDATE_PRICE`](./STATION_UPDATE_PRICE.md) | Historical candidate — not yet observed |
 | [`STATION_UPDATE_REQUESTED`](./STATION_UPDATE_REQUESTED.md) | Historical candidate — not yet observed |
-| [`STORM_STARTED`](./STORM_STARTED.md) | Observed (1 occurrences) |
+| [`STORM_STARTED`](./STORM_STARTED.md) | Observed (1 occurrence) |
 | [`STORM_STOPPED`](./STORM_STOPPED.md) | Observed (3 occurrences) |
 | [`SYSMENU_TOGGLE`](./SYSMENU_TOGGLE.md) | Historical candidate — not yet observed |
 | [`SYSTEM_BEST_PRICE`](./SYSTEM_BEST_PRICE.md) | Historical candidate — not yet observed |
@@ -200,7 +200,7 @@ Each page reports callback arguments, representative values, and available table
 | [`TERMINATE`](./TERMINATE.md) | Historical candidate — not yet observed |
 | [`TOUCH_PRESSED`](./TOUCH_PRESSED.md) | Historical candidate — not yet observed |
 | [`TOUCH_RELEASED`](./TOUCH_RELEASED.md) | Historical candidate — not yet observed |
-| [`TRANSACTION_COMPLETED`](./TRANSACTION_COMPLETED.md) | Observed (1 occurrences) |
+| [`TRANSACTION_COMPLETED`](./TRANSACTION_COMPLETED.md) | Observed (1 occurrence) |
 | [`TRANSACTION_FAILED`](./TRANSACTION_FAILED.md) | Historical candidate — not yet observed |
 | [`TURRET_SPAWNED`](./TURRET_SPAWNED.md) | Historical candidate — not yet observed |
 | [`TURRET_SPAWN_CINEMATIC_FINISHED`](./TURRET_SPAWN_CINEMATIC_FINISHED.md) | Historical candidate — not yet observed |
