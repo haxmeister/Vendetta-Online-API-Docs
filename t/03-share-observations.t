@@ -26,7 +26,7 @@ source=approved-no-arg
 function=GetTargetInfo
 result=ok
 returns=3
-return1 type=string bytes=11
+return1 type=string value="an NPC" bytes=6
 return2 type=nil
 return3 type=number value=12345
 CAPTURE
@@ -35,33 +35,55 @@ format=api-inspect-v1
 source=approved-no-arg
 function=GetTargetDistance
 result=error
-error="player secret error"
+error="sample native error"
 CAPTURE
 write_capture('event', 'CHAT_MSG_PRIVATE', '20261108T210001.000000Z-123-000003.txt', <<'CAPTURE');
 event=CHAT_MSG_PRIVATE
 arguments=2
-arg1 type=string value="secret player"
-arg2 type=table value=table{"private":"string"}
+arg1 type=string value="private hello from a player"
+arg2 type=table value=table{"sender":"string", "message":"string"}
 CAPTURE
-write_capture('note', 'connection_test', '20261108T210001.000000Z-123-000004.txt',
-    "private text should never be published\n");
+write_capture('event', 'CHAT_ENTERED', '20261108T210001.000000Z-123-000004.txt', <<'CAPTURE');
+event=CHAT_ENTERED
+arguments=1
+arg1 type=string value="typed in chat"
+CAPTURE
+write_capture('event', 'TARGET_CHANGED', '20261108T210001.000000Z-123-000005.txt', <<'CAPTURE');
+event=TARGET_CHANGED
+arguments=1
+arg1 type=string value="asteroid"
+CAPTURE
+write_capture('snapshot', 'functions', '20261108T210001.000000Z-123-000006.txt', <<'CAPTURE');
+format=api-probe-v1
+candidate_count=398
+GetTargetInfo	function
+CAPTURE
+write_capture('note', 'connection_test', '20261108T210001.000000Z-123-000007.txt',
+    "Test note keeps this text\nSecond line\n");
 
 is(system($^X, $tool, '--captures', $captures, '--output', $report), 0,
-    'generates local sanitized report');
+    'generates report preserving non-chat observations');
 ok(-f $report, 'report exists');
-open my $in, '<', $report or die "$report: $!";
+open my $in, '<:raw', $report or die "$report: $!";
 my $text = do { local $/; <$in> };
 close $in;
-like($text, qr/GetTargetInfo \| ok: 3 returns \(string, nil, number\)/,
-    'preserves return count and nil position');
-like($text, qr/GetTargetDistance \| error \(details omitted\)/,
-    'preserves errors without error text');
-like($text, qr/CHAT_MSG_PRIVATE \| 2 args \(string, table\)/,
-    'preserves event argument types');
-unlike($text, qr/secret player|player secret error|private text|12345/,
-    'never includes sensitive content or scalar values');
-like($text, qr/Function inspection records: 2/,
-    'function count');
-like($text, qr/Event observation records: 1/,
-    'event count');
+like($text, qr/return1 type=string value="an NPC" bytes=6/,
+    'preserves recorded string contents');
+like($text, qr/return3 type=number value=12345/,
+    'preserves numerical results');
+like($text, qr/error="sample native error"/, 'preserves errors');
+like($text, qr/TARGET_CHANGED.*?asteroid/s,
+    'preserves non-chat event strings');
+like($text, qr/candidate_count=398/, 'preserves snapshot inventory');
+like($text, qr/Test note keeps this text/, 'preserves notes');
+like($text, qr/CHAT_MSG_PRIVATE.*?arguments=2.*?arg1 type=string/s,
+    'keeps chat event and argument types');
+unlike($text, qr/private hello from a player|typed in chat|sender.*message/s,
+    'redacts chat values including table preview');
+like($text, qr/Chat event payloads redacted: 2/,
+    'counts chat redactions');
+like($text, qr/Function records: 2/, 'function count');
+like($text, qr/Event records: 3/, 'event count');
+like($text, qr/Snapshots: 1/, 'snapshot count');
+like($text, qr/Notes: 1/, 'note count');
 done_testing;
