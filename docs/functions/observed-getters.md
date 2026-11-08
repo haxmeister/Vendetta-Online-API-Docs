@@ -2,11 +2,11 @@
 
 **Status:** Behavior observed in a live Vendetta Online client, November 8, 2026. Signatures are *provisional*, not authoritative.
 
-These 12 names were invoked by the explicit APIProbe inspection allowlist five times each. **All 60 calls succeeded**, but certain functions returned zero values or nils when their requested game state was unavailable. The five observation rounds covered no target (including one docked round), an asteroid target, and an NPC ship target at two distances.
+These 12 names were invoked in two five-round sessions. **All 120 recorded calls succeeded**, but certain functions returned zero values or nils when their requested game state was unavailable. The initial five observation rounds covered no target (including one docked round), an asteroid target, and an NPC ship target at two distances.
 
 [Reviewed capture batch](../research/2026-11-08-observation-review.md) · [Function-name inventory](../research/2026-11-08-full-function-survey.md)
 
-The notation below describes **observed returns**, not arguments. Optional types are only those seen in these five samples. Calls with other game objects or contexts may differ.
+The notation below describes **observed returns**, not arguments. The table contains initial-session examples; second-session examples follow below. Optional types are only those seen in these five samples. Calls with other game objects or contexts may differ.
 
 | Function | Observed returns | Example values from the game | Context / caveat |
 | --- | --- | --- | --- |
@@ -77,11 +77,50 @@ The function returned **two values** in every sample:
 
 The first distance exactly matched the third value from `GetTargetInfo()` in all three targeted observations: approximately **1186.86**, **394.34**, and **96.69**. The second value's purpose is unknown.
 
+## Second getter inspection session — November 8, 2026
+
+Five additional calls were made for each getter (60 successes, no errors). The active ship was reported as `"Corvus Greyhound"`, whereas the earlier session reported `"EC-89"`. These samples show how actual return values change across ship and target states.
+
+| Getter | New live examples |
+| --- | --- |
+| `GetActiveShipEnergy()` | `(250, 1)` |
+| `GetActiveShipHealth()` | `(939, 0, 46, 80, 135, 0, 1200, 7500, nil, nil)` |
+| `GetActiveShipName()` | `("Corvus Greyhound")` |
+| `GetActiveShipSpeed()` | `(59.99732208252)`; `(57.883449554443)`; `(197.94502258301)`; plus 2 further examples |
+| `GetCurrentSectorid()` | `(5656)`; `(5130)` |
+| `GetCurrentStationID()` | `(nil)` |
+| `GetCurrentSystemid()` | `(23)`; `(21)` |
+| `GetTargetDistance()` | `(nil, nil)`; `(716.91092978835, nil)`; `(566.20940803734, nil)`; plus 2 further examples |
+| `GetTargetInfo()` | `(no returned values)`; `("Ice Crystal", nil, 716.91092978835, nil, nil, nil, nil)`; `("Ice Crystal", nil, 566.20940803734, nil, nil, nil, nil)`; plus 2 further examples |
+| `HasActiveShip()` | `(true)` |
+| `IsStormPresent()` | `(false)` |
+| `PlayerInStation()` | `(false)` |
+
+### New ship-health example
+
+Every call to `GetActiveShipHealth()` returned ten positions:
+
+~~~text
+(939, 0, 46, 80, 135, 0, 1200, 7500, nil, nil)
+~~~
+
+The earlier session recorded a different ship/state with `(25, 0, 0, 0, 0, 0, 25, 6000, nil, nil)`. The changing positions do not establish each field's meaning, but show why a single numerical example would be misleading.
+
+### New target examples
+
+- No target: `GetTargetInfo()` returned **zero values**, while `GetTargetDistance()` returned `(nil, nil)`.
+- Ice Crystal: `GetTargetInfo()` returned `("Ice Crystal", nil, 716.91092978835, nil, nil, nil, nil)`, later at distance `566.20940803734`.
+- Another ship: `GetTargetInfo()` returned `("A Murderous Hobo", 1, 645.20813017971, 1, "TGFT", "Behemoth", nil)`, later at distance `343.18653819752`.
+- `GetTargetDistance()` matched the third `GetTargetInfo()` value in every targeted round.
+- Energy was `(250, 1)` in each new observation; `GetCurrentStationID()` returned nil while `PlayerInStation()` was false in every new round.
+
+**Evidence:** Five inspection rounds preceding event snapshot `20261108T233831.046307Z-24651-000061.txt` in the November 8 capture handoff.
+
 ## Next validation steps
 
 1. Inspect `GetTargetInfo()` and `GetTargetDistance()` against an asteroid, NPC, player ship, and no target; record the exact number of return values.
 2. Test `GetActiveShipEnergy()` with a different ship or battery to check whether 250 is an invariant or an observed capacity.
 3. Test `GetActiveShipHealth()` at known different damage levels to identify the first eight numeric fields and the two trailing nils.
-4. Compare the [live event survey](../events/2026-11-08-live-event-survey.md) with additional sector and target changes; the initial broad watch has now recorded 42 different events.
+4. Compare the [live event survey](../events/2026-11-08-live-event-survey.md) with additional sector and target changes; both broad sessions have now observed 54 different events.
 
 The inspector records observations from explicitly approved functions; it does not call arbitrary API names or validate behavior automatically.

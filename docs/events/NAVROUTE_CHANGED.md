@@ -1,38 +1,48 @@
 # NAVROUTE_CHANGED
 
-**Status:** Observed in the VO client on November 8, 2026; argument signature provisional.
+**Status:** Observed in two live collection sessions on November 8, 2026; signature provisional.
 
-**Occurrences:** 2 total in the initial broad-watch session.
+Event callbacks deliver the arguments listed below **after** the event name passed to `OnEvent(event, ...)`. `()` means zero arguments, while `(nil)` means one explicit nil.
 
-## Observed callback arguments
+## First live collection — November 8, 2026
 
-1 distinct argument-type signature observed: `1:table`.
+**Callbacks:** 2. **Observed argument type(s):** (`table`).
+**Captured example(s):** one table argument; shallow preview `{"1": number}`.
 
-The examples below show arguments received **after** the event name in `OnEvent(event, ...)`.
+These are examples from the first broad-watch session, which preserved only one example per argument-type signature.
 
-### Captured example
+[First event survey](2026-11-08-live-event-survey.md).
+
+## Second live collection — November 8, 2026
+
+**Callbacks:** 2 (total for this event). **Saved examples:** 2.
+**Observed argument-type signature(s):** `1:table`.
+
+### Recorded examples
 
 ~~~text
+shape=table{1:number}
 event=NAVROUTE_CHANGED
 arguments=1
-arg1 type=table value=table{"1":number}
+arg1 type=table value=table{[1]=4763}
 ~~~
-
-## Interpretation and outstanding questions
-
-A table was delivered as an argument, but the initial watcher recorded only a **shallow preview of field names and value types**. Actual field values and nested table structure have not yet been established. The enhanced APIProbe table preview can now record bounded nested fields and scalar values in future captures; these details are **not recoverable from the existing snapshot**.
-
-The current broad watcher now collects table structures and **changing example values automatically**, so no special per-event setup is necessary:
 
 ~~~text
-/apidocs connect
-/apidocs watch all
+shape=table{}
+event=NAVROUTE_CHANGED
+arguments=1
+arg1 type=table value=table{}
 ~~~
 
-Change a navigation route or waypoint, then use `/apidocs stop`. New samples should show actual observed table indices, field names, values and nested fields (within preview limits). Use `/apidocs watch NAVROUTE_CHANGED` only if the broad-watch sample budget is insufficient. Do not assume particular table fields exist until a live capture shows them.
+### What this tells us
 
-## Sources
+Two table shapes were captured: a route with numeric key `[1]` holding `4763`, and an empty table. The key likely represents an indexed route entry, but its exact meaning has not been verified.
 
-- [Historical event candidates](../../plugin/APIProbe/events.lua) (compiled from the March 2024 `Eventtype` reference).
-- [November 8 live event survey](2026-11-08-live-event-survey.md), snapshot `20261108T223840.636743Z-24300-000001.txt`.
+**Source:** [second event survey](2026-11-08-second-live-event-survey.md), snapshot `20261108T233831.046307Z-24651-000061.txt`.
 
+## Evidence and limitations
+
+- Historical event-name candidate: [events.lua](../../plugin/APIProbe/events.lua).
+- Live observation: [second event survey](2026-11-08-second-live-event-survey.md).
+- The broad observer keeps at most two example values per argument shape; the event callback count is not a per-example frequency.
+- Table previews are intentionally bounded, and userdata is not traversed. Chat-related argument values are not recorded.

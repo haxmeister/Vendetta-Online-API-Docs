@@ -1,44 +1,49 @@
 # COMMAND
 
-**Status:** Observed in the VO client on November 8, 2026; argument signature provisional.
+**Status:** Observed in two live collection sessions on November 8, 2026; signature provisional.
 
-**Occurrences:** 4 total in the initial broad-watch session.
+Event callbacks deliver the arguments listed below **after** the event name passed to `OnEvent(event, ...)`. `()` means zero arguments, while `(nil)` means one explicit nil.
 
-## Observed callback arguments
+## First live collection — November 8, 2026
 
-2 distinct argument-type signatures observed: `1:number` or `2:number,table`.
+**Callbacks:** 4. **Observed argument type(s):** (`number`) **or** (`number`, `table`).
+**Captured example(s):** `(number)` or `(number, table)`; values redacted.
 
-The examples below show arguments received **after** the event name in `OnEvent(event, ...)`.
+These are examples from the first broad-watch session, which preserved only one example per argument-type signature.
 
-### Signature 1
+[First event survey](2026-11-08-live-event-survey.md).
+
+## Second live collection — November 8, 2026
+
+**Callbacks:** 29 (total for this event). **Saved examples:** 2.
+**Observed argument-type signature(s):** `1:number` or `2:number,table`.
+
+### Recorded examples
 
 ~~~text
+shape=redacted
 event=COMMAND
 arguments=1
 arg1 type=number
 ~~~
 
-### Signature 2
-
 ~~~text
+shape=redacted
 event=COMMAND
 arguments=2
 arg1 type=number
 arg2 type=table
 ~~~
 
-## Interpretation and outstanding questions
+### What this tells us
 
-The event name and argument types are known, but **argument values are intentionally redacted**, so this example does not expose chat or command content.
+Only argument types were collected. Chat and command contents, including table values, were omitted before capture.
 
-To collect more cases (up to 20 individual deliveries), use:
+**Source:** [second event survey](2026-11-08-second-live-event-survey.md), snapshot `20261108T233831.046307Z-24651-000061.txt`.
 
-~~~text
-/apidocs watch COMMAND
-~~~
+## Evidence and limitations
 
-## Sources
-
-- [Historical event candidates](../../plugin/APIProbe/events.lua) (compiled from the March 2024 `Eventtype` reference).
-- [November 8 live event survey](2026-11-08-live-event-survey.md), snapshot `20261108T223840.636743Z-24300-000001.txt`.
-
+- Historical event-name candidate: [events.lua](../../plugin/APIProbe/events.lua).
+- Live observation: [second event survey](2026-11-08-second-live-event-survey.md).
+- The broad observer keeps at most two example values per argument shape; the event callback count is not a per-example frequency.
+- Table previews are intentionally bounded, and userdata is not traversed. Chat-related argument values are not recorded.
