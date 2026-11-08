@@ -132,7 +132,7 @@ Nothing is sent automatically. Use these commands in the VO chat console:
 | --- | --- |
 | /apidocs connect | Connect to the local collector |
 | /apidocs test | Send a two-line test observation |
-| /apidocs scan | Inventory globally visible functions and functions one level inside global tables |
+| /apidocs scan | Check a curated list of known API candidates and record their types or accessibility |
 | /apidocs watch SECTOR_LOADED | Observe up to 20 occurrences of one event |
 | /apidocs unwatch SECTOR_LOADED | Stop watching the event |
 | /apidocs status | Report connection and watch count |
@@ -143,10 +143,17 @@ then run /apidocs test. Look for a new file under
 captures/note/connection_test/ on the Perl side. Next, run /apidocs scan
 and inspect captures/snapshot/functions/.
 
-The scanner lists names only. It never calls the discovered functions.
-It can include functions from other installed plugins; do not interpret the
-inventory as a verified list of native VO API functions. A snapshot may be
-split across multiple timestamped files.
+The game's strict Lua environment does not expose `_G` or `getfenv`.
+Consequently, `scan` is **not** an exhaustive global inventory. Instead, it
+tests a small curated list of names from known API and plugin examples using
+protected reads. Each name is recorded as a Lua type (`function`, `table`,
+etc.) or `inaccessible`. This may mean missing or restricted; it is not proof
+that a function does not exist. Probes never call the named functions.
+
+The snapshot appears under `captures/snapshot/functions/` and identifies
+itself with `format=api-probe-v1` and `source=curated-candidates`. We will
+expand the candidate set as we import references and verify additional APIs.
+The snapshot may include names provided by other plugins.
 
 Event observation is **opt-in per event**. Watch events you explicitly want
 to investigate; this tool does not enumerate all possible event names.
