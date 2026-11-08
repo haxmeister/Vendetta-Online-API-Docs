@@ -111,34 +111,39 @@ publishing or sharing them.
 
 ## Share observations without uploading files
 
-After collecting function or event observations, create a **sanitized report**
-from all local captures:
+After collecting observations, generate a complete, readable report:
 
 ~~~sh
 perl tools/share-observations.pl
 ~~~
 
-This writes `docs/research/capture-summary.md`, containing only function and
-event names, observed return/argument counts and Lua types, and observation
-counts. It intentionally excludes string contents, numbers and boolean values,
-error messages, chat and notes. Raw `captures/` data remains local and Git
-ignored. The report is not a replacement for detailed local debugging.
+This writes `docs/research/capture-summary.md`. It includes **all available
+recorded data** from function inspections (including return values and error
+messages), non-chat event captures, function-name snapshots, and notes.
+Actual text can only appear if the game plugin recorded it; older inspection
+captures stored only the lengths of returned strings.
 
-For a one-command GitHub handoff:
+**Chat payloads are the exception:** events with names starting `CHAT_`,
+and `COMMAND` or `EMOTE_ENTERED`, retain only event names, argument counts
+and Lua argument types. Their values are redacted in the report. The local
+`captures/` files remain intact and ignored by Git.
+
+To publish the updated report for ChatGPT to read:
 
 ~~~sh
 perl tools/share-observations.pl --push
 ~~~
 
-The script **asks before committing and pushing** the sanitized report to
-your *public* GitHub repository. Review the report first. A push may also
-publish other commits that are pending locally. Once pushed, ChatGPT can read
-`docs/research/capture-summary.md` directly from GitHub without another
-file upload. Nothing is automatically uploaded from the game.
+The script **asks before committing and pushing** to your *public* GitHub
+repository. Read `docs/research/capture-summary.md` first. Other events,
+notes and function observations can still contain names, positions or
+private information that the chat-event filter cannot detect. A push may
+also publish other commits that are pending locally. Nothing is uploaded
+automatically from the game.
 
-For a private, detailed review, you can still upload **one TAR archive**
-of your `captures/` directory. Do not publish the raw archive to the
-public repository: event observations may contain private chat or player data.
+Once pushed, tell ChatGPT to review `docs/research/capture-summary.md`
+directly. If you need a private full-fidelity diagnostic review, you can
+still upload one TAR archive without publishing it to GitHub.
 
 ## APIProbe (in-game discovery)
 
@@ -263,8 +268,9 @@ Unknown names are rejected. This is not a generic function executor.
 
 Each call creates a file in `captures/function/<Name>/`. The capture
 includes its success/error status, exact number of returned values, types
-(including nil), numerical/boolean scalar values, and byte lengths of
-strings. **String contents, table fields and userdata are not transmitted**.
+(including nil), numerical/boolean scalar values, and string contents
+(up to 1024 bytes per string, with the full byte length recorded).
+Table fields and userdata are not inspected.
 Errors are caught with `pcall` and included as bounded, quoted messages.
 The collector and its wire protocol are unchanged.
 
