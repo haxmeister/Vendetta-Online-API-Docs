@@ -140,6 +140,8 @@ end
 -- Candidate closures are generated, so no _G/getfenv lookup is needed.
 -- Only reads their types; never calls candidate functions.
 local CANDIDATES = dofile("candidates.lua")
+-- Unlike generated name probes, these explicitly call only approved getters.
+local INSPECTIONS = dofile("inspections.lua")
 
 local function scan()
     if not connected then info("connect first with /apidocs connect"); return end
@@ -193,6 +195,96 @@ local function scan()
         .. records .. " snapshots queued")
 end
 
+
+-- Return-type observations. Strings are never recorded, only their byte
+-- lengths. Tables/userdata are not traversed; no arbitrary tostring hooks.
+local MAX_INSPECT_RETURNS = 24
+local function summarize_returns(...)
+    local count = select("#", ...)
+    local lines = {"returns=" .. count}
+    for i = 1, math.min(count, MAX_INSPECT_RETURNS) do
+        local value = select(i, ...)
+        local kind = type(value)
+        local line = "return" .. i .. " type=" .. kind
+        if kind == "string" then
+            line = line .. " bytes=" .. #value
+        elseif kind == "number" or kind == "boolean" then
+            line = line .. " value=" .. tostring(value)
+        end
+        lines[#lines + 1] = line
+    end
+    if count > MAX_INSPECT_RETURNS then
+        lines[#lines + 1] = "remaining_returns=" .. (count - MAX_INSPECT_RETURNS)
+    end
+    return table.concat(lines, "\n")
+end
+
+local function inspect_one(entry)
+    -- The closure returns the getter's actual multiple return values.
+    local ok, result = pcall(function()
+        return summarize_returns(entry[2]())
+    end)
+    local lines = {
+        "format=api-inspect-v1",
+        "source=approved-no-arg",
+        "function=" .. entry[1],
+        "result=" .. (ok and "ok" or "error"),
+    }
+    if ok then
+        lines[#lines + 1] = result
+    else
+        -- Error text may contain newlines; quote and bound it.
+        lines[#lines + 1] = "error="
+            .. string.format("%q", string.sub(tostring(result), 1, 240))
+    end
+    local sent, err = send_record(
+        "function", entry[1], table.concat(lines, "\n") .. "\n"
+    )
+    if not sent then return nil, err end
+    return true, ok
+end
+
+local function inspect(name)
+    if not name or name == "list" then
+        local names = {}
+        for _, entry in ipairs(INSPECTIONS) do names[#names + 1] = entry[1] end
+        table.sort(names)
+        info("approved getters: " .. table.concat(names, ", "))
+        info("use /apidocs inspect NAME or /apidocs inspect all")
+        return
+    end
+    if not connected then
+        info("connect first with /apidocs connect")
+        return
+    end
+    if name == "all" then
+        local successes, errors = 0, 0
+        for _, entry in ipairs(INSPECTIONS) do
+            local sent, result = inspect_one(entry)
+            if not sent then
+                info("inspection stopped: " .. tostring(result))
+                return
+            end
+            if result then successes = successes + 1
+            else errors = errors + 1 end
+        end
+        info("queued " .. (successes + errors) .. " inspection records ("
+            .. successes .. " calls succeeded, " .. errors .. " raised errors)")
+        return
+    end
+    for _, entry in ipairs(INSPECTIONS) do
+        if entry[1] == name then
+            local sent, result = inspect_one(entry)
+            if not sent then info("inspection failed: " .. tostring(result))
+            else info(name .. " observation queued ("
+                .. (result and "ok" or "call error") .. ")") end
+            return
+        end
+    end
+    info("not approved for inspection: " .. tostring(name))
+    info("use /apidocs inspect list")
+end
+
 local function command(_, args)
     local action = args and args[1] and string.lower(args[1]) or "help"
     local name = args and args[2]
@@ -203,6 +295,8 @@ local function command(_, args)
         info(ok and "test record queued" or ("test failed: " .. tostring(err)))
     elseif action == "scan" then
         scan()
+    elseif action == "inspect" then
+        inspect(name)
     elseif action == "watch" then
         watch(name)
     elseif action == "unwatch" then
@@ -215,7 +309,7 @@ local function command(_, args)
     elseif action == "stop" then
         stop()
     else
-        info("/apidocs connect | test | scan | watch EVENT | unwatch EVENT | status | stop")
+        info("/apidocs connect | test | scan | inspect [list|NAME|all] | watch EVENT | unwatch EVENT | status | stop")
     end
 end
 
