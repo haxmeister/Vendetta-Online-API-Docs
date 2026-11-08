@@ -9,8 +9,6 @@ local watched = {}
 local observations = {}
 local EVENT_LIMIT = 20
 local MAX_EVENT_RECORD = 32768
-local MAX_SCAN_ROWS = 10000
-local ROWS_PER_FRAME = 120
 
 local function info(message)
     print("[APIProbe] " .. message)
@@ -139,39 +137,13 @@ local function stop()
     info("stopped")
 end
 
--- Candidates come from known plugin/API examples. Reading these names through
--- protected closures avoids _G/getfenv, which VO intentionally does not expose.
--- This list is not exhaustive: extend it as we import published API references.
--- A probe only reads a value; it never calls a candidate function.
-local CANDIDATES = {
-    {"RegisterEvent",             function() return RegisterEvent end},
-    {"UnregisterEvent",           function() return UnregisterEvent end},
-    {"ProcessEvent",              function() return ProcessEvent end},
-    {"RegisterUserCommand",       function() return RegisterUserCommand end},
-    {"ReloadInterface",          function() return ReloadInterface end},
-    {"TCPSocket",                function() return TCPSocket end},
-    {"GetCurrentSectorid",       function() return GetCurrentSectorid end},
-    {"GetCurrentSystemid",       function() return GetCurrentSystemid end},
-    {"GetCurrentStationid",      function() return GetCurrentStationid end},
-    {"GetSectorName",            function() return GetSectorName end},
-    {"GetPlayerName",            function() return GetPlayerName end},
-    {"GetPlayerID",              function() return GetPlayerID end},
-    {"GetCurrentCharId",         function() return GetCurrentCharId end},
-    {"GetTargetInfo",            function() return GetTargetInfo end},
-    {"PlayerInventoryPairs",     function() return PlayerInventoryPairs end},
-    {"GetInventoryItemInfo",     function() return GetInventoryItemInfo end},
-    {"GetInventoryItemName",     function() return GetInventoryItemName end},
-    {"LoadSystemNotes",          function() return LoadSystemNotes end},
-    {"SaveSystemNotes",          function() return SaveSystemNotes end},
-    {"GetCharInfo",              function() return GetCharInfo end},
-    {"iup",                      function() return iup end},
-    {"rmlui",                    function() return rmlui end},
-}
+-- Candidate closures are generated, so no _G/getfenv lookup is needed.
+-- Only reads their types; never calls candidate functions.
+local CANDIDATES = dofile("candidates.lua")
 
 local function scan()
     if not connected then info("connect first with /apidocs connect"); return end
-    local rows = {}
-    local found, inaccessible = 0, 0
+    local rows, found, inaccessible = {}, 0, 0
     for _, candidate in ipairs(CANDIDATES) do
         local ok, value = pcall(candidate[2])
         local status
@@ -179,8 +151,6 @@ local function scan()
             status = type(value)
             if status == "function" then found = found + 1 end
         else
-            -- A missing name raises an error in VO's strict environment.
-            -- It may also be blocked for other reasons; don't assume absent.
             status = "inaccessible"
             inaccessible = inaccessible + 1
         end
@@ -188,20 +158,39 @@ local function scan()
     end
     table.sort(rows)
 
-    -- Keep the snapshot small and explicit about its limited coverage.
-    local lines = {
-        "format=api-probe-v1",
-        "source=curated-candidates",
-        "candidate_count=" .. #CANDIDATES,
-        "name\ttype_or_status",
-    }
-    for _, row in ipairs(rows) do lines[#lines + 1] = row end
-    local ok, err = send_record(
-        "snapshot", "functions", table.concat(lines, "\n") .. "\n"
-    )
+    -- Chunk larger inventories into bounded records on the TCP connection.
+    local records, chunk = 0, {}
+    local function send_chunk()
+        if #chunk == 0 then return true end
+        local lines = {
+            "format=api-probe-v1",
+            "source=generated-candidates",
+            "candidate_count=" .. #CANDIDATES,
+            "part=" .. (records + 1),
+            "name\ttype_or_status",
+        }
+        for _, row in ipairs(chunk) do lines[#lines + 1] = row end
+        local ok, err = send_record(
+            "snapshot", "functions", table.concat(lines, "\n") .. "\n"
+        )
+        if not ok then return nil, err end
+        records = records + 1
+        chunk = {}
+        return true
+    end
+
+    for _, row in ipairs(rows) do
+        chunk[#chunk + 1] = row
+        if #chunk >= 150 then
+            local ok, err = send_chunk()
+            if not ok then info("scan failed: " .. tostring(err)); return end
+        end
+    end
+    local ok, err = send_chunk()
     if not ok then info("scan failed: " .. tostring(err)); return end
     info("checked " .. #CANDIDATES .. " candidates; found " .. found
-        .. " functions; " .. inaccessible .. " inaccessible; snapshot queued")
+        .. " functions; " .. inaccessible .. " inaccessible; "
+        .. records .. " snapshots queued")
 end
 
 local function command(_, args)
