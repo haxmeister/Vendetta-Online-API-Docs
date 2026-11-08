@@ -11,9 +11,10 @@ local EVENT_LIMIT = 20
 local MAX_EVENT_RECORD = 32768
 local EVENT_NAMES = dofile("events.lua")
 local all_observations = {}
-local all_signatures = 0
-local MAX_ALL_SIGNATURES_PER_EVENT = 2
-local MAX_ALL_SIGNATURES = 512
+local all_samples = 0
+local MAX_ALL_SHAPES_PER_EVENT = 6
+local MAX_ALL_EXAMPLES_PER_SHAPE = 2
+local MAX_ALL_SAMPLES = 512
 
 local function info(message)
     print("[APIProbe] " .. message)
@@ -131,51 +132,112 @@ local function quote(value)
     return text
 end
 
--- A broad event watch is deliberately compact: keep at most two distinct
--- argument-type signatures per event, with one bounded example of each.
--- Chat-related arguments are recorded by type, never by value.
+-- /apidocs watch all discovers signatures, bounded table shapes and a few
+-- different values for each shape. Unlike the old type-only deduplication,
+-- a new field or value can produce a new example without a focused watch.
+-- Chat-related arguments are recorded ONLY by type, never by value/fields.
 local function is_chat_event(name)
     return string.match(name, "^CHAT_")
         or string.match(name, "^ACTIVATE_CHAT_")
         or name == "COMMAND" or name == "EMOTE_ENTERED"
 end
 
+-- Shape fingerprint only: key names and nested types, not changing values.
+-- It is bounded separately from the more detailed quote() preview.
+local function event_shape(value)
+    local seen, nodes = {}, 0
+    local function walk(v, depth)
+        local kind = type(v)
+        if kind ~= "table" then return kind end
+        if seen[v] then return "cycle" end
+        if depth >= 3 or nodes >= 64 then return "table{...}" end
+        seen[v] = true
+        local fields, key, count, truncated = {}, nil, 0, false
+        while true do
+            local next_key = next(v, key)
+            if next_key == nil then break end
+            key = next_key
+            count = count + 1
+            if count > 12 or nodes >= 64 then
+                truncated = true
+                break
+            end
+            nodes = nodes + 1
+            local key_kind = type(key)
+            if key_kind == "string" or key_kind == "number"
+                    or key_kind == "boolean" then
+                local label
+                if key_kind == "string" then
+                    label = string.format("%q", string.sub(key, 1, 64))
+                else
+                    label = tostring(key)
+                end
+                fields[#fields + 1] = label .. ":" .. walk(rawget(v, key), depth + 1)
+            end
+        end
+        seen[v] = nil
+        if truncated then fields[#fields + 1] = "..." end
+        table.sort(fields)
+        return "table{" .. table.concat(fields, ",") .. "}"
+    end
+    local ok, text = pcall(walk, value, 0)
+    if not ok then return "table{<unreadable>}" end
+    if #text > 512 then return string.sub(text, 1, 512) .. "..." end
+    return text
+end
+
 local function record_all(event, ...)
     local record = all_observations[event]
     if not record then
-        record = {count = 0, samples = {}, signatures = {}}
+        record = {count = 0, samples = {}, shapes = {}, shape_count = 0}
         all_observations[event] = record
     end
     record.count = record.count + 1
-    if #record.samples >= MAX_ALL_SIGNATURES_PER_EVENT
-        or all_signatures >= MAX_ALL_SIGNATURES then return end
+    if all_samples >= MAX_ALL_SAMPLES then return end
 
     local n = select("#", ...)
-    local types, lines = {}, {"event=" .. event, "arguments=" .. n}
+    local types, shapes, lines = {}, {}, {"event=" .. event, "arguments=" .. n}
     local chat = is_chat_event(event)
     for i = 1, math.min(n, 16) do
         local value = select(i, ...)
         local kind = type(value)
         types[#types + 1] = kind
-        local line = "arg" .. i .. " type=" .. kind
+        -- Never inspect chat-related table keys or contents.
+        shapes[#shapes + 1] = (chat and kind or event_shape(value))
+    end
+    local signature = n .. ":" .. table.concat(types, ",")
+    local shape = table.concat(shapes, ";")
+    if chat then shape = "redacted" end
+    local key = signature .. "|" .. shape
+    local group = record.shapes[key]
+    if not group then
+        if record.shape_count >= MAX_ALL_SHAPES_PER_EVENT then return end
+        group = {values = {}, count = 0}
+        record.shapes[key] = group
+        record.shape_count = record.shape_count + 1
+    end
+    if group.count >= MAX_ALL_EXAMPLES_PER_SHAPE then return end
+
+    for i = 1, math.min(n, 16) do
+        local value = select(i, ...)
+        local line = "arg" .. i .. " type=" .. type(value)
         if not chat then
-            -- Limit samples even for unusually large payloads.
             line = line .. " value=" .. string.sub(quote(value), 1, 1024)
         end
         lines[#lines + 1] = line
     end
     if n > 16 then lines[#lines + 1] = "remaining_arguments=" .. (n - 16) end
-    local signature = n .. ":" .. table.concat(types, ",")
-    if record.signatures[signature] then return end
-    record.signatures[signature] = true
     local body = table.concat(lines, "\n")
     if #body > 4096 then body = string.sub(body, 1, 4096) .. "\n[truncated]" end
+    -- Only include changing examples. Chat events get one type-only example.
+    if group.values[body] then return end
+    group.values[body] = true
+    group.count = group.count + 1
     record.samples[#record.samples + 1] = {
-        signature = signature, body = body,
+        signature = signature, shape = shape, body = body,
     }
-    all_signatures = all_signatures + 1
+    all_samples = all_samples + 1
 end
-
 local function flush_all()
     if not connected then
         info("connect first to flush all-event observations")
@@ -190,16 +252,22 @@ local function flush_all()
                 signature = sample.signature,
                 text = "signature=" .. sample.signature .. "\n"
                     .. "occurrences=" .. observation.count .. "\n"
+                    .. "shape=" .. sample.shape .. "\n"
                     .. sample.body .. "\n",
             }
         end
     end
     if #records == 0 then
-        info("no new all-event signatures to flush")
+        info("no new all-event examples to flush")
         return true
     end
     table.sort(records, function(a, b)
-        if a.name == b.name then return a.signature < b.signature end
+        if a.name == b.name then
+            if a.signature == b.signature then
+                return a.text < b.text
+            end
+            return a.signature < b.signature
+        end
         return a.name < b.name
     end)
 
@@ -208,7 +276,7 @@ local function flush_all()
     local function send_chunk()
         if #chunk == 0 then return true end
         local header = {
-            "format=api-event-watch-v1",
+            "format=api-event-watch-v2",
             "source=historical-event-candidates",
             "candidate_count=" .. #EVENT_NAMES,
             "observed_events=" .. observed,
@@ -240,7 +308,7 @@ local function flush_all()
     end
     -- Keep signature history to avoid duplicate reports on subsequent flushes.
     for _, observation in pairs(all_observations) do observation.samples = {} end
-    info("queued " .. #records .. " event signatures in "
+    info("queued " .. #records .. " event examples in "
         .. part .. " snapshot records (" .. observed .. " observed events)")
     return true
 end
@@ -336,7 +404,7 @@ local function watch_all()
     end
     info("watching all " .. #EVENT_NAMES .. " historical event names ("
         .. registered .. " added, " .. failed .. " rejected); "
-        .. "up to two type signatures per event, buffered until flush/stop")
+        .. "automatically samples shapes and values, buffered until flush/stop")
 end
 
 local function unwatch_all()
