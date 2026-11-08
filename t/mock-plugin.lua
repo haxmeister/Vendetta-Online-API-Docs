@@ -34,17 +34,29 @@ end
 
 -- Emulate Vendetta's strict-global lookup in the plugin environment.
 -- An attempt to read _G must fail, as it does in the real game.
-local chunk = assert(loadfile("plugin/APIProbe/main.lua"))
-local strict_environment = {}
+local base_globals = _G
+local strict_environment = {
+    -- VO provides getfenv; emulate it on texlua's Lua 5.3 test runtime.
+    getfenv = function(level)
+        assert(level == 0)
+        return base_globals
+    end,
+}
 setmetatable(strict_environment, {
     __index = function(_, key)
         if key == "_G" then
             error("attempt to read from undeclared variable _G")
         end
-        return _G[key]
+        return base_globals[key]
     end,
 })
-setfenv(chunk, strict_environment)
+local chunk
+if type(setfenv) == "function" then
+    chunk = assert(loadfile("plugin/APIProbe/main.lua"))
+    setfenv(chunk, strict_environment)
+else
+    chunk = assert(loadfile("plugin/APIProbe/main.lua", "t", strict_environment))
+end
 chunk()
 dofile = real_dofile
 assert(type(commands.apidocs) == "function", "command was registered")
