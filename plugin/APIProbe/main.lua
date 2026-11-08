@@ -139,59 +139,69 @@ local function stop()
     info("stopped")
 end
 
+-- Candidates come from known plugin/API examples. Reading these names through
+-- protected closures avoids _G/getfenv, which VO intentionally does not expose.
+-- This list is not exhaustive: extend it as we import published API references.
+-- A probe only reads a value; it never calls a candidate function.
+local CANDIDATES = {
+    {"RegisterEvent",             function() return RegisterEvent end},
+    {"UnregisterEvent",           function() return UnregisterEvent end},
+    {"ProcessEvent",              function() return ProcessEvent end},
+    {"RegisterUserCommand",       function() return RegisterUserCommand end},
+    {"ReloadInterface",          function() return ReloadInterface end},
+    {"TCPSocket",                function() return TCPSocket end},
+    {"GetCurrentSectorid",       function() return GetCurrentSectorid end},
+    {"GetCurrentSystemid",       function() return GetCurrentSystemid end},
+    {"GetCurrentStationid",      function() return GetCurrentStationid end},
+    {"GetSectorName",            function() return GetSectorName end},
+    {"GetPlayerName",            function() return GetPlayerName end},
+    {"GetPlayerID",              function() return GetPlayerID end},
+    {"GetCurrentCharId",         function() return GetCurrentCharId end},
+    {"GetTargetInfo",            function() return GetTargetInfo end},
+    {"PlayerInventoryPairs",     function() return PlayerInventoryPairs end},
+    {"GetInventoryItemInfo",     function() return GetInventoryItemInfo end},
+    {"GetInventoryItemName",     function() return GetInventoryItemName end},
+    {"LoadSystemNotes",          function() return LoadSystemNotes end},
+    {"SaveSystemNotes",          function() return SaveSystemNotes end},
+    {"GetCharInfo",              function() return GetCharInfo end},
+    {"iup",                      function() return iup end},
+    {"rmlui",                    function() return rmlui end},
+}
+
 local function scan()
     if not connected then info("connect first with /apidocs connect"); return end
-    -- VO uses strict globals: reading an undeclared _G raises an error.
-    -- getfenv(0) obtains the Lua global environment without that lookup.
-    -- Some game-provided names may be resolved through a metatable and may
-    -- not appear in pairs(), so this remains a best-effort inventory.
-    local ok, globals = pcall(function() return getfenv(0) end)
-    if not ok or type(globals) ~= "table" then
-        info("cannot enumerate Lua environment: " .. tostring(globals))
-        return
-    end
-    local names = {}
-    local count = 0
-    local limited = false
-
-    local function add(scope, name)
-        if count >= MAX_SCAN_ROWS then limited = true; return end
-        count = count + 1
-        names[#names + 1] = scope .. "\t" .. string.format("%q", name)
-    end
-
-    -- Record global functions and one level of functions inside global tables.
-    -- This is an inventory, not proof that a function belongs to the VO API.
-    for key, value in pairs(globals) do
-        if type(key) == "string" then
-            if type(value) == "function" then
-                add("global", key)
-            elseif type(value) == "table" then
-                local visited = 0
-                for child, entry in pairs(value) do
-                    visited = visited + 1
-                    if visited > 2500 or limited then break end
-                    if type(child) == "string" and type(entry) == "function" then
-                        add(key, child)
-                    end
-                end
-            end
+    local rows = {}
+    local found, inaccessible = 0, 0
+    for _, candidate in ipairs(CANDIDATES) do
+        local ok, value = pcall(candidate[2])
+        local status
+        if ok then
+            status = type(value)
+            if status == "function" then found = found + 1 end
+        else
+            -- A missing name raises an error in VO's strict environment.
+            -- It may also be blocked for other reasons; don't assume absent.
+            status = "inaccessible"
+            inaccessible = inaccessible + 1
         end
-        if limited then break end
+        rows[#rows + 1] = candidate[1] .. "\t" .. status
     end
+    table.sort(rows)
 
-    table.sort(names)
-    local sent = 0
-    for offset = 1, #names, ROWS_PER_FRAME do
-        local end_index = math.min(offset + ROWS_PER_FRAME - 1, #names)
-        local block = {"format=api-inventory-v1", "kind=function", "part=" .. (sent + 1)}
-        for i = offset, end_index do block[#block + 1] = names[i] end
-        local ok, err = send_record("snapshot", "functions", table.concat(block, "\n") .. "\n")
-        if not ok then info("scan stopped: " .. tostring(err)); return end
-        sent = sent + 1
-    end
-    info("queued " .. count .. " function names in " .. sent
-        .. " captures" .. (limited and " (scan limit reached)" or ""))
+    -- Keep the snapshot small and explicit about its limited coverage.
+    local lines = {
+        "format=api-probe-v1",
+        "source=curated-candidates",
+        "candidate_count=" .. #CANDIDATES,
+        "name\ttype_or_status",
+    }
+    for _, row in ipairs(rows) do lines[#lines + 1] = row end
+    local ok, err = send_record(
+        "snapshot", "functions", table.concat(lines, "\n") .. "\n"
+    )
+    if not ok then info("scan failed: " .. tostring(err)); return end
+    info("checked " .. #CANDIDATES .. " candidates; found " .. found
+        .. " functions; " .. inaccessible .. " inaccessible; snapshot queued")
 end
 
 local function command(_, args)
