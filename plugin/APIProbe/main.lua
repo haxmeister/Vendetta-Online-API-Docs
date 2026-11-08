@@ -141,7 +141,15 @@ end
 
 local function scan()
     if not connected then info("connect first with /apidocs connect"); return end
-    local globals = _G or getfenv(0)
+    -- VO uses strict globals: reading an undeclared _G raises an error.
+    -- getfenv(0) obtains the Lua global environment without that lookup.
+    -- Some game-provided names may be resolved through a metatable and may
+    -- not appear in pairs(), so this remains a best-effort inventory.
+    local ok, globals = pcall(function() return getfenv(0) end)
+    if not ok or type(globals) ~= "table" then
+        info("cannot enumerate Lua environment: " .. tostring(globals))
+        return
+    end
     local names = {}
     local count = 0
     local limited = false
