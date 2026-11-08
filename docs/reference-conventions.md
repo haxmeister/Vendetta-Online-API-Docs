@@ -50,7 +50,7 @@ Examples: (false) or (4)
 Meaning of the value: not yet established
 ~~~
 
-Do not invent examples to fill gaps. For chat events, retain the argument types but omit recorded message contents, speaker names, and any other chat payload values. For table arguments, do not invent a table structure when earlier captures recorded only a shallow type preview. Newer APIProbe captures include bounded nested field values; distinguish these from historical type-only previews, and record any truncation limits.
+Do not invent examples to fill gaps. For chat events, retain the argument types but omit recorded message contents, speaker names, and any other chat payload values. For table arguments, do not invent a table structure when earlier captures recorded only a shallow type preview. APIProbe's broad watcher now collects bounded nested field values and multiple examples when values or shapes differ. Distinguish these newer `api-event-watch-v2` examples from historical type-only previews, record truncation limits, and never infer a missing field was absent outside the captured sample.
 
 ## Review and retention
 
