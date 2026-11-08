@@ -27,7 +27,7 @@ arg1 type=table value=table{[8]=true}
 
 ### What this tells us
 
-The callback returned tables with one numeric key and boolean `true`: `[27]=true` and `[8]=true`. The meaning of these keys is not established by the type and value alone.
+The callback delivered tables with one numeric key and boolean `true`: `[27]=true` and `[8]=true`. The meaning of these keys is not established by the type and value alone.
 
 **Source:** [second event survey](2026-11-08-second-live-event-survey.md), snapshot `20261108T233831.046307Z-24651-000061.txt`.
 
