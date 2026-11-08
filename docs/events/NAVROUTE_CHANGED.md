@@ -22,14 +22,14 @@ arg1 type=table value=table{"1":number}
 
 A table was delivered as an argument, but the initial watcher recorded only a **shallow preview of field names and value types**. Actual field values and nested table structure have not yet been established. The enhanced APIProbe table preview can now record bounded nested fields and scalar values in future captures; these details are **not recoverable from the existing snapshot**.
 
-To collect up to 20 detailed observations, start the Perl collector and run:
+The current broad watcher now collects table structures and **changing example values automatically**, so no special per-event setup is necessary:
 
 ~~~text
 /apidocs connect
-/apidocs watch NAVROUTE_CHANGED
+/apidocs watch all
 ~~~
 
-Change a navigation route or waypoint in game, then use `/apidocs unwatch NAVROUTE_CHANGED` or `/apidocs stop`. The new captures can reveal **table indices, values, and nested fields**, subject to preview limits. Do not assume those fields exist until they are observed.
+Change a navigation route or waypoint, then use `/apidocs stop`. New samples should show actual observed table indices, field names, values and nested fields (within preview limits). Use `/apidocs watch NAVROUTE_CHANGED` only if the broad-watch sample budget is insufficient. Do not assume particular table fields exist until a live capture shows them.
 
 ## Sources
 
