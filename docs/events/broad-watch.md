@@ -29,6 +29,8 @@ Watching all 214 names does **not** send every callback to the collector.
 - Each event keeps a count of occurrences.
 - Only its first **two distinct argument-type signatures** are sampled in a session; identical types are not recorded repeatedly.
 - Up to 16 argument positions are inspected, with a bounded example of each non-chat value.
+- **Tables now include actual primitive field values and nested table previews** (up to 3 levels, 12 keys per table, 64 field visits and 2,048 output bytes per preview). Cyclic references and unsupported values are marked rather than traversed forever.
+- Broad-watch samples are still taken only when a **new type signature** appears; to see subsequent variations in a table's contents, use `/apidocs watch EVENT_NAME` for up to 20 separate deliveries.
 - A global cap of 512 unique signatures prevents unbounded memory use.
 - Samples are buffered and sent by `flush` as `snapshot/event-watch` records, chunked to a few dozen kilobytes per file rather than creating thousands of individual event files.
 - Chat-related event values are never included, including `CHAT_*`, `ACTIVATE_CHAT_*`, `COMMAND`, and `EMOTE_ENTERED`. Their argument types remain observable.
