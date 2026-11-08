@@ -304,6 +304,10 @@ See [function-inspector.md](docs/research/function-inspector.md) for the
 whitelist and output format. Copy **all three** APIProbe Lua files when
 updating the installed plugin.
 
+There is [one page per known event](docs/events/index.md), including captured
+example arguments, observed table previews, and clear unverified placeholders.
+The original multi-event survey is retained for comparison.
+
 Event observation is opt-in. You can watch one event in detail or use
 `/apidocs watch all` to register 214 unique historical names at once.
 Broad watching buffers at most two unique argument-type signatures per event,
