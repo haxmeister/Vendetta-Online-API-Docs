@@ -11,6 +11,10 @@ The reference is still being built. Start with our
 the [42-event live survey](docs/events/2026-11-08-live-event-survey.md),
 and the [first 65-capture review](docs/research/2026-11-08-observation-review.md).
 
+All reference entries should show **actual observed example values**, not just
+types. See the [documentation conventions](docs/reference-conventions.md)
+for how we distinguish function returns from event callback arguments.
+
 Our first tool is a local **capture collector**, which saves observations to
 files without copying text out of the game UI.
 
