@@ -96,7 +96,8 @@ my $isolated_script = File::Spec->catfile($isolated_tools, 'share-observations.p
 ok(copy($tool, $isolated_script), 'copy tool for default-path cutoff test');
 open my $reviewed, '>', File::Spec->catfile($isolated_data, 'reviewed-through.txt')
     or die $!;
-print {$reviewed} "# latest extracted capture\n20261108T220410.123515Z\n";
+print {$reviewed} "# latest extracted capture\r\n\r\n",
+    "20261108T220410.123515Z  # reviewed captures\r\n";
 close $reviewed;
 my $default_dir = File::Spec->catdir($isolated, 'captures', 'function', 'GetCurrentSectorid');
 make_path($default_dir);
