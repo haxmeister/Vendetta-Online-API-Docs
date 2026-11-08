@@ -39,7 +39,7 @@ The second value tracks the first divided by **250** within the precision observ
 
 ## GetActiveShipHealth()
 
-Every observation had **ten** return positions: eight numbers followed by two explicit nils. The first six numbers were `0` in these samples; the seventh was `0` in one observation and `25` in four; the eighth was `6000` in all five.
+Every observation had **ten** return positions: eight numbers followed by two explicit nils. The first and seventh numbers were both `0` in one observation and `25` in the other four. Positions two through six were `0` throughout; the eighth was `6000` in all five.
 
 A historical reference describes health fields, damage, and maximum health, but these captures **do not establish the meaning of every position**. In particular, do not infer health percentage or segment mapping from one ship.
 
