@@ -310,12 +310,15 @@ The original multi-event survey is retained for comparison.
 
 Event observation is opt-in. You can watch one event in detail or use
 `/apidocs watch all` to register 214 unique historical names at once.
-Broad watching buffers at most two unique argument-type signatures per event,
-then `/apidocs flush` or `/apidocs stop` sends them in bounded snapshots.
+Broad watching automatically captures different argument types, changing
+table shapes, and up to two distinct values per shape (six shapes per event,
+512 total examples per session). `/apidocs flush` or `/apidocs stop` sends
+the buffered examples as bounded snapshots. **You do not need to watch each
+event individually to capture its table fields.**
 This is not a runtime discovery of undocumented event names; see
 [the broad event watcher](docs/events/broad-watch.md).
 For strings, it records quoted Lua text (with newline escapes), byte lengths,
-and argument types. Tables receive a bounded shallow type preview. Large
+and argument types. Tables receive bounded nested field/value previews. Large
 events are truncated, and each event watch is limited to 20 observations.
 
 Observations may include sensitive player information if you watch chat or
