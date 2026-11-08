@@ -34,6 +34,6 @@ arguments=0
 
 ### What this tells us
 
-These are representative values from a particular game state, not constants. The precise meaning of each field may require further testing.
+No arguments were delivered in any of the eight second-session callbacks. Together with the five earlier observations, this supports a zero-argument callback signature across 13 observed deliveries; other contexts remain untested.
 
 **Source:** [second event survey](2026-11-08-second-live-event-survey.md), snapshot `20261108T233831.046307Z-24651-000061.txt`.
