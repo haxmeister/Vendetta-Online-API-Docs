@@ -25,7 +25,7 @@ GetOptions(
     'help'       => \$help,
 ) or die "usage: perl tools/share-observations.pl [--captures DIR] [--output FILE] [--all] [--push]\n";
 if ($help) {
-    say 'usage: perl tools/share-observations.pl [--captures DIR] [--output FILE] [--push]';
+    say 'usage: perl tools/share-observations.pl [--captures DIR] [--output FILE] [--all] [--push]';
     exit 0;
 }
 die "captures directory not found: $captures\n" if !-d $captures;
@@ -36,7 +36,7 @@ if ($push && ($captures ne $default_captures || $output ne $default_output)) {
 # The maintainer advances this marker only after consolidating observations
 # into the permanent reference. Raw files remain in captures/ locally.
 my $reviewed_through;
-if (!$all && -f $reviewed_file) {
+if (!$all && $captures eq $default_captures && -f $reviewed_file) {
     open my $prior, '<', $reviewed_file or die "cannot read $reviewed_file: $!\n";
     while (my $line = <$prior>) {
         $line =~ s/\s*#.*\z//;
