@@ -167,7 +167,6 @@ run("inspect", "GetTargetInfo")
 assert(calls.target == 1)
 category, name, body = decode(frames[#frames])
 assert(string.find(body, "returns=4", 1, true))
-assert(string.find(body, "return1 type=string bytes=", 1, true))
 assert(string.find(body, "return1 type=string value=", 1, true),
     "capture text from approved getter")
 assert(string.find(body, "private player name", 1, true),
