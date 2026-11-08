@@ -32,22 +32,17 @@ dofile = function(path)
     return real_dofile(path)
 end
 
--- Emulate Vendetta's strict-global lookup in the plugin environment.
--- An attempt to read _G must fail, as it does in the real game.
+-- Emulate the VO strict-global proxy: unknown globals raise an error.
+-- In particular, VO does not expose _G or getfenv.
 local base_globals = _G
-local strict_environment = {
-    -- VO provides getfenv; emulate it on texlua's Lua 5.3 test runtime.
-    getfenv = function(level)
-        assert(level == 0)
-        return base_globals
-    end,
-}
+local strict_environment = {}
 setmetatable(strict_environment, {
     __index = function(_, key)
-        if key == "_G" then
-            error("attempt to read from undeclared variable _G")
+        local value = key ~= "_G" and key ~= "getfenv" and base_globals[key]
+        if value == nil or value == false then
+            error("attempt to read from undeclared variable " .. key)
         end
-        return base_globals[key]
+        return value
     end,
 })
 local chunk
@@ -97,7 +92,10 @@ run("scan")
 assert(#frames > 2)
 category, name, body = decode(frames[3])
 assert(category == "snapshot" and name == "functions")
-assert(string.find(body, "format=api-inventory-v1", 1, true))
+assert(string.find(body, "format=api-probe-v1", 1, true))
+assert(string.find(body, "source=curated-candidates", 1, true))
+assert(string.find(body, "RegisterEvent\tfunction", 1, true))
+assert(string.find(body, "GetCurrentSectorid\tinaccessible", 1, true))
 run("stop")
 assert(next(watched) == nil)
 print("PASS: Lua APIProbe mock protocol, scan, watch, and stop")
