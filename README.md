@@ -5,9 +5,13 @@ A concise, community-maintained reference for the Vendetta Online Lua API.
 This project is independent of Guild Software. We aim to document functions,
 events, argument types, and observed behavior using evidence from the game.
 
-The reference is still being built. Our first tool is a local **capture
-collector**, which saves observations to files without copying text out of
-the game UI.
+The reference is still being built. Start with our
+[12 observed getter signatures](docs/functions/observed-getters.md), the
+[398-name function survey](docs/research/2026-11-08-full-function-survey.md),
+and the [latest capture report](docs/research/capture-summary.md).
+
+Our first tool is a local **capture collector**, which saves observations to
+files without copying text out of the game UI.
 
 ## Run the collector
 
