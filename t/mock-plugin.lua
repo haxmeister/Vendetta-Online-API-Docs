@@ -1,8 +1,6 @@
 -- Run from repository root: texlua t/mock-plugin.lua
 local real_dofile = dofile
-local commands = {}
-local watched = {}
-local frames = {}
+local commands, watched, frames = {}, {}, {}
 local last_connection
 
 function RegisterUserCommand(name, callback) commands[name] = callback end
@@ -11,6 +9,7 @@ function UnregisterEvent(handler, name)
     assert(watched[name] == handler)
     watched[name] = nil
 end
+function GetCurrentSectorid() return 42 end
 
 local TCP = {}
 function TCP.Connect(host, port, options)
@@ -27,41 +26,45 @@ function TCP.Connect(host, port, options)
     return conn
 end
 
-dofile = function(path)
-    if path == "../TCP/client.lua" then return TCP end
-    return real_dofile(path)
-end
-
--- Emulate the VO strict-global proxy: unknown globals raise an error.
--- In particular, VO does not expose _G or getfenv.
-local base_globals = _G
-local strict_environment = {}
-setmetatable(strict_environment, {
-    __index = function(_, key)
-        local value = key ~= "_G" and key ~= "getfenv" and base_globals[key]
-        if value == nil or value == false then
-            error("attempt to read from undeclared variable " .. key)
+-- Simulate the VO strict-global environment for the plugin and probes.
+local normal_globals = _G
+local env = {}
+setmetatable(env, {
+    __index = function(_, name)
+        if name == "_G" or name == "getfenv" or normal_globals[name] == nil then
+            error("attempt to read from undeclared variable " .. name)
         end
-        return value
+        return normal_globals[name]
     end,
 })
-local chunk
-if type(setfenv) == "function" then
-    chunk = assert(loadfile("plugin/APIProbe/main.lua"))
-    setfenv(chunk, strict_environment)
-else
-    chunk = assert(loadfile("plugin/APIProbe/main.lua", "t", strict_environment))
+local function load_in_env(path)
+    local chunk
+    if type(setfenv) == "function" then
+        chunk = assert(loadfile(path))
+        setfenv(chunk, env)
+    else
+        chunk = assert(loadfile(path, "t", env))
+    end
+    return chunk()
 end
-chunk()
+
+dofile = function(path)
+    if path == "../TCP/client.lua" then return TCP end
+    if path == "candidates.lua" then
+        return load_in_env("plugin/APIProbe/candidates.lua")
+    end
+    return real_dofile(path)
+end
+load_in_env("plugin/APIProbe/main.lua")
 dofile = real_dofile
-assert(type(commands.apidocs) == "function", "command was registered")
+assert(type(commands.apidocs) == "function", "command not registered")
 
 local function run(...)
     return commands.apidocs(nil, {...})
 end
 local function decode(wire)
-    local bytes, payload = string.match(wire, "^(%d+):(.*)$")
-    assert(tonumber(bytes) == #payload, "framing length mismatch")
+    local size, payload = string.match(wire, "^(%d+):(.*)$")
+    assert(tonumber(size) == #payload, "framing length mismatch")
     local category, name, body = string.match(payload, "^([^%z]+)%z([^%z]+)%z(.*)$")
     assert(category and name and body, "record layout mismatch")
     return category, name, body
@@ -70,13 +73,13 @@ end
 run("test")
 assert(#frames == 0, "should not send without connection")
 run("connect")
-assert(last_connection ~= nil, "no connection started")
+assert(last_connection, "connection not started")
 last_connection.options.onConnect()
 run("test")
 assert(#frames == 1)
 local category, name, body = decode(frames[1])
 assert(category == "note" and name == "connection_test")
-assert(body == "First line\nSecond line\n", "multiline payload changed")
+assert(body == "First line\nSecond line\n", "multiline body changed")
 
 run("watch", "SECTOR_LOADED")
 assert(watched.SECTOR_LOADED)
@@ -93,9 +96,11 @@ assert(#frames > 2)
 category, name, body = decode(frames[3])
 assert(category == "snapshot" and name == "functions")
 assert(string.find(body, "format=api-probe-v1", 1, true))
-assert(string.find(body, "source=curated-candidates", 1, true))
+assert(string.find(body, "source=generated-candidates", 1, true))
+assert(string.find(body, "candidate_count=28", 1, true))
 assert(string.find(body, "RegisterEvent\tfunction", 1, true))
-assert(string.find(body, "GetCurrentSectorid\tinaccessible", 1, true))
+assert(string.find(body, "GetCurrentSectorid\tfunction", 1, true))
+assert(string.find(body, "GetCharInfo\tinaccessible", 1, true))
 run("stop")
 assert(next(watched) == nil)
-print("PASS: Lua APIProbe mock protocol, scan, watch, and stop")
+print("PASS: APIProbe strict-global mock and generated probes")
