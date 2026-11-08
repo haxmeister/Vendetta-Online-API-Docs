@@ -153,7 +153,10 @@ exists or that a name belongs to the built-in API. It never calls candidates.
 
 The snapshot appears under `captures/snapshot/functions/` and identifies
 itself with `format=api-probe-v1` and `source=generated-candidates`.
-Larger scans split into numbered parts. The initial file contains 28 names.
+Larger scans split into numbered parts (150 candidates per part). The current
+list contains **398 names**: 390 distinct names extracted from a historical
+Racecar2 Function Index, combined with our existing candidates. The imported
+index was last edited in December 2023, so results require current verification.
 
 ### Expand function candidates
 
@@ -165,18 +168,21 @@ perl tools/build-probes.pl
 texlua t/mock-plugin.lua
 ~~~
 
-For the Racecar2 wiki, save its API Index page as an HTML file in your browser,
-then import its `API_FunctionName` page links:
+To import a new Racecar2 Function Index, save its page as plain text or HTML,
+then run:
 
 ~~~sh
-perl tools/import-candidates.pl /path/to/saved-API-Index.html
+perl tools/import-candidates.pl /path/to/saved-Function-Index.txt
 perl tools/build-probes.pl
 ~~~
 
-The importer collects **candidate names only** and does not import descriptions,
-arguments, or other third-party content. Inspect the resulting name list: index
-pages may contain non-function links, and many old APIs may have been renamed.
-The Racecar2 website is not required for the first scan.
+The importer recognizes the `Functions` section of plain-text copies and
+`API_FunctionName` links in HTML copies. It collects **candidate names only**;
+it does not import third-party descriptions or arguments. Names that no longer
+exist remain marked `inaccessible` until independently verified.
+
+After pulling the current repository, you do **not** need to import the index
+again: the 398-name candidate list and generated probe are already committed.
 
 After regenerating `candidates.lua`, copy both `main.lua` and
 `candidates.lua` to your installed `plugins/APIProbe/` directory, reload
