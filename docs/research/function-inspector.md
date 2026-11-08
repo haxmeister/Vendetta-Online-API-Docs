@@ -80,12 +80,18 @@ error="message from protected call"
   a native crash, which is why calls must stay allowlisted and read-only.
 - The exact count of return values is saved; up to 24 positions are recorded,
   including explicit `nil` values.
-- Strings are recorded only as `type=string bytes=N`, without their content.
-- Numeric and boolean values are included. They may reveal your in-game
-  state or location, so review files before sharing.
+- String results from approved getters are now recorded with their quoted
+  contents (first 1024 bytes), original byte length, and a truncation marker
+  when necessary. Earlier captures contain only lengths.
+- Numeric and boolean values are included. Names, values and errors may reveal
+  your in-game state or location, so review reports before public sharing.
 - Table fields and userdata contents are not inspected.
 - Error messages are quoted and limited to 240 bytes; they may still contain
-  in-game details, so captures remain in the Git-ignored local directory.
+  in-game details.
+- The `share-observations.pl` report retains values and errors by default.
+  Chat-related event payloads are redacted before inclusion, but the filter
+  cannot recognize chat text copied into unrelated captures. Review the
+  report before approving its publication to the public repository.
 
 Next, inspect the same getters in different game states and compare their
 return signatures with the historical descriptions. Do not mark a function's
