@@ -219,6 +219,15 @@ local route = {
 }
 route.self = route -- ensure cyclic tables cannot crash inspection
 watched.NAVROUTE_CHANGED:OnEvent("NAVROUTE_CHANGED", route)
+route.destination = "Bractus"
+watched.NAVROUTE_CHANGED:OnEvent("NAVROUTE_CHANGED", route)
+route.destination = "Dau"
+watched.NAVROUTE_CHANGED:OnEvent("NAVROUTE_CHANGED", route)
+-- New field: this must be captured even after value-example quota fills.
+route.comment = "Different shape"
+watched.NAVROUTE_CHANGED:OnEvent("NAVROUTE_CHANGED", route)
+route.comment = nil
+route.destination = "Sedina"
 watched.CHAT_MSG_PRIVATE:OnEvent("CHAT_MSG_PRIVATE", {
     message = "private table message", speaker = "private table speaker",
 })
@@ -232,7 +241,7 @@ local whole = ""
 for i = baseline + 1, #frames do
     category, name, body = decode(frames[i])
     assert(category == "snapshot" and name == "event-watch")
-    assert(string.find(body, "format=api-event-watch-v1", 1, true))
+    assert(string.find(body, "format=api-event-watch-v2", 1, true))
     assert(string.find(body, "candidate_count=214", 1, true))
     whole = whole .. body
 end
@@ -242,6 +251,14 @@ assert(string.find(whole, "occurrences=30", 1, true))
 assert(string.find(whole, "Asteroid", 1, true), "non-chat samples retain values")
 assert(string.find(whole, '["destination"]="Sedina"', 1, true),
     "non-chat table preview should record actual string values")
+assert(string.find(whole, '["destination"]="Bractus"', 1, true),
+    "second value with unchanged shape should be captured automatically")
+assert(not string.find(whole, '["destination"]="Dau"', 1, true),
+    "third value with unchanged shape should respect the per-shape cap")
+assert(string.find(whole, '["comment"]="Different shape"', 1, true),
+    "changed table fields should be captured automatically")
+assert(string.find(whole, "shape=", 1, true),
+    "snapshots must record table shape metadata")
 assert(string.find(whole, '["length"]=2', 1, true),
     "nested table preview should record numeric values")
 assert(string.find(whole, '["valid"]=true', 1, true),
@@ -257,6 +274,8 @@ assert(not string.find(whole, "private conversation", 1, true),
     "chat content must not be collected")
 assert(not string.find(whole, "private recipient", 1, true),
     "chat activation must not expose recipient")
+assert(not string.find(whole, "private table speaker", 1, true),
+    "chat field names and scalar values must stay private")
 local after_flush = #frames
 run("flush")
 assert(#frames == after_flush, "unchanged signatures should not be sent twice")
