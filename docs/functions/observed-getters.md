@@ -53,15 +53,15 @@ Without a target, the function returned **no values** (not a single `nil`) in tw
 
 When an asteroid was targeted, it returned seven positions:
 
-```lua
--- Observed with an asteroid selected: seven return values
+```text
+# Observed with an asteroid selected: seven return values
 "Asteroid", nil, 1186.8591428641, nil, nil, nil, nil
 ```
 
 When an NPC ship was targeted, it also returned seven:
 
-```lua
--- Observed with an NPC ship selected: seven return values
+```text
+# Observed with an NPC ship selected: seven return values
 "*Station Guard Cra-Ha Halina", 1, 394.33755765207, 9, "", "Vulture", nil
 ```
 
