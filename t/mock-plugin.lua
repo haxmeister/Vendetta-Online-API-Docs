@@ -91,16 +91,30 @@ assert(string.find(body, "arg2 type=number value=3", 1, true))
 run("unwatch", "SECTOR_LOADED")
 assert(watched.SECTOR_LOADED == nil)
 
+local expected = #load_in_env("plugin/APIProbe/candidates.lua")
 run("scan")
-assert(#frames > 2)
-category, name, body = decode(frames[3])
-assert(category == "snapshot" and name == "functions")
-assert(string.find(body, "format=api-probe-v1", 1, true))
-assert(string.find(body, "source=generated-candidates", 1, true))
-assert(string.find(body, "candidate_count=28", 1, true))
-assert(string.find(body, "RegisterEvent\tfunction", 1, true))
-assert(string.find(body, "GetCurrentSectorid\tfunction", 1, true))
-assert(string.find(body, "GetCharInfo\tinaccessible", 1, true))
+assert(#frames == 2 + math.ceil(expected / 150), "unexpected snapshot count")
+local rows, statuses = 0, {}
+for index = 3, #frames do
+    category, name, body = decode(frames[index])
+    assert(category == "snapshot" and name == "functions")
+    assert(string.find(body, "format=api-probe-v1", 1, true))
+    assert(string.find(body, "source=generated-candidates", 1, true))
+    assert(string.find(body, "candidate_count=" .. expected, 1, true))
+    assert(string.find(body, "part=" .. (index - 2), 1, true))
+    for line in string.gmatch(body, "[^\n]+") do
+        local id, status = string.match(line, "^([A-Za-z_][A-Za-z0-9_]*)\t([a-z]+)$")
+        if id then
+            assert(statuses[id] == nil, "duplicate: " .. id)
+            statuses[id] = status
+            rows = rows + 1
+        end
+    end
+end
+assert(rows == expected, "lost function candidates")
+assert(statuses.RegisterEvent == "function")
+assert(statuses.GetCurrentSectorid == "function")
+assert(statuses.GetCharInfo == "inaccessible")
 run("stop")
 assert(next(watched) == nil)
 print("PASS: APIProbe strict-global mock and generated probes")
