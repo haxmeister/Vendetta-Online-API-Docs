@@ -123,7 +123,8 @@ plugins/
 │   └── client.lua
 └── APIProbe/
     ├── main.lua
-    └── candidates.lua
+    ├── candidates.lua
+    └── inspections.lua
 ~~~
 
 Start the Perl collector first, then launch VO (or reload the interface).
@@ -134,6 +135,9 @@ Nothing is sent automatically. Use these commands in the VO chat console:
 | /apidocs connect | Connect to the local collector |
 | /apidocs test | Send a two-line test observation |
 | /apidocs scan | Check the generated candidate list and record types or accessibility |
+| /apidocs inspect list | Show the approved read-only getters |
+| /apidocs inspect GetCurrentSectorid | Call one approved getter and record return types |
+| /apidocs inspect all | Inspect all 12 approved getters once |
 | /apidocs watch SECTOR_LOADED | Observe up to 20 occurrences of one event |
 | /apidocs unwatch SECTOR_LOADED | Stop watching the event |
 | /apidocs status | Report connection and watch count |
@@ -187,6 +191,39 @@ again: the 398-name candidate list and generated probe are already committed.
 After regenerating `candidates.lua`, copy both `main.lua` and
 `candidates.lua` to your installed `plugins/APIProbe/` directory, reload
 the interface, connect, and run `/apidocs scan` again.
+
+### Inspect read-only getters
+
+After completing the function-name scan, use the separate, manually reviewed
+`inspections.lua` allowlist to collect return-value observations:
+
+~~~text
+/apidocs connect
+/apidocs inspect list
+/apidocs inspect GetCurrentSectorid
+/apidocs inspect all
+~~~
+
+**Inspection is opt-in.** No functions run on plugin load or during
+`/apidocs scan`. Only the 12 getter closures declared in `inspections.lua`
+may be invoked, and only by `/apidocs inspect NAME` or `inspect all`.
+Unknown names are rejected. This is not a generic function executor.
+
+Each call creates a file in `captures/function/<Name>/`. The capture
+includes its success/error status, exact number of returned values, types
+(including nil), numerical/boolean scalar values, and byte lengths of
+strings. **String contents, table fields and userdata are not transmitted**.
+Errors are caught with `pcall` and included as bounded, quoted messages.
+The collector and its wire protocol are unchanged.
+
+Functions may return different results when docked, in flight, or targeting
+another ship. For a useful first sample, run `inspect all` while docked;
+afterward you can inspect selected getters again in space. An error is
+itself an observation, not proof the function is broken.
+
+See [function-inspector.md](docs/research/function-inspector.md) for the
+whitelist and output format. Copy **all three** APIProbe Lua files when
+updating the installed plugin.
 
 Event observation is **opt-in per event**. Watch events you explicitly want
 to investigate; this tool does not enumerate all possible event names.
