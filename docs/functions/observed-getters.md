@@ -4,7 +4,7 @@
 
 These 12 names were invoked by the explicit APIProbe inspection allowlist five times each. **All 60 calls succeeded**, but certain functions returned zero values or nils when their requested game state was unavailable. The five observation rounds covered no target (including one docked round), an asteroid target, and an NPC ship target at two distances.
 
-[Original captures and values](../research/capture-summary.md) · [Function-name inventory](../research/2026-11-08-full-function-survey.md)
+[Reviewed capture batch](../research/2026-11-08-observation-review.md) · [Function-name inventory](../research/2026-11-08-full-function-survey.md)
 
 The notation below describes **observed returns**, not arguments. Optional types are only those seen in these five samples. Calls with other game objects or contexts may differ.
 
