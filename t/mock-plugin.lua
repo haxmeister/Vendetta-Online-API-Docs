@@ -168,8 +168,12 @@ assert(calls.target == 1)
 category, name, body = decode(frames[#frames])
 assert(string.find(body, "returns=4", 1, true))
 assert(string.find(body, "return1 type=string bytes=", 1, true))
-assert(not string.find(body, "private player name", 1, true),
-    "do not transmit potentially private target name")
+assert(string.find(body, "return1 type=string value=", 1, true),
+    "capture text from approved getter")
+assert(string.find(body, "private player name", 1, true),
+    "preserve getter string contents for documentation")
+assert(string.find(body, "bytes=", 1, true),
+    "preserve original byte length")
 assert(string.find(body, "return4 type=nil", 1, true))
 
 run("inspect", "GetTargetDistance")
