@@ -11,48 +11,48 @@ These are observed callback arguments **after the event name** passed into `OnEv
 
 | Event name | Observed callback argument types | Occurrences | Example arguments from the game |
 | --- | --- | ---: | --- |
-| `ACTIVATE_CHAT_CHANNEL` | none | 1 | `()` |
-| `CHAT_CANCELLED` | none | 1 | `()` |
-| `CHAT_DONE` | none | 1 | `()` |
-| `CHAT_MSG_BARENTER` | (`table`) | 1 | one table argument (contents redacted) |
-| `CHAT_MSG_BARLIST` | (`table`) | 1 | one table argument (contents redacted) |
-| `CHAT_MSG_SECTORD_SECTOR` | (`table`) | 1 | one table argument (contents redacted) |
-| `CHAT_MSG_SERVER_SECTOR` | (`table`) | 4 | one table argument (contents redacted) |
-| `CINEMATIC_START` | (`boolean`) **or** (`number`) | 9 | `(false)` or `(4)` |
-| `COMMAND` | (`number`) **or** (`number`, `table`) | 4 | `(number)` or `(number, table)`; values redacted |
-| `DESIRED_SPEED_CHANGED` | none | 120 | `()` |
-| `ENTER_ZONE_dock` | (`string`) | 1 | `("dock")` |
-| `ENTER_ZONE_NFZ` | (`string`) | 2 | `("NFZ")` |
-| `ENTER_ZONE_wormhole` | (`string`) | 2 | `("wormhole")` |
-| `ENTERED_STATION` | none | 1 | `()` |
-| `ENTERING_STATION` | none | 1 | `()` |
-| `HUD_HIDE` | none | 10 | `()` |
-| `HUD_SHOW` | (`string`) | 5 | `("ship")` |
-| `LEAVE_ZONE_dock` | (`string`) | 1 | `("dock")` |
-| `LEAVE_ZONE_NFZ` | (`string`) | 2 | `("NFZ")` |
-| `LEAVE_ZONE_wormhole` | (`string`) | 1 | `("wormhole")` |
-| `LEAVING_STATION` | none | 1 | `()` |
-| `MISSIONLIST_UPDATED` | (`nil`) | 12 | `(nil)` — one actual nil argument |
-| `MSG_NOTIFICATION` | (`string`, `number`, `boolean`, `boolean`) | 3 | `("Press the Activate key to enter wormhole to Sedina.", 5000, false, false)` |
-| `NAVMENU_TOGGLE` | none | 1 | `()` |
-| `NAVROUTE_CHANGED` | (`table`) | 2 | one table argument; shallow preview `{"1": number}` |
-| `PLAYER_ENTERED_SECTOR` | (`number`) | 17 | `(30444115)` |
-| `PLAYER_LEFT_SECTOR` | (`number`) | 30 | `(30445388)` |
-| `PLAYER_STATS_UPDATED` | (`number`) | 4 | `(345929)` |
-| `PLAYER_UPDATE` | (`number`) | 9 | `(345929)` |
-| `PLAYER_UPDATE_STATS` | (`number`) | 4 | `(345929)` |
-| `PLAYERLIST_CLOSE` | none | 1 | `()` |
-| `SECTOR_CHANGED` | (`number`) | 4 | `(5570)` |
-| `SECTOR_LOADED` | none | 4 | `()` |
-| `SHIP_SPAWN_CINEMATIC_FINISHED` | none | 5 | `()` |
-| `SHIP_SPAWNED` | none | 5 | `()` |
-| `SHOW_STATION` | none | 1 | `()` |
-| `STORM_STARTED` | none | 1 | `()` |
-| `STORM_STOPPED` | none | 3 | `()` |
-| `TARGET_CHANGED` | none | 2 | `()` |
-| `TRANSACTION_COMPLETED` | (`number`) | 1 | `(0)` |
-| `UPDATE_NEWS_HEADLINES` | none | 4 | `()` |
-| `WARP_OUT_CINEMATIC_FINISHED` | none | 4 | `()` |
+| [`ACTIVATE_CHAT_CHANNEL`](ACTIVATE_CHAT_CHANNEL.md) | none | 1 | `()` |
+| [`CHAT_CANCELLED`](CHAT_CANCELLED.md) | none | 1 | `()` |
+| [`CHAT_DONE`](CHAT_DONE.md) | none | 1 | `()` |
+| [`CHAT_MSG_BARENTER`](CHAT_MSG_BARENTER.md) | (`table`) | 1 | one table argument (contents redacted) |
+| [`CHAT_MSG_BARLIST`](CHAT_MSG_BARLIST.md) | (`table`) | 1 | one table argument (contents redacted) |
+| [`CHAT_MSG_SECTORD_SECTOR`](CHAT_MSG_SECTORD_SECTOR.md) | (`table`) | 1 | one table argument (contents redacted) |
+| [`CHAT_MSG_SERVER_SECTOR`](CHAT_MSG_SERVER_SECTOR.md) | (`table`) | 4 | one table argument (contents redacted) |
+| [`CINEMATIC_START`](CINEMATIC_START.md) | (`boolean`) **or** (`number`) | 9 | `(false)` or `(4)` |
+| [`COMMAND`](COMMAND.md) | (`number`) **or** (`number`, `table`) | 4 | `(number)` or `(number, table)`; values redacted |
+| [`DESIRED_SPEED_CHANGED`](DESIRED_SPEED_CHANGED.md) | none | 120 | `()` |
+| [`ENTER_ZONE_dock`](ENTER_ZONE_dock.md) | (`string`) | 1 | `("dock")` |
+| [`ENTER_ZONE_NFZ`](ENTER_ZONE_NFZ.md) | (`string`) | 2 | `("NFZ")` |
+| [`ENTER_ZONE_wormhole`](ENTER_ZONE_wormhole.md) | (`string`) | 2 | `("wormhole")` |
+| [`ENTERED_STATION`](ENTERED_STATION.md) | none | 1 | `()` |
+| [`ENTERING_STATION`](ENTERING_STATION.md) | none | 1 | `()` |
+| [`HUD_HIDE`](HUD_HIDE.md) | none | 10 | `()` |
+| [`HUD_SHOW`](HUD_SHOW.md) | (`string`) | 5 | `("ship")` |
+| [`LEAVE_ZONE_dock`](LEAVE_ZONE_dock.md) | (`string`) | 1 | `("dock")` |
+| [`LEAVE_ZONE_NFZ`](LEAVE_ZONE_NFZ.md) | (`string`) | 2 | `("NFZ")` |
+| [`LEAVE_ZONE_wormhole`](LEAVE_ZONE_wormhole.md) | (`string`) | 1 | `("wormhole")` |
+| [`LEAVING_STATION`](LEAVING_STATION.md) | none | 1 | `()` |
+| [`MISSIONLIST_UPDATED`](MISSIONLIST_UPDATED.md) | (`nil`) | 12 | `(nil)` — one actual nil argument |
+| [`MSG_NOTIFICATION`](MSG_NOTIFICATION.md) | (`string`, `number`, `boolean`, `boolean`) | 3 | `("Press the Activate key to enter wormhole to Sedina.", 5000, false, false)` |
+| [`NAVMENU_TOGGLE`](NAVMENU_TOGGLE.md) | none | 1 | `()` |
+| [`NAVROUTE_CHANGED`](NAVROUTE_CHANGED.md) | (`table`) | 2 | one table argument; shallow preview `{"1": number}` |
+| [`PLAYER_ENTERED_SECTOR`](PLAYER_ENTERED_SECTOR.md) | (`number`) | 17 | `(30444115)` |
+| [`PLAYER_LEFT_SECTOR`](PLAYER_LEFT_SECTOR.md) | (`number`) | 30 | `(30445388)` |
+| [`PLAYER_STATS_UPDATED`](PLAYER_STATS_UPDATED.md) | (`number`) | 4 | `(345929)` |
+| [`PLAYER_UPDATE`](PLAYER_UPDATE.md) | (`number`) | 9 | `(345929)` |
+| [`PLAYER_UPDATE_STATS`](PLAYER_UPDATE_STATS.md) | (`number`) | 4 | `(345929)` |
+| [`PLAYERLIST_CLOSE`](PLAYERLIST_CLOSE.md) | none | 1 | `()` |
+| [`SECTOR_CHANGED`](SECTOR_CHANGED.md) | (`number`) | 4 | `(5570)` |
+| [`SECTOR_LOADED`](SECTOR_LOADED.md) | none | 4 | `()` |
+| [`SHIP_SPAWN_CINEMATIC_FINISHED`](SHIP_SPAWN_CINEMATIC_FINISHED.md) | none | 5 | `()` |
+| [`SHIP_SPAWNED`](SHIP_SPAWNED.md) | none | 5 | `()` |
+| [`SHOW_STATION`](SHOW_STATION.md) | none | 1 | `()` |
+| [`STORM_STARTED`](STORM_STARTED.md) | none | 1 | `()` |
+| [`STORM_STOPPED`](STORM_STOPPED.md) | none | 3 | `()` |
+| [`TARGET_CHANGED`](TARGET_CHANGED.md) | none | 2 | `()` |
+| [`TRANSACTION_COMPLETED`](TRANSACTION_COMPLETED.md) | (`number`) | 1 | `(0)` |
+| [`UPDATE_NEWS_HEADLINES`](UPDATE_NEWS_HEADLINES.md) | none | 4 | `()` |
+| [`WARP_OUT_CINEMATIC_FINISHED`](WARP_OUT_CINEMATIC_FINISHED.md) | none | 4 | `()` |
 
 ## Findings and interpretation
 

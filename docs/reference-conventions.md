@@ -25,6 +25,9 @@ Notes: One docked and four undocked observations; IDs change by station.
 
 ## Events
 
+Each event has its own page in the [event reference](events/index.md). The combined survey is an index of observations, not a replacement for per-event documentation.
+
+
 Events **deliver callback arguments**; these are not values returned by the event handler. Our observer uses `OnEvent(event_name, ...)`, so examples show the arguments **after** the event-name argument.
 
 Example:
