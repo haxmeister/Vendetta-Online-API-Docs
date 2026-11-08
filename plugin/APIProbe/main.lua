@@ -99,7 +99,9 @@ local function quote(value)
                     or key_type == "boolean" then
                 local key_text
                 if key_type == "string" then
-                    key_text = "[" .. string.format("%q", key) .. "]"
+                    local short_key = string.sub(key, 1, 128)
+                    key_text = "[" .. string.format("%q", short_key) .. "]"
+                    if #key > 128 then key_text = key_text .. "[key truncated]" end
                 else
                     key_text = "[" .. tostring(key) .. "]"
                 end
