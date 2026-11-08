@@ -224,6 +224,7 @@ watched.NAVROUTE_CHANGED:OnEvent("NAVROUTE_CHANGED", route)
 route.destination = "Dau"
 watched.NAVROUTE_CHANGED:OnEvent("NAVROUTE_CHANGED", route)
 -- New field: this must be captured even after value-example quota fills.
+route.destination = "Sedina"
 route.comment = "Different shape"
 watched.NAVROUTE_CHANGED:OnEvent("NAVROUTE_CHANGED", route)
 route.comment = nil
