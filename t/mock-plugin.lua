@@ -212,6 +212,16 @@ watched.TARGET_CHANGED:OnEvent("TARGET_CHANGED", "Another target", 13)
 watched.SECTOR_CHANGED:OnEvent("SECTOR_CHANGED", 5597)
 watched.CHAT_MSG_PRIVATE:OnEvent("CHAT_MSG_PRIVATE", "private conversation")
 watched.ACTIVATE_CHAT_PRIVATE:OnEvent("ACTIVATE_CHAT_PRIVATE", "private recipient")
+local route = {
+    [1] = 5570,
+    destination = "Sedina",
+    nested = {length = 2, valid = true},
+}
+route.self = route -- ensure cyclic tables cannot crash inspection
+watched.NAVROUTE_CHANGED:OnEvent("NAVROUTE_CHANGED", route)
+watched.CHAT_MSG_PRIVATE:OnEvent("CHAT_MSG_PRIVATE", {
+    message = "private table message", speaker = "private table speaker",
+})
 for i = 1, 30 do
     watched.HUD_UPDATE:OnEvent("HUD_UPDATE", i)
 end
@@ -230,7 +240,19 @@ assert(string.find(whole, "event=TARGET_CHANGED", 1, true))
 assert(string.find(whole, "event=SECTOR_CHANGED", 1, true))
 assert(string.find(whole, "occurrences=30", 1, true))
 assert(string.find(whole, "Asteroid", 1, true), "non-chat samples retain values")
+assert(string.find(whole, '["destination"]="Sedina"', 1, true),
+    "non-chat table preview should record actual string values")
+assert(string.find(whole, '["length"]=2', 1, true),
+    "nested table preview should record numeric values")
+assert(string.find(whole, '["valid"]=true', 1, true),
+    "nested table preview should record booleans")
+assert(string.find(whole, "<cycle>", 1, true),
+    "cycles should be detected without recursion")
 assert(string.find(whole, "event=CHAT_MSG_PRIVATE", 1, true))
+assert(not string.find(whole, "private table message", 1, true),
+    "chat table contents must never be inspected")
+assert(not string.find(whole, "private table speaker", 1, true),
+    "chat table player names must never be inspected")
 assert(not string.find(whole, "private conversation", 1, true),
     "chat content must not be collected")
 assert(not string.find(whole, "private recipient", 1, true),
@@ -248,6 +270,15 @@ assert(string.find(body, "arg1 type=string", 1, true))
 assert(not string.find(body, "secret explicit chat", 1, true),
     "explicit chat capture must also be type-only")
 run("unwatch", "CHAT_MSG_PRIVATE")
+
+-- Focused watches should capture table fields per occurrence.
+run("watch", "NAVROUTE_CHANGED")
+watched.NAVROUTE_CHANGED:OnEvent("NAVROUTE_CHANGED", route)
+category, name, body = decode(frames[#frames])
+assert(category == "event" and name == "NAVROUTE_CHANGED")
+assert(string.find(body, '["destination"]="Sedina"', 1, true))
+assert(string.find(body, '["length"]=2', 1, true))
+run("unwatch", "NAVROUTE_CHANGED")
 
 run("stop")
 assert(next(watched) == nil)
