@@ -9,7 +9,23 @@ function UnregisterEvent(handler, name)
     assert(watched[name] == handler)
     watched[name] = nil
 end
-function GetCurrentSectorid() return 42 end
+local calls = {sector = 0, health = 0, target = 0, distance = 0}
+function GetCurrentSectorid()
+    calls.sector = calls.sector + 1
+    return 42
+end
+function GetActiveShipHealth()
+    calls.health = calls.health + 1
+    return 0.8, nil, 75
+end
+function GetTargetInfo()
+    calls.target = calls.target + 1
+    return "private player name\\nwith newline", 0.5, 100, nil
+end
+function GetTargetDistance()
+    calls.distance = calls.distance + 1
+    error("simulated missing target")
+end
 
 local TCP = {}
 function TCP.Connect(host, port, options)
@@ -53,6 +69,9 @@ dofile = function(path)
     if path == "candidates.lua" then
         return load_in_env("plugin/APIProbe/candidates.lua")
     end
+    if path == "inspections.lua" then
+        return load_in_env("plugin/APIProbe/inspections.lua")
+    end
     return real_dofile(path)
 end
 load_in_env("plugin/APIProbe/main.lua")
@@ -70,6 +89,9 @@ local function decode(wire)
     return category, name, body
 end
 
+run("inspect", "list")
+run("inspect", "GetCurrentSectorid")
+assert(calls.sector == 0, "inspection must not call getters without connection")
 run("test")
 assert(#frames == 0, "should not send without connection")
 run("connect")
@@ -115,6 +137,58 @@ assert(rows == expected, "lost function candidates")
 assert(statuses.RegisterEvent == "function")
 assert(statuses.GetCurrentSectorid == "function")
 assert(statuses.GetCharInfo == "inaccessible")
+-- The inspector must run only explicitly allowlisted getters.
+local approved = load_in_env("plugin/APIProbe/inspections.lua")
+local before_inspect = #frames
+run("inspect", "RunTutorial")
+run("inspect", "GetMoney")
+assert(#frames == before_inspect, "unapproved calls must not capture")
+assert(calls.sector == 0, "scan must not invoke getters")
+
+run("inspect", "GetCurrentSectorid")
+assert(calls.sector == 1)
+category, name, body = decode(frames[#frames])
+assert(category == "function" and name == "GetCurrentSectorid")
+assert(string.find(body, "format=api-inspect-v1", 1, true))
+assert(string.find(body, "source=approved-no-arg", 1, true))
+assert(string.find(body, "result=ok", 1, true))
+assert(string.find(body, "returns=1", 1, true))
+assert(string.find(body, "return1 type=number value=42", 1, true))
+
+run("inspect", "GetActiveShipHealth")
+assert(calls.health == 1)
+category, name, body = decode(frames[#frames])
+assert(category == "function" and name == "GetActiveShipHealth")
+assert(string.find(body, "returns=3", 1, true))
+assert(string.find(body, "return2 type=nil", 1, true))
+assert(string.find(body, "return3 type=number value=75", 1, true))
+
+run("inspect", "GetTargetInfo")
+assert(calls.target == 1)
+category, name, body = decode(frames[#frames])
+assert(string.find(body, "returns=4", 1, true))
+assert(string.find(body, "return1 type=string bytes=", 1, true))
+assert(not string.find(body, "private player name", 1, true),
+    "do not transmit potentially private target name")
+assert(string.find(body, "return4 type=nil", 1, true))
+
+run("inspect", "GetTargetDistance")
+assert(calls.distance == 1)
+category, name, body = decode(frames[#frames])
+assert(string.find(body, "result=error", 1, true))
+assert(string.find(body, "simulated missing target", 1, true))
+
+local before_all = #frames
+run("inspect", "all")
+assert(#frames == before_all + #approved, "all must inspect only approved getters")
+assert(calls.sector == 2 and calls.health == 2
+    and calls.target == 2 and calls.distance == 2)
+for i = before_all + 1, #frames do
+    category, name, body = decode(frames[i])
+    assert(category == "function" and type(name) == "string")
+    assert(string.find(body, "source=approved-no-arg", 1, true))
+end
+
 run("stop")
 assert(next(watched) == nil)
-print("PASS: APIProbe strict-global mock and generated probes")
+print("PASS: APIProbe strict-global scan, allowlisted getter inspection, and events")
