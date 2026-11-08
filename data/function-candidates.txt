@@ -1,0 +1,31 @@
+# Curated initial candidates from the 2026-11-08 VO APIProbe scan.
+# Candidate names, not proof of API support or behavior.
+# Additional names from https://vendetta-online.com/x/msgboard/16/27297?page=2
+GetActiveShipName
+GetCharInfo
+GetCharacterID
+GetCurrentCharId
+GetCurrentSectorid
+GetCurrentStationid
+GetCurrentSystemid
+GetInventoryItemInfo
+GetInventoryItemName
+GetLastShipLoadout
+GetPlayerFaction
+GetPlayerHealth
+GetPlayerID
+GetPlayerName
+GetSectorAlignment
+GetSectorName
+GetTargetInfo
+LoadSystemNotes
+PlayerInventoryPairs
+ProcessEvent
+RegisterEvent
+RegisterUserCommand
+ReloadInterface
+SaveSystemNotes
+TCPSocket
+UnregisterEvent
+iup
+rmlui
