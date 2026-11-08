@@ -39,8 +39,9 @@ my $reviewed_through;
 if (!$all && $captures eq $default_captures && -f $reviewed_file) {
     open my $prior, '<', $reviewed_file or die "cannot read $reviewed_file: $!\n";
     while (my $line = <$prior>) {
-        $line =~ s/\s*#.*\z//;
-        $line =~ s/\A\s+|\s+\z//g;
+        chomp $line;
+        $line =~ s/#.*\z//;  # whole-line and inline comments
+        $line =~ s/\A\s+|\s+\z//g;  # blanks, including CRLF
         next if $line eq '';
         die "invalid reviewed-through timestamp: $line\n"
             unless $line =~ /\A\d{8}T\d{6}\.\d{6}Z\z/;
