@@ -32,7 +32,20 @@ dofile = function(path)
     return real_dofile(path)
 end
 
-real_dofile("plugin/APIProbe/main.lua")
+-- Emulate Vendetta's strict-global lookup in the plugin environment.
+-- An attempt to read _G must fail, as it does in the real game.
+local chunk = assert(loadfile("plugin/APIProbe/main.lua"))
+local strict_environment = {}
+setmetatable(strict_environment, {
+    __index = function(_, key)
+        if key == "_G" then
+            error("attempt to read from undeclared variable _G")
+        end
+        return _G[key]
+    end,
+})
+setfenv(chunk, strict_environment)
+chunk()
 dofile = real_dofile
 assert(type(commands.apidocs) == "function", "command was registered")
 
