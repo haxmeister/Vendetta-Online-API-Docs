@@ -1,6 +1,6 @@
 # Broad event observation
 
-**Status:** Implemented; awaiting an in-game integration test.
+**Status:** In-game capture verified November 8, 2026. The first broad watch observed 42 distinct events and 44 argument-type signatures, delivered in one snapshot. [See the observed event reference.](2026-11-08-live-event-survey.md)
 
 The historical Vendetta Lua `Eventtype` reference lists 215 entries, with `PLAYERLIST_TOGGLE` repeated. APIProbe contains **214 distinct event names** in [`events.lua`](../../plugin/APIProbe/events.lua). This is a *candidate list*, not proof that all names can be registered or that they still fire.
 
