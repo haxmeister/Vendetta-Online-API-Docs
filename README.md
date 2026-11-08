@@ -122,7 +122,8 @@ plugins/
 ├── TCP/
 │   └── client.lua
 └── APIProbe/
-    └── main.lua
+    ├── main.lua
+    └── candidates.lua
 ~~~
 
 Start the Perl collector first, then launch VO (or reload the interface).
@@ -132,7 +133,7 @@ Nothing is sent automatically. Use these commands in the VO chat console:
 | --- | --- |
 | /apidocs connect | Connect to the local collector |
 | /apidocs test | Send a two-line test observation |
-| /apidocs scan | Check a curated list of known API candidates and record their types or accessibility |
+| /apidocs scan | Check the generated candidate list and record types or accessibility |
 | /apidocs watch SECTOR_LOADED | Observe up to 20 occurrences of one event |
 | /apidocs unwatch SECTOR_LOADED | Stop watching the event |
 | /apidocs status | Report connection and watch count |
@@ -144,16 +145,42 @@ captures/note/connection_test/ on the Perl side. Next, run /apidocs scan
 and inspect captures/snapshot/functions/.
 
 The game's strict Lua environment does not expose `_G` or `getfenv`.
-Consequently, `scan` is **not** an exhaustive global inventory. Instead, it
-tests a small curated list of names from known API and plugin examples using
-protected reads. Each name is recorded as a Lua type (`function`, `table`,
-etc.) or `inaccessible`. This may mean missing or restricted; it is not proof
-that a function does not exist. Probes never call the named functions.
+Consequently, `scan` is **not** an exhaustive global inventory. Instead,
+`candidates.lua` contains generated protected reads for known names from API
+references and plugin examples. A read reports a Lua type (`function`,
+`table`, etc.) or `inaccessible`. This does not establish that a function
+exists or that a name belongs to the built-in API. It never calls candidates.
 
 The snapshot appears under `captures/snapshot/functions/` and identifies
-itself with `format=api-probe-v1` and `source=curated-candidates`. We will
-expand the candidate set as we import references and verify additional APIs.
-The snapshot may include names provided by other plugins.
+itself with `format=api-probe-v1` and `source=generated-candidates`.
+Larger scans split into numbered parts. The initial file contains 28 names.
+
+### Expand function candidates
+
+Edit `data/function-candidates.txt` to add new global names (one per line),
+then regenerate the Lua probe file:
+
+~~~sh
+perl tools/build-probes.pl
+texlua t/mock-plugin.lua
+~~~
+
+For the Racecar2 wiki, save its API Index page as an HTML file in your browser,
+then import its `API_FunctionName` page links:
+
+~~~sh
+perl tools/import-candidates.pl /path/to/saved-API-Index.html
+perl tools/build-probes.pl
+~~~
+
+The importer collects **candidate names only** and does not import descriptions,
+arguments, or other third-party content. Inspect the resulting name list: index
+pages may contain non-function links, and many old APIs may have been renamed.
+The Racecar2 website is not required for the first scan.
+
+After regenerating `candidates.lua`, copy both `main.lua` and
+`candidates.lua` to your installed `plugins/APIProbe/` directory, reload
+the interface, connect, and run `/apidocs scan` again.
 
 Event observation is **opt-in per event**. Watch events you explicitly want
 to investigate; this tool does not enumerate all possible event names.
