@@ -49,32 +49,85 @@ local function connect()
     if not client then info("connection failed: " .. tostring(err)) end
 end
 
+-- Bounded table inspection for documented event payloads. Inspect primitive
+-- values, field names and nested tables without invoking arbitrary __tostring
+-- methods or traversing userdata. Chat events bypass this function entirely.
+local TABLE_PREVIEW_DEPTH = 3
+local TABLE_PREVIEW_KEYS = 12
+local TABLE_PREVIEW_NODES = 64
+local TABLE_PREVIEW_BYTES = 2048
+local TABLE_STRING_BYTES = 512
+
 local function quote(value)
-    local kind = type(value)
-    if kind == "string" then
-        return string.format("%q", value) .. " (bytes=" .. #value .. ")"
-    elseif kind == "number" or kind == "boolean" or kind == "nil" then
-        return tostring(value)
-    elseif kind == "table" then
-        -- A shallow type preview; do not dump entire plugin or UI objects.
-        local parts, n = {}, 0
-        for key, entry in pairs(value) do
-            n = n + 1
-            if n > 12 then break end
-            local keykind = type(key)
-            if keykind == "string" or keykind == "number" then
-                parts[#parts + 1] = string.format("%q", tostring(key))
-                    .. ":" .. type(entry)
+    local seen, nodes = {}, 0
+
+    local function preview(v, depth)
+        local kind = type(v)
+        if kind == "string" then
+            local shortened = string.sub(v, 1, TABLE_STRING_BYTES)
+            local text = string.format("%q", shortened)
+            if #v > TABLE_STRING_BYTES then
+                text = text .. " [string truncated; bytes=" .. #v .. "]"
+            else
+                text = text .. " (bytes=" .. #v .. ")"
+            end
+            return text
+        elseif kind == "number" or kind == "boolean" or kind == "nil" then
+            return tostring(v)
+        elseif kind ~= "table" then
+            -- Do not call user-defined tostring on userdata or functions.
+            return "<" .. kind .. ">"
+        end
+        if seen[v] then return "<cycle>" end
+        if depth >= TABLE_PREVIEW_DEPTH or nodes >= TABLE_PREVIEW_NODES then
+            return "table{...}"
+        end
+        seen[v] = true
+        local entries, count, key, limited = {}, 0, nil, false
+        while true do
+            local next_key = next(v, key)  -- raw iteration, no __pairs hook
+            if next_key == nil then break end
+            key = next_key
+            count = count + 1
+            if count > TABLE_PREVIEW_KEYS or nodes >= TABLE_PREVIEW_NODES then
+                limited = true
+                break
+            end
+            nodes = nodes + 1
+            local key_type = type(key)
+            if key_type == "string" or key_type == "number"
+                    or key_type == "boolean" then
+                local key_text
+                if key_type == "string" then
+                    key_text = "[" .. string.format("%q", key) .. "]"
+                else
+                    key_text = "[" .. tostring(key) .. "]"
+                end
+                local child = rawget(v, key)
+                entries[#entries + 1] = {
+                    key = key_text,
+                    value = preview(child, depth + 1),
+                }
             end
         end
-        table.sort(parts)
-        return "table{" .. table.concat(parts, ", ")
-            .. (n > 12 and ", ..." or "") .. "}"
+        seen[v] = nil
+        table.sort(entries, function(a, b) return a.key < b.key end)
+        local parts = {}
+        for _, entry in ipairs(entries) do
+            parts[#parts + 1] = entry.key .. "=" .. entry.value
+        end
+        if limited then parts[#parts + 1] = "..." end
+        return "table{" .. table.concat(parts, ", ") .. "}"
     end
-    -- Avoid calling arbitrary __tostring metamethods on userdata.
-    return "<" .. kind .. ">"
-end
 
+    local ok, text = pcall(preview, value, 0)
+    if not ok then return "<preview error>" end
+    if #text > TABLE_PREVIEW_BYTES then
+        return string.sub(text, 1, TABLE_PREVIEW_BYTES)
+            .. "...[preview truncated]"
+    end
+    return text
+end
 
 -- A broad event watch is deliberately compact: keep at most two distinct
 -- argument-type signatures per event, with one bounded example of each.
