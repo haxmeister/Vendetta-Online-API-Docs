@@ -27,38 +27,43 @@ Play normally: dock/launch, travel, change targets, open the HUD and nav menu. T
 Watching all 214 names does **not** send every callback to the collector.
 
 - Each event keeps a count of occurrences.
-- Only its first **two distinct argument-type signatures** are sampled in a session; identical types are not recorded repeatedly.
-- Up to 16 argument positions are inspected, with a bounded example of each non-chat value.
-- **Tables now include actual primitive field values and nested table previews** (up to 3 levels, 12 keys per table, 64 field visits and 2,048 output bytes per preview). Cyclic references and unsupported values are marked rather than traversed forever.
-- Broad-watch samples are still taken only when a **new type signature** appears; to see subsequent variations in a table's contents, use `/apidocs watch EVENT_NAME` for up to 20 separate deliveries.
-- A global cap of 512 unique signatures prevents unbounded memory use.
-- Samples are buffered and sent by `flush` as `snapshot/event-watch` records, chunked to a few dozen kilobytes per file rather than creating thousands of individual event files.
-- Chat-related event values are never included, including `CHAT_*`, `ACTIVATE_CHAT_*`, `COMMAND`, and `EMOTE_ENTERED`. Their argument types remain observable.
+- The observer identifies **argument types and bounded table shapes**. The first sample of each new shape is captured, plus a second example when its actual values differ.
+- Up to **six shapes per event** and **two distinct values per shape** are sampled. Unchanged callbacks are not repeatedly saved; a high-frequency event cannot crowd out every other event.
+- Up to 16 argument positions are inspected. Nested tables include primitive values, bounded to 3 levels, 12 keys per table, 64 field visits, and 2,048 bytes per table preview. Cyclic references are handled.
+- A global cap of **512 captured examples** bounds memory for the full session. Once an event or session reaches its cap, further occurrences are still counted but their arguments are not sampled.
+- Samples are buffered and sent by `/apidocs flush` or `/apidocs stop` as `snapshot/event-watch` records, in chunks rather than a file per callback.
+- Chat-related events (`CHAT_*`, `ACTIVATE_CHAT_*`, `COMMAND`, and `EMOTE_ENTERED`) record **argument types only**. Table keys, player names, messages and argument values are not inspected or transmitted.
+- `/apidocs watch EVENT_NAME` is **optional**, for a particularly noisy, rare, or complex event when automatic samples are insufficient. It is no longer required for basic table field discovery.
 
 The event list is based on documentation last edited in March 2024. It includes events which might have been removed or which require rare circumstances; not observing an event is **not** proof that it is absent.
 
 ## Sample snapshot format
 
+The enhanced observer emits `format=api-event-watch-v2`, with an additional `shape=` field. One event can produce multiple samples with **the same argument-type signature** when the values or table layout change.
+
 ~~~text
-format=api-event-watch-v1
+format=api-event-watch-v2
 source=historical-event-candidates
 candidate_count=214
 observed_events=2
 part=1
-signature=1:number
+signature=1:table
 occurrences=3
-event=SECTOR_CHANGED
+shape=table{"destination":string}
+event=NAVROUTE_CHANGED
 arguments=1
-arg1 type=number value=5597
+arg1 type=table value=table{["destination"]="Sedina" (bytes=6)}
 
 ---
-signature=0:
-occurrences=4
-event=TARGET_CHANGED
-arguments=0
+signature=1:table
+occurrences=3
+shape=table{"destination":string}
+event=NAVROUTE_CHANGED
+arguments=1
+arg1 type=table value=table{["destination"]="Bractus" (bytes=7)}
 ~~~
 
-Values shown above are illustrative. Individual live captures should be labeled observed before promotion into the reference.
+These examples illustrate the format only: those exact `NAVROUTE_CHANGED` table values have **not** yet been observed in VO. The `occurrences` number is a total event count, not a per-example count. The older `api-event-watch-v1` captures remain useful but do not contain changing-value samples.
 
 ## Git handoff and retention
 
