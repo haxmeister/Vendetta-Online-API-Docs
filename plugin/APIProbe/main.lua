@@ -9,6 +9,11 @@ local watched = {}
 local observations = {}
 local EVENT_LIMIT = 20
 local MAX_EVENT_RECORD = 32768
+local EVENT_NAMES = dofile("events.lua")
+local all_observations = {}
+local all_signatures = 0
+local MAX_ALL_SIGNATURES_PER_EVENT = 2
+local MAX_ALL_SIGNATURES = 512
 
 local function info(message)
     print("[APIProbe] " .. message)
@@ -70,20 +75,142 @@ local function quote(value)
     return "<" .. kind .. ">"
 end
 
+
+-- A broad event watch is deliberately compact: keep at most two distinct
+-- argument-type signatures per event, with one bounded example of each.
+-- Chat-related arguments are recorded by type, never by value.
+local function is_chat_event(name)
+    return string.match(name, "^CHAT_")
+        or string.match(name, "^ACTIVATE_CHAT_")
+        or name == "COMMAND" or name == "EMOTE_ENTERED"
+end
+
+local function record_all(event, ...)
+    local record = all_observations[event]
+    if not record then
+        record = {count = 0, samples = {}, signatures = {}}
+        all_observations[event] = record
+    end
+    record.count = record.count + 1
+    if #record.samples >= MAX_ALL_SIGNATURES_PER_EVENT
+        or all_signatures >= MAX_ALL_SIGNATURES then return end
+
+    local n = select("#", ...)
+    local types, lines = {}, {"event=" .. event, "arguments=" .. n}
+    local chat = is_chat_event(event)
+    for i = 1, math.min(n, 16) do
+        local value = select(i, ...)
+        local kind = type(value)
+        types[#types + 1] = kind
+        local line = "arg" .. i .. " type=" .. kind
+        if not chat then
+            -- Limit samples even for unusually large payloads.
+            line = line .. " value=" .. string.sub(quote(value), 1, 1024)
+        end
+        lines[#lines + 1] = line
+    end
+    if n > 16 then lines[#lines + 1] = "remaining_arguments=" .. (n - 16) end
+    local signature = n .. ":" .. table.concat(types, ",")
+    if record.signatures[signature] then return end
+    record.signatures[signature] = true
+    local body = table.concat(lines, "\n")
+    if #body > 4096 then body = string.sub(body, 1, 4096) .. "\n[truncated]" end
+    record.samples[#record.samples + 1] = {
+        signature = signature, body = body,
+    }
+    all_signatures = all_signatures + 1
+end
+
+local function flush_all()
+    if not connected then
+        info("connect first to flush all-event observations")
+        return false
+    end
+    local records, observed = {}, 0
+    for name, observation in pairs(all_observations) do
+        if observation.count > 0 then observed = observed + 1 end
+        for _, sample in ipairs(observation.samples) do
+            records[#records + 1] = {
+                name = name,
+                signature = sample.signature,
+                text = "signature=" .. sample.signature .. "\n"
+                    .. "occurrences=" .. observation.count .. "\n"
+                    .. sample.body .. "\n",
+            }
+        end
+    end
+    if #records == 0 then
+        info("no new all-event signatures to flush")
+        return true
+    end
+    table.sort(records, function(a, b)
+        if a.name == b.name then return a.signature < b.signature end
+        return a.name < b.name
+    end)
+
+    -- A few snapshots rather than potentially thousands of individual files.
+    local part, chunk, bytes = 0, {}, 0
+    local function send_chunk()
+        if #chunk == 0 then return true end
+        local header = {
+            "format=api-event-watch-v1",
+            "source=historical-event-candidates",
+            "candidate_count=" .. #EVENT_NAMES,
+            "observed_events=" .. observed,
+            "part=" .. (part + 1),
+        }
+        local body = table.concat(header, "\n") .. "\n"
+            .. table.concat(chunk, "\n---\n") .. "\n"
+        local ok, err = send_record("snapshot", "event-watch", body)
+        if not ok then return nil, err end
+        part = part + 1
+        chunk, bytes = {}, 0
+        return true
+    end
+    for _, record in ipairs(records) do
+        if bytes + #record.text > 24000 then
+            local ok, err = send_chunk()
+            if not ok then
+                info("event flush failed: " .. tostring(err))
+                return false
+            end
+        end
+        chunk[#chunk + 1] = record.text
+        bytes = bytes + #record.text
+    end
+    local ok, err = send_chunk()
+    if not ok then
+        info("event flush failed: " .. tostring(err))
+        return false
+    end
+    -- Keep signature history to avoid duplicate reports on subsequent flushes.
+    for _, observation in pairs(all_observations) do observation.samples = {} end
+    info("queued " .. #records .. " event signatures in "
+        .. part .. " snapshot records (" .. observed .. " observed events)")
+    return true
+end
+
 local observer = {}
 function observer:OnEvent(event, ...)
-    if not watched[event] then return end
+    local mode = watched[event]
+    if not mode then return end
+    if mode == "all" then
+        record_all(event, ...)
+        return
+    end
     local count = observations[event] or 0
     if count >= EVENT_LIMIT then return end
     observations[event] = count + 1
 
     local n = select("#", ...)
     local lines = {"event=" .. event, "arguments=" .. n}
-    -- Only send the first 16 arguments and bound the total record size.
+    local chat = is_chat_event(event)
+    -- Chat payloads are type-only. Other events keep bounded examples.
     for index = 1, math.min(n, 16) do
         local value = select(index, ...)
-        lines[#lines + 1] = "arg" .. index .. " type=" .. type(value)
-            .. " value=" .. quote(value)
+        local line = "arg" .. index .. " type=" .. type(value)
+        if not chat then line = line .. " value=" .. quote(value) end
+        lines[#lines + 1] = line
     end
     if n > 16 then lines[#lines + 1] = "remaining_arguments=" .. (n - 16) end
     local body = table.concat(lines, "\n") .. "\n"
@@ -110,10 +237,16 @@ local function watch(name)
         info("event name must contain only letters, digits, and underscores")
         return
     end
+    if watched[name] == "all" then
+        watched[name] = "detail"
+        observations[name] = 0
+        info("switched " .. name .. " to detailed capture")
+        return
+    end
     if watched[name] then info("already watching " .. name); return end
     local ok, err = pcall(RegisterEvent, observer, name)
     if not ok then info("unable to watch " .. name .. ": " .. tostring(err)); return end
-    watched[name] = true
+    watched[name] = "detail"
     observations[name] = 0
     info("watching " .. name .. " (maximum " .. EVENT_LIMIT .. " observations)")
 end
@@ -128,7 +261,43 @@ local function unwatch(name)
     end
 end
 
+
+local function watch_all()
+    if not connected then
+        info("connect first with /apidocs connect")
+        return
+    end
+    local registered, failed = 0, 0
+    for _, name in ipairs(EVENT_NAMES) do
+        if not watched[name] then
+            local ok = pcall(RegisterEvent, observer, name)
+            if ok then
+                watched[name] = "all"
+                registered = registered + 1
+            else
+                failed = failed + 1
+            end
+        end
+    end
+    info("watching all " .. #EVENT_NAMES .. " historical event names ("
+        .. registered .. " added, " .. failed .. " rejected); "
+        .. "up to two type signatures per event, buffered until flush/stop")
+end
+
+local function unwatch_all()
+    local count = 0
+    for name, mode in pairs(watched) do
+        if mode == "all" then
+            pcall(UnregisterEvent, observer, name)
+            watched[name] = nil
+            count = count + 1
+        end
+    end
+    info("stopped " .. count .. " broad event watches")
+end
+
 local function stop()
+    if connected then flush_all() end
     local names = {}
     for name in pairs(watched) do names[#names + 1] = name end
     for _, name in ipairs(names) do unwatch(name) end
@@ -303,9 +472,16 @@ local function command(_, args)
     elseif action == "inspect" then
         inspect(name)
     elseif action == "watch" then
-        watch(name)
+        if name == "all" then watch_all() else watch(name) end
     elseif action == "unwatch" then
-        unwatch(name)
+        if name == "all" then
+            if connected then flush_all() end
+            unwatch_all()
+        else
+            unwatch(name)
+        end
+    elseif action == "flush" then
+        flush_all()
     elseif action == "status" then
         local n = 0
         for _ in pairs(watched) do n = n + 1 end
@@ -314,7 +490,7 @@ local function command(_, args)
     elseif action == "stop" then
         stop()
     else
-        info("/apidocs connect | test | scan | inspect [list|NAME|all] | watch EVENT | unwatch EVENT | status | stop")
+        info("/apidocs connect | test | scan | inspect [list|NAME|all] | watch [EVENT|all] | unwatch [EVENT|all] | flush | status | stop")
     end
 end
 
