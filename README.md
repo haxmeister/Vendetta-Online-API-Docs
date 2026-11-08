@@ -127,6 +127,27 @@ plugins/
     └── inspections.lua
 ~~~
 
+**Linux symlink installation:** VO resolves sibling paths such as
+`../TCP/client.lua` relative to `plugins/APIProbe/`. Do **not** symlink the
+entire `APIProbe` directory into another repository: the parent path may
+no longer point to `plugins/TCP/`. Instead, create a real `plugins/APIProbe/`
+directory and symlink its Lua files individually:
+
+~~~sh
+SOURCE=/home/haxmeister/Documents/lua/Vendetta-Online-API-Docs/plugin/APIProbe
+PLUGINS="$HOME/.vendetta/plugins"  # adjust to your VO installation
+
+# Only for a currently symlinked APIProbe directory:
+[ -L "$PLUGINS/APIProbe" ] && unlink "$PLUGINS/APIProbe"
+mkdir -p "$PLUGINS/APIProbe"
+for file in main.lua candidates.lua inspections.lua; do
+    ln -sfn "$SOURCE/$file" "$PLUGINS/APIProbe/$file"
+done
+~~~
+
+This leaves the sibling `plugins/TCP/` location intact while allowing
+updates from `git pull` to appear immediately on the next interface reload.
+
 Start the Perl collector first, then launch VO (or reload the interface).
 Nothing is sent automatically. Use these commands in the VO chat console:
 
