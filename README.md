@@ -8,6 +8,7 @@ events, argument types, and observed behavior using evidence from the game.
 The reference is still being built. Start with our
 [12 observed getter signatures](docs/functions/observed-getters.md), the
 [398-name function survey](docs/research/2026-11-08-full-function-survey.md),
+the [42-event live survey](docs/events/2026-11-08-live-event-survey.md),
 and the [first 65-capture review](docs/research/2026-11-08-observation-review.md).
 
 Our first tool is a local **capture collector**, which saves observations to
