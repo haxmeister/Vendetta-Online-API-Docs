@@ -109,6 +109,37 @@ name, and capture timestamp come from the directory and filename.
 Captured data can contain player information or chat. Review files before
 publishing or sharing them.
 
+## Share observations without uploading files
+
+After collecting function or event observations, create a **sanitized report**
+from all local captures:
+
+~~~sh
+perl tools/share-observations.pl
+~~~
+
+This writes `docs/research/capture-summary.md`, containing only function and
+event names, observed return/argument counts and Lua types, and observation
+counts. It intentionally excludes string contents, numbers and boolean values,
+error messages, chat and notes. Raw `captures/` data remains local and Git
+ignored. The report is not a replacement for detailed local debugging.
+
+For a one-command GitHub handoff:
+
+~~~sh
+perl tools/share-observations.pl --push
+~~~
+
+The script **asks before committing and pushing** the sanitized report to
+your *public* GitHub repository. Review the report first. A push may also
+publish other commits that are pending locally. Once pushed, ChatGPT can read
+`docs/research/capture-summary.md` directly from GitHub without another
+file upload. Nothing is automatically uploaded from the game.
+
+For a private, detailed review, you can still upload **one TAR archive**
+of your `captures/` directory. Do not publish the raw archive to the
+public repository: event observations may contain private chat or player data.
+
 ## APIProbe (in-game discovery)
 
 The first discovery plugin is in [plugin/APIProbe](plugin/APIProbe).
