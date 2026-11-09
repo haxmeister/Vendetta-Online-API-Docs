@@ -14,7 +14,7 @@ These observations do not establish universal API signatures.
 
 - Function records: 0
 - Event records: 0
-- Snapshots: 2
+- Snapshots: 3
 - Notes: 0
 - Chat event payloads redacted: 0
 
@@ -585,5 +585,193 @@ These observations do not establish universal API signatures.
     context=callback-time-approved-getters-v1
     context.HasActiveShip=1[boolean:true]
     context.GetActiveShipHealth=10[number:0,number:0,number:0,number:0,number:0,number:0,number:0,number:10000,nil,nil]
+    
+
+### event-watch — 20261109T013730.312126Z-25441-000003.txt
+
+    format=api-event-watch-v3
+    source=historical-event-candidates
+    candidate_count=214
+    observed_events=53
+    part=1
+    signature=0:
+    occurrences=2
+    shape=redacted
+    event=ACTIVATE_CHAT_CHANNEL
+    arguments=0
+    
+    ---
+    signature=0:
+    occurrences=2
+    shape=redacted
+    event=CHAT_DONE
+    arguments=0
+    
+    ---
+    signature=1:table
+    occurrences=1
+    shape=redacted
+    event=CHAT_MSG_CONFIRMATION
+    arguments=1
+    arg1 type=table
+    
+    ---
+    signature=1:table
+    occurrences=1
+    shape=redacted
+    event=CHAT_MSG_DEATH
+    arguments=1
+    arg1 type=table
+    
+    ---
+    signature=1:table
+    occurrences=1
+    shape=redacted
+    event=CHAT_MSG_SECTORD_MISSION
+    arguments=1
+    arg1 type=table
+    
+    ---
+    signature=1:table
+    occurrences=12
+    shape=redacted
+    event=CHAT_MSG_SERVER
+    arguments=1
+    arg1 type=table
+    
+    ---
+    signature=0:
+    occurrences=11
+    shape=
+    event=CINEMATIC_START
+    arguments=0
+    context=callback-time-approved-getters-v1
+    context.PlayerInStation=1[boolean:false]
+    context.GetCurrentSectorid=1[number:4780]
+    
+    ---
+    signature=1:number
+    occurrences=4
+    shape=redacted
+    event=COMMAND
+    arguments=1
+    arg1 type=number
+    
+    ---
+    signature=1:table
+    occurrences=3
+    shape=table{20:boolean}
+    event=CONQUERED_SECTORS_UPDATED
+    arguments=1
+    arg1 type=table value=table{[20]=true}
+    
+    ---
+    signature=1:table
+    occurrences=3
+    shape=table{27:boolean}
+    event=CONQUERED_SECTORS_UPDATED
+    arguments=1
+    arg1 type=table value=table{[27]=true}
+    
+    ---
+    signature=1:table
+    occurrences=3
+    shape=table{8:boolean}
+    event=CONQUERED_SECTORS_UPDATED
+    arguments=1
+    arg1 type=table value=table{[8]=true}
+    
+    ---
+    signature=1:number
+    occurrences=3
+    shape=number
+    event=INVENTORY_ADD
+    arguments=1
+    arg1 type=number value=14172
+    
+    ---
+    signature=1:number
+    occurrences=3
+    shape=number
+    event=INVENTORY_ADD
+    arguments=1
+    arg1 type=number value=14173
+    
+    ---
+    signature=1:number
+    occurrences=3
+    shape=number
+    event=INVENTORY_REMOVE
+    arguments=1
+    arg1 type=number value=11122
+    
+    ---
+    signature=1:number
+    occurrences=3
+    shape=number
+    event=INVENTORY_REMOVE
+    arguments=1
+    arg1 type=number value=11123
+    
+    ---
+    signature=1:string
+    occurrences=11
+    shape=string
+    event=MSG_LOGOFF_TIMER
+    arguments=1
+    arg1 type=string value="10 seconds to self-destruct." (bytes=28)
+    
+    ---
+    signature=1:string
+    occurrences=11
+    shape=string
+    event=MSG_LOGOFF_TIMER
+    arguments=1
+    arg1 type=string value="9 seconds to self-destruct." (bytes=27)
+    
+    ---
+    signature=1:table
+    occurrences=5
+    shape=table{}
+    event=NAVROUTE_CHANGED
+    arguments=1
+    arg1 type=table value=table{}
+    context=callback-time-approved-getters-v1
+    context.GetCurrentSectorid=1[number:4780]
+    context.GetCurrentSystemid=1[number:19]
+    
+    ---
+    signature=0:
+    occurrences=1
+    shape=
+    event=PLAYER_DEATH_CINEMATIC_FINISHED
+    arguments=0
+    
+    ---
+    signature=4:number,number,number,number
+    occurrences=1
+    shape=number;number;number;number
+    event=PLAYER_DIED
+    arguments=4
+    arg1 type=number value=345929
+    arg2 type=number value=345929
+    arg3 type=number value=0
+    arg4 type=number value=4780
+    context=callback-time-approved-getters-v1
+    context.GetCurrentSectorid=1[number:4780]
+    context.PlayerInStation=1[boolean:false]
+    context.HasActiveShip=1[boolean:false]
+    
+    ---
+    signature=2:number,number
+    occurrences=1
+    shape=number;number
+    event=TARGET_HEALTH_UPDATE
+    arguments=2
+    arg1 type=number value=-1
+    arg2 type=number value=0
+    context=callback-time-approved-getters-v1
+    context.GetTargetInfo=7[string,number:1,number:2608.4965976593,number:3,string,string,nil]
+    context.GetTargetDistance=2[number:2608.4965976593,nil]
     
 
