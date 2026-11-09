@@ -85,3 +85,41 @@ Both sampled callbacks delivered a message string plus numeric arguments **10 an
 **Limitations:** Getter context was obtained inside the event callback; it does not establish pre-event state or callback ordering.
 
 **Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.
+
+---
+
+## Fifth live capture — November 9, 2026 UTC
+
+**Saved examples:** 2. The watcher counts event occurrences cumulatively across flushes; they are not per-example frequencies.
+
+~~~text
+signature=3:string,number,number
+shape=string;number;number
+event=TARGET_SCANNED
+arguments=3
+arg1 type=string value="Ship too far to scan\
+" (bytes=21)
+arg2 type=number value=11
+arg3 type=number value=842
+context=callback-time-approved-getters-v1
+context.GetTargetInfo=7[string,number:1,number:1062.7273874329,number:3,string,string,nil]
+context.GetTargetDistance=2[number:1062.7273874329,nil]
+~~~
+
+~~~text
+signature=3:string,number,number
+shape=string;number;number
+event=TARGET_SCANNED
+arguments=3
+arg1 type=string value="Ship too far to scan\
+" (bytes=21)
+arg2 type=number value=11
+arg3 type=number value=842
+context=callback-time-approved-getters-v1
+context.GetTargetInfo=7[string,number:1,number:1488.3341358714,number:3,string,string,nil]
+context.GetTargetDistance=2[number:1488.3341358714,nil]
+~~~
+
+Both examples delivered `"Ship too far to scan"` (ending with a newline), followed by numbers 11 and 842. Target distance varied from approximately 1062.73 to 1488.33. Neither numeric event field was the contemporaneous distance.
+
+Getter context was taken *during* the callback, so equal values are correlations rather than proof of a universal signature. [Fifth context survey](2026-11-09-fifth-live-event-survey.md), snapshots `20261109T013130.298625Z-25441-000001.txt`.

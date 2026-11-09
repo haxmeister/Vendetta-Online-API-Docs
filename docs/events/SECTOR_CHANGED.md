@@ -84,3 +84,37 @@ In both sampled callbacks, the event's sole numeric argument matched the contemp
 **Limitations:** Getter context was read during the callback, not necessarily before the event transition. A matching number is correlation evidence, not universal field semantics.
 
 **Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.
+
+---
+
+## Fifth live capture — November 9, 2026 UTC
+
+**Saved examples:** 2. The watcher counts event occurrences cumulatively across flushes; they are not per-example frequencies.
+
+~~~text
+signature=1:number
+shape=number
+event=SECTOR_CHANGED
+arguments=1
+arg1 type=number value=4735
+context=callback-time-approved-getters-v1
+context.GetCurrentSectorid=1[number:4735]
+context.GetCurrentSystemid=1[number:19]
+context.PlayerInStation=1[boolean:false]
+~~~
+
+~~~text
+signature=1:number
+shape=number
+event=SECTOR_CHANGED
+arguments=1
+arg1 type=number value=4764
+context=callback-time-approved-getters-v1
+context.GetCurrentSectorid=1[number:4764]
+context.GetCurrentSystemid=1[number:19]
+context.PlayerInStation=1[boolean:false]
+~~~
+
+Arguments 4735 and 4764 matched callback-time `GetCurrentSectorid()` exactly. Together with prior matches in different systems, this strongly supports a sector-ID interpretation for callback argument 1.
+
+Getter context was taken *during* the callback, so equal values are correlations rather than proof of a universal signature. [Fifth context survey](2026-11-09-fifth-live-event-survey.md), snapshots `20261109T013130.298625Z-25441-000001.txt`.

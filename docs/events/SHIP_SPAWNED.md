@@ -74,3 +74,33 @@ The event delivered no additional arguments. Both saved callbacks found an activ
 **Limitations:** Getter context was obtained inside the event callback; it does not establish pre-event state or callback ordering.
 
 **Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.
+
+---
+
+## Fifth live capture — November 9, 2026 UTC
+
+**Saved examples:** 2. The watcher counts event occurrences cumulatively across flushes; they are not per-example frequencies.
+
+~~~text
+signature=0:
+shape=
+event=SHIP_SPAWNED
+arguments=0
+context=callback-time-approved-getters-v1
+context.HasActiveShip=1[boolean:true]
+context.GetActiveShipHealth=10[number:0,number:0,number:0,number:0,number:0,number:0,number:0,number:7500,nil,nil]
+~~~
+
+~~~text
+signature=0:
+shape=
+event=SHIP_SPAWNED
+arguments=0
+context=callback-time-approved-getters-v1
+context.HasActiveShip=1[boolean:true]
+context.GetActiveShipHealth=10[number:0,number:0,number:0,number:0,number:0,number:0,number:0,number:10000,nil,nil]
+~~~
+
+Both samples had zero event arguments, with `HasActiveShip()` true and ten health return positions; eighth-position values were 7500 and 10000. The numeric health fields remain incompletely understood.
+
+Getter context was taken *during* the callback, so equal values are correlations rather than proof of a universal signature. [Fifth context survey](2026-11-09-fifth-live-event-survey.md), snapshots `20261109T013130.298625Z-25441-000001.txt`, `20261109T013430.297695Z-25441-000002.txt`.

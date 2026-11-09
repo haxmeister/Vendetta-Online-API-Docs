@@ -73,3 +73,33 @@ The callback still delivered **zero** arguments. Its two contextual `GetTargetIn
 **Limitations:** Getter context was obtained inside the event callback; it does not establish pre-event state or callback ordering.
 
 **Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.
+
+---
+
+## Fifth live capture — November 9, 2026 UTC
+
+**Saved examples:** 2. The watcher counts event occurrences cumulatively across flushes; they are not per-example frequencies.
+
+~~~text
+signature=0:
+shape=
+event=TARGET_CHANGED
+arguments=0
+context=callback-time-approved-getters-v1
+context.GetTargetInfo=0[]
+context.GetTargetDistance=2[nil,nil]
+~~~
+
+~~~text
+signature=0:
+shape=
+event=TARGET_CHANGED
+arguments=0
+context=callback-time-approved-getters-v1
+context.GetTargetInfo=7[string,number:1,number:1492.4592959274,number:3,string,string,nil]
+context.GetTargetDistance=2[number:1492.4592959274,nil]
+~~~
+
+Both sampled callbacks delivered **zero arguments**. One found zero `GetTargetInfo()` returns and `(nil,nil)` distance; the other found seven info returns and distance 1492.4592959274, matching `GetTargetDistance()`'s first value. The getter results are not callback arguments.
+
+Getter context was taken *during* the callback, so equal values are correlations rather than proof of a universal signature. [Fifth context survey](2026-11-09-fifth-live-event-survey.md), snapshots `20261109T013130.298625Z-25441-000001.txt`.

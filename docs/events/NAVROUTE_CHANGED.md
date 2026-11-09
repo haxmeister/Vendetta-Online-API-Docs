@@ -108,3 +108,57 @@ The populated route table carried `[1]=4764`, while the callback-time `GetCurren
 **Limitations:** Getter context was obtained inside the event callback; it does not establish pre-event state or callback ordering.
 
 **Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.
+
+---
+
+## Fifth live capture — November 9, 2026 UTC
+
+**Saved examples:** 4. The watcher counts event occurrences cumulatively across flushes; they are not per-example frequencies.
+
+~~~text
+signature=1:table
+shape=table{1:number}
+event=NAVROUTE_CHANGED
+arguments=1
+arg1 type=table value=table{[1]=4735}
+context=callback-time-approved-getters-v1
+context.GetCurrentSectorid=1[number:4764]
+context.GetCurrentSystemid=1[number:19]
+~~~
+
+~~~text
+signature=1:table
+shape=table{1:number}
+event=NAVROUTE_CHANGED
+arguments=1
+arg1 type=table value=table{[1]=4764}
+context=callback-time-approved-getters-v1
+context.GetCurrentSectorid=1[number:4735]
+context.GetCurrentSystemid=1[number:19]
+~~~
+
+~~~text
+signature=1:table
+shape=table{}
+event=NAVROUTE_CHANGED
+arguments=1
+arg1 type=table value=table{}
+context=callback-time-approved-getters-v1
+context.GetCurrentSectorid=1[number:4764]
+context.GetCurrentSystemid=1[number:19]
+~~~
+
+~~~text
+signature=1:table
+shape=table{}
+event=NAVROUTE_CHANGED
+arguments=1
+arg1 type=table value=table{}
+context=callback-time-approved-getters-v1
+context.GetCurrentSectorid=1[number:4780]
+context.GetCurrentSystemid=1[number:19]
+~~~
+
+Route tables contained `[1]=4735`, `[1]=4764`, or were empty. In both populated examples the current sector was **different** from the table entry, so this entry cannot be assumed to always represent the current sector.
+
+Getter context was taken *during* the callback, so equal values are correlations rather than proof of a universal signature. [Fifth context survey](2026-11-09-fifth-live-event-survey.md), snapshots `20261109T013130.298625Z-25441-000001.txt`, `20261109T013730.312126Z-25441-000003.txt`.
