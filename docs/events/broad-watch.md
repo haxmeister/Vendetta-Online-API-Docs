@@ -53,7 +53,8 @@ Watching all 214 names does **not** send every callback to the collector.
   getter observations; all earlier `v2` snapshots remain valid historical evidence.
 - After a successful `/apidocs stop`, the next collection session starts
   with fresh per-event sampling quotas.
-- Chat-related events (`CHAT_*`, `ACTIVATE_CHAT_*`, `COMMAND`, and `EMOTE_ENTERED`) record **argument types only**. Table keys, player names, messages and argument values are not inspected or transmitted.
+- Chat-related events (`CHAT_*`, `ACTIVATE_CHAT_*`, `COMMAND`, and `EMOTE_ENTERED`) use **the same bounded local argument previews** as other events: real table keys, nested field types, and example values are captured. New chat samples include `argN schema=...` metadata; broad-watch `shape=...` fingerprints expose table keys and nested types. The local `captures/` directory therefore contains actual message contents and should remain private.
+- Reports automatically published to the **public** GitHub repository preserve chat event names, argument types/counts, table field names/nesting/types and numeric/boolean examples. The report generator omits chat message strings and chat table value previews, including inside event-watch snapshot records. Historical captures made under the old type-only recorder cannot retroactively yield missing table keys.
 - `/apidocs watch EVENT_NAME` is **optional**, for a particularly noisy, rare, or complex event when automatic samples are insufficient. It is no longer required for basic table field discovery.
 
 The event list is based on documentation last edited in March 2024. It includes events which might have been removed or which require rare circumstances; not observing an event is **not** proof that it is absent.

@@ -12,7 +12,9 @@ the [event reference (214 individual pages; 75 observed)](docs/events/index.md),
 and the [first 65-capture review](docs/research/2026-11-08-observation-review.md).
 
 All reference entries should show **actual observed example values**, not just
-types. See the [documentation conventions](docs/reference-conventions.md)
+types. Chat table field names and nested field types are now captured too;
+local records may contain private chat text, while public reports preserve
+schemas without publishing the messages. See the [documentation conventions](docs/reference-conventions.md)
 for how we distinguish function returns from event callback arguments.
 
 For named event meanings, we also preserve [historical Racecar Eventtype notes](docs/research/racecar-eventtype-crosswalk.md), but **live captures override the 2024 reference when they disagree**.

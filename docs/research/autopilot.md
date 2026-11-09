@@ -48,7 +48,7 @@ For research, we should prefer the default broad watch plus occasional targeted 
 
 The collector listens only on localhost and is separate from the game servers. **The `assist.pl` launcher explicitly opts into unattended public publication.** Event values, target names, station identifiers and other non-chat data may become publicly visible through GitHub and remain in its commit history.
 
-Chat-related argument values are withheld by APIProbe and separately redacted by the report generator, but other sensitive text can occur in non-chat observations. Do not use unattended publication for private game sessions or sensitive material. The alternative, `perl tools/collect.pl`, collects locally without automatically publishing anything.
+APIProbe now records **bounded chat-table keys, types, nesting and example values locally**, including real strings. Treat local `captures/` as private. The public report generator keeps chat schemas (the table keys and field types developers need) and numeric/boolean argument examples, but omits private chat text and chat-table value previews. This protection applies to individual event captures **and** to chat events embedded in broad-watch snapshots. Other events may still contain sensitive values; do not use unattended publication during sensitive play. For local-only research use `perl tools/collect.pl` instead.
 
 GitHub is *not* a secure command channel for executing untrusted code. Repository control access must remain limited to collaborators you trust.
 

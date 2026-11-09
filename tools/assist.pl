@@ -96,7 +96,8 @@ say "Research bridge running (collector PID $child).";
 say "In-game: /apidocs start";
 say "Guidance changes sync from control/plan.txt every $interval seconds.";
 say "New observations will be published automatically to PUBLIC GitHub.";
-say "WARNING: non-chat captures may contain player names or other private values.";
+say "WARNING: local captures include full bounded chat text and table values.";
+say "Public GitHub reports keep chat schemas but omit private chat text.";
 say "Press Ctrl-C to stop this local bridge.";
 
 my $stopping = 0;

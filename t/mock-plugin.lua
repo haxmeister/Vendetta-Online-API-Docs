@@ -293,11 +293,11 @@ assert(string.find(whole, "private conversation", 1, true),
     "local scalar chat arguments are captured")
 assert(string.find(whole, "private recipient", 1, true),
     "local chat activation arguments are captured")
-assert(string.find(whole, '["message"]:string', 1, true),
+assert(string.find(whole, '"message":string', 1, true),
     "chat schema exposes table key names and types")
-assert(string.find(whole, '["faction"]:number', 1, true),
+assert(string.find(whole, '"faction":number', 1, true),
     "chat schema exposes nested fields")
-assert(string.find(whole, '["trusted"]:boolean', 1, true),
+assert(string.find(whole, '"trusted":boolean', 1, true),
     "chat schema handles nested tables")
 assert(string.find(whole, '["speaker"]="private table speaker"', 1, true),
     "bounded local previews include representative string values")

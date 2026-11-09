@@ -40,7 +40,7 @@ Each event page begins with an **Arguments** section. A captured event shows its
 
 The [Racecar Eventtype page (March 2024 revision)](https://vo-wiki.com/racecar2/index.php?title=Eventtype&oldid=14149) provides useful event descriptions and suggested argument names. **Our live-client callback captures take precedence when the two disagree.**
 
-Keep distinct: **Observed callback form** (captured types/counts), **Meaning confidence** (inference based on observed evidence), and **Historical Racecar reference** (old descriptions or candidate field names). A historical field name alone does **not** upgrade a meaning's confidence and must not be copied into an observed argument table as an established fact. For unobserved events, historical descriptions may provide a research direction but never create a supposed observed signature. Record concrete conflicts—such as extra arguments, different Lua types, or sample values that contradict old examples—next to the source claim. Continue to redact chat payloads; historical chat table descriptions are not equivalent to observing private fields.
+Keep distinct: **Observed callback form** (captured types/counts), **Meaning confidence** (inference based on observed evidence), and **Historical Racecar reference** (old descriptions or candidate field names). A historical field name alone does **not** upgrade a meaning's confidence and must not be copied into an observed argument table as an established fact. For unobserved events, historical descriptions may provide a research direction but never create a supposed observed signature. Record concrete conflicts—such as extra arguments, different Lua types, or sample values that contradict old examples—next to the source claim. For new captures, document chat table keys and value types from the live `shape=` and `argN schema=` records. The public handoff omits chat text and table value previews, so an old historical table description is still not evidence that a modern client delivered those keys.
 
 Use these confidence labels for the **meaning**, not for the independently observed Lua type:
 
@@ -49,7 +49,7 @@ Use these confidence labels for the **meaning**, not for the independently obser
 - **Tentative**: a plausible interpretation supported by limited evidence.
 - **Unknown**: the type/value was captured, but what the argument represents is not established.
 
-A row with **Unknown** confidence is useful: it still documents the captured position, type, and actual values without naming unverified fields. For mixed signatures (e.g. zero-or-one argument), retain each observed form. For privacy-redacted chat events, show argument types but no private values or table keys.
+A row with **Unknown** confidence is useful: it still documents the captured position, type, and actual values without naming unverified fields. For mixed signatures (e.g. zero-or-one argument), retain each observed form. For chat events, document the **observed table key names and nested field types**. Real bounded argument values are kept locally; public reports retain schemas while omitting chat text and table value previews. Earlier type-only samples remain type-only and cannot be promoted into invented field structures.
 
 
 
@@ -73,7 +73,7 @@ Examples: (false) or (4)
 Meaning of the value: not yet established
 ~~~
 
-Do not invent examples to fill gaps. For chat events, retain the argument types but omit recorded message contents, speaker names, and any other chat payload values. For table arguments, do not invent a table structure when earlier captures recorded only a shallow type preview. APIProbe's broad watcher now collects bounded nested field values and multiple examples when values or shapes differ. Distinguish newer `api-event-watch-v2` and context-enabled `api-event-watch-v3` examples from historical type-only previews, record truncation limits, and never infer a missing field was absent outside the captured sample.
+Do not invent examples to fill gaps. For chat events, keep actual field names and types from new captures but do not publish private conversation text, sender names, or other sensitive chat values from local raw captures. For table arguments, do not invent a table structure when earlier captures recorded only a shallow type preview. APIProbe's broad watcher now collects bounded nested field values and multiple examples when values or shapes differ. Distinguish newer `api-event-watch-v2` and context-enabled `api-event-watch-v3` examples from historical type-only previews, record truncation limits, and never infer a missing field was absent outside the captured sample.
 
 ## Review and retention
 
