@@ -12,6 +12,17 @@
 
 **Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
 
+## Historical Racecar reference (March 2024)
+
+**Historical description:** Racecar says this carries logoff, explosion countdown, and abort notices.
+
+**Historical argument information and comparison:** It describes one string message argument. Our client captured real countdown text with the same one-string form.
+
+**Evidence priority:** Our observed callback form, getter correlations and actual values shown in the Arguments section take precedence over old claims.
+
+**Source:** [Racecar Eventtype, revision 14149](https://vo-wiki.com/racecar2/index.php?title=Eventtype&oldid=14149); last edited March 19, 2024.
+
+
 ---
 
 ## Sources

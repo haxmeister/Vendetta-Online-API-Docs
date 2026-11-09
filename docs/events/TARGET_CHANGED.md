@@ -10,6 +10,17 @@ No positional callback arguments were observed.
 
 **Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
 
+## Historical Racecar reference (March 2024)
+
+**Historical description:** Racecar lists no callback arguments for a target change.
+
+**Historical argument information and comparison:** Our client likewise delivered **zero arguments** both with a target selected and with no target; use getter calls during the callback for details.
+
+**Evidence priority:** Our observed callback form, getter correlations and actual values shown in the Arguments section take precedence over old claims.
+
+**Source:** [Racecar Eventtype, revision 14149](https://vo-wiki.com/racecar2/index.php?title=Eventtype&oldid=14149); last edited March 19, 2024.
+
+
 ---
 
 **Callback arguments:** None (`arguments=0`).

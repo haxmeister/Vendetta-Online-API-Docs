@@ -10,6 +10,17 @@ No positional callback arguments were observed.
 
 **Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
 
+## Historical Racecar reference (March 2024)
+
+**Historical description:** Racecar describes this as firing upon entering a sector containing an ion storm.
+
+**Historical argument information and comparison:** It states that no callback arguments are passed. Our captures observed the zero-argument form with `IsStormPresent()` true.
+
+**Evidence priority:** Our observed callback form, getter correlations and actual values shown in the Arguments section take precedence over old claims.
+
+**Source:** [Racecar Eventtype, revision 14149](https://vo-wiki.com/racecar2/index.php?title=Eventtype&oldid=14149); last edited March 19, 2024.
+
+
 ---
 
 Event callbacks deliver the arguments listed below **after** the event name passed to `OnEvent(event, ...)`. `()` means zero arguments, while `(nil)` means one explicit nil.

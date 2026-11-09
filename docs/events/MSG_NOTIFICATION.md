@@ -15,6 +15,17 @@
 
 **Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
 
+## Historical Racecar reference (March 2024)
+
+**Historical description:** Racecar associates this with notification text overlaid on the center of the HUD, including inventory-full warnings.
+
+**Historical argument information and comparison:** It describes one message string followed by unspecified additional values. **Live evidence takes precedence:** our captures delivered exactly four positions in the sampled cases: `(string, number, boolean, boolean)`. The meanings of positions 2–4 are unverified.
+
+**Evidence priority:** Our observed callback form, getter correlations and actual values shown in the Arguments section take precedence over old claims.
+
+**Source:** [Racecar Eventtype, revision 14149](https://vo-wiki.com/racecar2/index.php?title=Eventtype&oldid=14149); last edited March 19, 2024.
+
+
 ---
 
 Event callbacks deliver the arguments listed below **after** the event name passed to `OnEvent(event, ...)`. `()` means zero arguments, while `(nil)` means one explicit nil.
