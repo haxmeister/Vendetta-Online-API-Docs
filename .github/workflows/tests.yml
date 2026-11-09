@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - name: Install Lua for the mock game client
+      - name: Install Lua and Racecar crawler test dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y lua5.1 lua5.4
+          sudo apt-get install -y lua5.1 lua5.4 libhtml-tree-perl liburi-perl
       - name: Run Perl tests
         run: prove -lr t
       - name: Run APIProbe strict-global mock (Lua 5.1)
