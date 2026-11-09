@@ -2,7 +2,7 @@
 
 **Status:** Behavior observed in a live Vendetta Online client, November 8, 2026. Signatures are *provisional*, not authoritative.
 
-These 12 names were invoked in two five-round sessions. **All 120 recorded calls succeeded**, but certain functions returned zero values or nils when their requested game state was unavailable. The initial five observation rounds covered no target (including one docked round), an asteroid target, and an NPC ship target at two distances.
+These 12 names were invoked in two five-round sessions and a third four-round session. **All 168 recorded calls succeeded**, but certain functions returned zero values or nils when their requested game state was unavailable. The initial five observation rounds covered no target (including one docked round), an asteroid target, and an NPC ship target at two distances.
 
 [Reviewed capture batch](../research/2026-11-08-observation-review.md) · [Function-name inventory](../research/2026-11-08-full-function-survey.md)
 
@@ -115,6 +115,48 @@ The earlier session recorded a different ship/state with `(25, 0, 0, 0, 0, 0, 25
 - Energy was `(250, 1)` in each new observation; `GetCurrentStationID()` returned nil while `PlayerInStation()` was false in every new round.
 
 **Evidence:** Five inspection rounds preceding event snapshot `20261108T233831.046307Z-24651-000061.txt` in the November 8 capture handoff.
+
+## Third getter inspection session — November 8–9, 2026 UTC
+
+Four additional inspection rounds produced **48 successful calls** (four per approved getter, no errors). They covered three readings from `"Corvus Marauder Mercenary"` and a later reading from `"Corvus Greyhound"`, including a docked state.
+
+| Getter | New recorded example return values |
+| --- | --- |
+| `GetActiveShipEnergy()` | `(250, 1)`; `(0, 0)` |
+| `GetActiveShipHealth()` | `(0, 0, 0, 0, 0, 0, 0, 10000, nil, nil)`; `(0, 0, 0, 0, 0, 0, 0, 7500, nil, nil)` |
+| `GetActiveShipName()` | `("Corvus Marauder Mercenary")`; `("Corvus Greyhound")` |
+| `GetActiveShipSpeed()` | `(3.2928614696059e-11)`; `(2.4891486167908)`; `(66.655891418457)`; plus 1 additional value |
+| `GetCurrentSectorid()` | `(4764)`; `(5076)` |
+| `GetCurrentStationID()` | `(nil)`; `(1299457)` |
+| `GetCurrentSystemid()` | `(19)`; `(20)` |
+| `GetTargetDistance()` | `(1575.5122976353, nil)`; `(311.23334543795, nil)`; `(281.22722129979, nil)`; plus 1 additional value |
+| `GetTargetInfo()` | `("Asteroid", nil, 1575.5122976353, nil, nil, nil, nil)`; `("Asteroid", nil, 311.23334543795, nil, nil, nil, nil)`; `("*Marshal Vesella Slios", 1, 281.22722129979, 3, "", "Vulture", nil)`; plus 1 additional value |
+| `HasActiveShip()` | `(true)` |
+| `IsStormPresent()` | `(false)` |
+| `PlayerInStation()` | `(false)`; `(true)` |
+
+### Health results on the two ships
+
+The observed `GetActiveShipHealth()` returns were ten positions each:
+
+~~~text
+Corvus Marauder Mercenary:
+(0, 0, 0, 0, 0, 0, 0, 10000, nil, nil)
+
+Corvus Greyhound:
+(0, 0, 0, 0, 0, 0, 0, 7500, nil, nil)
+~~~
+
+Position eight varied between these ships; its meaning is not yet proven. The two trailing nil positions remain in all 14 cumulative inspections across three batches.
+
+### Target and station context
+
+- An asteroid target produced `("Asteroid", nil, 1575.5122976353, nil, nil, nil, nil)`, with a second reading at distance `311.23334543795`.
+- A ship target produced `("*Marshal Vesella Slios", 1, 281.22722129979, 3, "", "Vulture", nil)`.
+- With no target, `GetTargetInfo()` returned **zero values**, while `GetTargetDistance()` returned `(nil, nil)`. The other targeted distance values matched the third `GetTargetInfo()` position.
+- In the final docked round, `PlayerInStation()` was `true`, `GetCurrentStationID()` returned `1299457`, and `GetActiveShipEnergy()` returned `(0, 0)`. This does not establish that docking always zeroes energy.
+
+**Evidence:** Four getter inspection rounds in the third capture handoff. Samples are real values from the current game client, not constants.
 
 ## Next validation steps
 
