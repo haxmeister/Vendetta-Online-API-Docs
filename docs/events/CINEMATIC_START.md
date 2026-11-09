@@ -61,3 +61,26 @@ arg1 type=number value=6
 This session repeated the boolean argument `false` and numeric argument `4`, and introduced numeric `6`. Consumers should not assume a single argument type.
 
 **Source:** [second event survey](2026-11-08-second-live-event-survey.md), snapshot `20261108T233831.046307Z-24651-000061.txt`.
+
+---
+
+## New observations — third collection batch (November 8–9, 2026 UTC)
+
+**Stored examples:** 1. **Observed callback form(s):** `0:`.
+
+### Recorded examples
+
+~~~text
+signature=0:
+shape=
+event=CINEMATIC_START
+arguments=0
+~~~
+
+### Interpretation
+
+**New signature:** This observation had zero callback arguments. Earlier live captures supplied one boolean or one numeric argument. Plugins must tolerate all three observed forms; 33 is the event-wide counter, not a count of zero-argument invocations.
+
+**Occurrence-count caveat:** The watcher retains event counters across flushes. The counts reported with these examples are cumulative at the time of capture; they cannot be added to counts from earlier snapshots.
+
+**Source:** [Third event survey](2026-11-08-third-live-event-survey.md), captured in `20261109T000121.364994Z-24651-000114.txt`.
