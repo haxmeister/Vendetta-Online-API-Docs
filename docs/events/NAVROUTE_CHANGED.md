@@ -46,3 +46,27 @@ Two table shapes were captured: a route with numeric key `[1]` holding `4763`, a
 - Live observation: [second event survey](2026-11-08-second-live-event-survey.md).
 - The broad observer keeps at most two example values per argument shape; the event callback count is not a per-example frequency.
 - Table previews are intentionally bounded, and userdata is not traversed. Chat-related argument values are not recorded.
+
+---
+
+## New observations — third collection batch (November 8–9, 2026 UTC)
+
+**Saved examples:** 1. **Argument signature(s):** `1:table`.
+
+### Captured examples
+
+~~~text
+signature=1:table
+shape=table{1:number}
+event=NAVROUTE_CHANGED
+arguments=1
+arg1 type=table value=table{[1]=4764}
+~~~
+
+### Interpretation
+
+The numeric route-table value in this new sample is `4764`, compared with `[1]=4763` and an empty table in earlier captures. It is a changing value in an indexed table; its exact semantic meaning remains provisional.
+
+**Occurrence-count caveat:** Event counters persist across flushes; do not sum these counts with previous snapshots.
+
+**Source:** [Third event survey](2026-11-08-third-live-event-survey.md), snapshot `20261108T234315.893757Z-24651-000062.txt`.

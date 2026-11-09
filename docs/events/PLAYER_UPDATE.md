@@ -39,3 +39,27 @@ These are representative values from a particular game state, not constants. The
 - Live observation: [second event survey](2026-11-08-second-live-event-survey.md).
 - The broad observer keeps at most two example values per argument shape; the event callback count is not a per-example frequency.
 - Table previews are intentionally bounded, and userdata is not traversed. Chat-related argument values are not recorded.
+
+---
+
+## New observations — third collection batch (November 8–9, 2026 UTC)
+
+**Saved examples:** 1. **Argument signature(s):** `1:number`.
+
+### Captured examples
+
+~~~text
+signature=1:number
+shape=number
+event=PLAYER_UPDATE
+arguments=1
+arg1 type=number value=462219
+~~~
+
+### Interpretation
+
+One numeric argument was captured (`462219`). Other sessions supplied different numbers.
+
+**Occurrence-count caveat:** Event counters persist across flushes; do not sum these counts with previous snapshots.
+
+**Source:** [Third event survey](2026-11-08-third-live-event-survey.md), snapshot `20261109T000121.364994Z-24651-000114.txt`.
