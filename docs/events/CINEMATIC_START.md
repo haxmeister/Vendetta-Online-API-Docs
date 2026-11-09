@@ -154,3 +154,72 @@ This session captured **three distinct signatures**: zero arguments, one boolean
 **Limitations:** Getter context was obtained inside the event callback; it does not establish pre-event state or callback ordering.
 
 **Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.
+
+
+---
+
+## Automated research batch — November 9, 2026 UTC
+
+**Observed callback signatures:** `1:boolean`, `1:number`, `0:`. **Saved representative examples:** 5. The `occurrences` counters are cumulative within a watching session and must not be added across flushes or treated as per-example frequencies.
+
+### Captured examples
+
+~~~text
+signature=1:boolean
+shape=boolean
+event=CINEMATIC_START
+arguments=1
+arg1 type=boolean value=false
+context=callback-time-approved-getters-v1
+context.PlayerInStation=1[boolean:false]
+context.GetCurrentSectorid=1[number:4735]
+~~~
+
+~~~text
+signature=1:boolean
+shape=boolean
+event=CINEMATIC_START
+arguments=1
+arg1 type=boolean value=false
+context=callback-time-approved-getters-v1
+context.PlayerInStation=1[boolean:false]
+context.GetCurrentSectorid=1[number:4764]
+~~~
+
+~~~text
+signature=1:number
+shape=number
+event=CINEMATIC_START
+arguments=1
+arg1 type=number value=4
+context=callback-time-approved-getters-v1
+context.PlayerInStation=1[boolean:false]
+context.GetCurrentSectorid=1[number:4764]
+~~~
+
+~~~text
+signature=1:number
+shape=number
+event=CINEMATIC_START
+arguments=1
+arg1 type=number value=6
+context=callback-time-approved-getters-v1
+context.PlayerInStation=1[boolean:false]
+context.GetCurrentSectorid=1[number:4735]
+~~~
+
+~~~text
+signature=0:
+shape=
+event=CINEMATIC_START
+arguments=0
+context=callback-time-approved-getters-v1
+context.PlayerInStation=1[boolean:false]
+context.GetCurrentSectorid=1[number:4780]
+~~~
+
+### Interpretation and limits
+
+Zero-, boolean-, and number-argument forms have all been observed; do not assume a fixed callback arity or numeric meaning.
+
+**Source:** automated capture snapshots `20261109T013130.298625Z-25441-000001.txt`, `20261109T013730.312126Z-25441-000003.txt`; permanent review: [November 9 automated session](../research/2026-11-09-automated-review.md).
