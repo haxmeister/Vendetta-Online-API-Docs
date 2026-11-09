@@ -52,3 +52,41 @@ The observed message changed destination from Latos to Sedina. The accompanying 
 - Live observation: [second event survey](2026-11-08-second-live-event-survey.md).
 - The broad observer keeps at most two example values per argument shape; the event callback count is not a per-example frequency.
 - Table previews are intentionally bounded, and userdata is not traversed. Chat-related argument values are not recorded.
+
+---
+
+## Fourth live session — callback-time context (November 9, 2026 UTC)
+
+**Callbacks:** 13. **Saved examples:** 2. Counts are event-wide, not per example.
+
+### Callback examples
+
+~~~text
+signature=4:string,number,boolean,boolean
+shape=string;number;boolean;boolean
+event=MSG_NOTIFICATION
+arguments=4
+arg1 type=string value="Press the Activate key to enter wormhole to Latos." (bytes=50)
+arg2 type=number value=5000
+arg3 type=boolean value=false
+arg4 type=boolean value=false
+~~~
+
+~~~text
+signature=4:string,number,boolean,boolean
+shape=string;number;boolean;boolean
+event=MSG_NOTIFICATION
+arguments=4
+arg1 type=string value="\127ffffffPlease use a wormhole to continue on your flight route." (bytes=62)
+arg2 type=number value=3000
+arg3 type=boolean value=false
+arg4 type=boolean value=false
+~~~
+
+### Interpretation and limitations
+
+Two notification examples retained four arguments: message string, number, false, false. One included a wormhole instruction and numeric `5000`; another used numeric `3000` with a text-control prefix. These numeric values could have different meanings; the report doesn't establish them.
+
+The context snapshot does not preserve per-callback timing or independent field verification.
+
+**Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.

@@ -54,3 +54,35 @@ This session observed the numeric argument `13304`. Previous sessions also obser
 **Occurrence-count caveat:** The observer's event counters persist between flushes. Totals reported with these samples are cumulative, not counts to add to earlier snapshots.
 
 **Source:** [Third event survey](2026-11-08-third-live-event-survey.md), snapshot `20261109T000121.364994Z-24651-000114.txt`.
+
+---
+
+## Fourth live session — callback-time context (November 9, 2026 UTC)
+
+**Callbacks:** 6. **Saved examples:** 2. Counts are event-wide, not per example.
+
+### Callback examples
+
+~~~text
+signature=1:number
+shape=number
+event=INVENTORY_UPDATE
+arguments=1
+arg1 type=number value=14164
+~~~
+
+~~~text
+signature=1:number
+shape=number
+event=INVENTORY_UPDATE
+arguments=1
+arg1 type=number value=5866
+~~~
+
+### Interpretation and limitations
+
+Two numeric examples (`14164`, `5866`) were captured. Some numbers also occur in ship events, but this aggregate snapshot cannot establish simultaneity or cause.
+
+The context snapshot does not preserve per-callback timing or independent field verification.
+
+**Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.

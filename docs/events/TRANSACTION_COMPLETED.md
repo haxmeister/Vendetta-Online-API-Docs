@@ -63,3 +63,35 @@ A single numeric argument, `6`, was observed, alongside the earlier sample `0`. 
 **Occurrence-count caveat:** Event counters persist across flushes; do not sum these counts with previous snapshots.
 
 **Source:** [Third event survey](2026-11-08-third-live-event-survey.md), snapshot `20261109T000121.364994Z-24651-000114.txt`.
+
+---
+
+## Fourth live session — callback-time context (November 9, 2026 UTC)
+
+**Callbacks:** 7. **Saved examples:** 2. Counts are event-wide, not per example.
+
+### Callback examples
+
+~~~text
+signature=1:number
+shape=number
+event=TRANSACTION_COMPLETED
+arguments=1
+arg1 type=number value=0
+~~~
+
+~~~text
+signature=1:number
+shape=number
+event=TRANSACTION_COMPLETED
+arguments=1
+arg1 type=number value=1
+~~~
+
+### Interpretation and limitations
+
+Examples delivered one numeric value, `0` or `1`. Earlier sessions included `6`. Their meaning has not been established through controlled purchases or other operations.
+
+The context snapshot does not preserve per-callback timing or independent field verification.
+
+**Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.

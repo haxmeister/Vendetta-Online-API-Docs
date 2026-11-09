@@ -1,18 +1,33 @@
 # PLAYER_HOME_CHANGED
 
-**Status:** Historical event name; no callback observations recorded yet.
+**Status:** First observed in a live VO client on November 9, 2026 UTC; argument semantics provisional.
 
-## Callback arguments and examples
+Event callback arguments are supplied after the event name to `OnEvent(event, ...)`.
 
-No callback for this name has been observed in the current collection sessions. **Argument count, types and example values are unknown.**
+## Source catalog
 
-To investigate this historical candidate, use the event watcher while performing the relevant in-game action:
+[Historical candidate list](../../plugin/APIProbe/events.lua).
+
+---
+
+## Fourth live session — callback-time context (November 9, 2026 UTC)
+
+**Callbacks:** 1. **Saved examples:** 1. Counts are event-wide, not per example.
+
+### Callback examples
 
 ~~~text
-/apidocs watch PLAYER_HOME_CHANGED
+signature=1:number
+shape=number
+event=PLAYER_HOME_CHANGED
+arguments=1
+arg1 type=number value=1219585
 ~~~
 
-## Sources
+### Interpretation and limitations
 
-- [Historical event candidates](../../plugin/APIProbe/events.lua) (compiled from the March 2024 `Eventtype` reference).
+**First recorded occurrence:** the callback delivered one numeric value, `1219585`. The same number appeared as `GetCurrentStationID()` during other station-related callbacks in this session, but this event itself had **no contextual getter sample**, so its field meaning is unverified.
 
+The context snapshot does not preserve per-callback timing or independent field verification.
+
+**Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.

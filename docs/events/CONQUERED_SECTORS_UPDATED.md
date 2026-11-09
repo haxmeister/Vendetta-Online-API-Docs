@@ -85,3 +85,35 @@ This session added four example table shapes, including multiple numeric keys ma
 **Occurrence-count caveat:** The observer's event counters persist between flushes. Totals reported with these samples are cumulative, not counts to add to earlier snapshots.
 
 **Source:** [Third event survey](2026-11-08-third-live-event-survey.md), snapshot `20261109T000121.364994Z-24651-000114.txt`.
+
+---
+
+## Fourth live session — callback-time context (November 9, 2026 UTC)
+
+**Callbacks:** 2. **Saved examples:** 2. Counts are event-wide, not per example.
+
+### Callback examples
+
+~~~text
+signature=1:table
+shape=table{27:boolean,30:boolean}
+event=CONQUERED_SECTORS_UPDATED
+arguments=1
+arg1 type=table value=table{[27]=true, [30]=true}
+~~~
+
+~~~text
+signature=1:table
+shape=table{6:boolean}
+event=CONQUERED_SECTORS_UPDATED
+arguments=1
+arg1 type=table value=table{[6]=true}
+~~~
+
+### Interpretation and limitations
+
+The two table examples contained boolean `true` at numeric keys `[27]` and `[30]` together, and at `[6]` alone. Earlier sessions also contained other key combinations. The meaning of these keys and whether missing keys imply false is unknown.
+
+The context snapshot does not preserve per-callback timing or independent field verification.
+
+**Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.
