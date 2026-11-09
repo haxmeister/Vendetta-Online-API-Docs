@@ -2,6 +2,16 @@
 
 **Status:** Observed in two live client sessions on November 8, 2026.
 
+## Arguments
+
+**Observed callback form:** `()`. Positions exclude the event name passed to `OnEvent(event, ...)`.
+
+No positional callback arguments were observed.
+
+**Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
+
+---
+
 **Callback arguments:** None (`arguments=0`).
 
 ~~~text

@@ -2,6 +2,20 @@
 
 **Status:** Observed for the first time in the second live collection session on November 8, 2026; signature provisional.
 
+## Arguments
+
+**Observed callback form:** `(string, number, number)`. Positions exclude the event name passed to `OnEvent(event, ...)`.
+
+| Position | Lua type(s) | Meaning | Recorded example(s) | Meaning confidence |
+| --- | --- | --- | --- | --- |
+| 1 | `string` | Scan result text | `"Cargo Hold Empty"`, `"Ship too far to scan"` | High |
+| 2 | `number` | Not identified | `3`, `10` | Unknown |
+| 3 | `number` | Not identified | `1292`, `99` | Unknown |
+
+**Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
+
+---
+
 Event callbacks deliver the arguments listed below **after** the event name passed to `OnEvent(event, ...)`. `()` means zero arguments, while `(nil)` means one explicit nil.
 
 ## Second live collection — November 8, 2026
