@@ -36,13 +36,13 @@ for my $entry (@events) {
 cmp_ok($historical, '>=', 71, 'source descriptions captured on at least 71 event pages');
 
 like($pages{PLAYER_GOT_HIT},
-    qr/Observed callback form: \x60\(number, number, number, boolean, number, userdata\)\x60/,
+    qr/\*\*Observed callback form:\*\* \x60\(number, number, number, boolean, number, userdata\)\x60/,
     'live six-position PLAYER_GOT_HIT retained despite shorter historical account');
 like($pages{PLAYER_DIED},
-    qr/Observed callback form: \x60\(number, number, number, number\)\x60/,
+    qr/\*\*Observed callback form:\*\* \x60\(number, number, number, number\)\x60/,
     'live four-position PLAYER_DIED retained');
 like($pages{CHAT_MSG_SERVER_SECTOR},
-    qr/Observed callback form: \x60\(table\)\x60/,
+    qr/\*\*Observed callback form:\*\* \x60\(table\)\x60/,
     'live table type overrides historic string description');
 like($pages{MISSION_QUESTION_OPEN},
     qr/db:1009/, 'real mission token preserved');
