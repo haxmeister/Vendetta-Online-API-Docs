@@ -18,6 +18,32 @@ for how we distinguish function returns from event callback arguments.
 Our first tool is a local **capture collector**, which saves observations to
 files without copying text out of the game UI.
 
+## Automated research (recommended)
+
+To reduce repeated commands and uploads, run the opt-in research bridge from
+the repository root:
+
+~~~sh
+perl tools/assist.pl
+~~~
+
+Then, in Vendetta Online:
+
+~~~text
+/apidocs start
+~~~
+
+The bridge collects and periodically flushes event examples, reads
+[limited test instructions](control/plan.txt) from GitHub, displays those
+instructions in VO, and **automatically publishes new observation reports
+to this public GitHub repository**. It does not execute remote Lua.
+For safe unattended use, privacy considerations, local auto-update rules,
+and the exact supported commands, see the
+[assistant-guided research workflow](docs/research/autopilot.md).
+
+The original manual workflow below remains available if you prefer to
+keep captures private or inspect them before publishing.
+
 ## Run the collector
 
 Requires Linux, Perl 5.36+, and [Linux::Event](https://metacpan.org/pod/Linux::Event)
@@ -203,10 +229,15 @@ This leaves the sibling `plugins/TCP/` location intact while allowing
 updates from `git pull` to appear immediately on the next interface reload.
 
 Start the Perl collector first, then launch VO (or reload the interface).
-Nothing is sent automatically. Use these commands in the VO chat console:
+The **manual** collector sends nothing until you issue a capture command.
+The opt-in assistant bridge uses the `start` command and timed flushes.
+Commands available in the VO chat console:
 
 | Command | Purpose |
 | --- | --- |
+| /apidocs start | Connect, enable context and watch all candidate events |
+| /apidocs finish | Flush, unregister event watches and disconnect |
+| /apidocs context on | Include selected bounded getter context |
 | /apidocs connect | Connect to the local collector |
 | /apidocs test | Send a two-line test observation |
 | /apidocs scan | Check the generated candidate list and record types or accessibility |
