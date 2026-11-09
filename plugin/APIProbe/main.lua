@@ -722,9 +722,11 @@ local function command(_, args)
     elseif action == "status" then
         local n = 0
         for _ in pairs(watched) do n = n + 1 end
+        local pending = conn and conn.pendingBytes or 0
         info((connected and "connected" or "not connected")
             .. "; watching " .. n .. " events"
-            .. "; context " .. (context_enabled and "on" or "off"))
+            .. "; context " .. (context_enabled and "on" or "off")
+            .. "; TCP pending " .. pending .. " bytes")
     elseif action == "stop" then
         stop()
     else
