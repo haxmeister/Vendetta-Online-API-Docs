@@ -14,7 +14,7 @@ These observations do not establish universal API signatures.
 
 - Function records: 0
 - Event records: 0
-- Snapshots: 4
+- Snapshots: 5
 - Notes: 0
 - Chat event payloads redacted: 0
 
@@ -813,5 +813,63 @@ These observations do not establish universal API signatures.
     shape=
     event=SYSMENU_TOGGLE
     arguments=0
+    
+
+### event-watch — 20261109T014630.304410Z-25441-000005.txt
+
+    format=api-event-watch-v3
+    source=historical-event-candidates
+    candidate_count=214
+    observed_events=62
+    part=1
+    signature=1:table
+    occurrences=3
+    shape=redacted
+    event=CHAT_MSG_SECTORD_SECTOR
+    arguments=1
+    arg1 type=table
+    
+    ---
+    signature=1:string
+    occurrences=4
+    shape=string
+    event=ENTER_ZONE_wormhole
+    arguments=1
+    arg1 type=string value="wormhole" (bytes=8)
+    
+    ---
+    signature=1:string
+    occurrences=2
+    shape=string
+    event=LEAVE_ZONE_wormhole
+    arguments=1
+    arg1 type=string value="wormhole" (bytes=8)
+    
+    ---
+    signature=4:string,number,boolean,boolean
+    occurrences=98
+    shape=string;number;boolean;boolean
+    event=MSG_NOTIFICATION
+    arguments=4
+    arg1 type=string value="Press the Activate key to enter wormhole to Azek." (bytes=49)
+    arg2 type=number value=5000
+    arg3 type=boolean value=false
+    arg4 type=boolean value=false
+    
+    ---
+    signature=1:number
+    occurrences=1
+    shape=number
+    event=PLAYER_GUILD_TAG_UPDATED
+    arguments=1
+    arg1 type=number value=30466963
+    
+    ---
+    signature=1:number
+    occurrences=1
+    shape=number
+    event=UPDATE_CHARINFO
+    arguments=1
+    arg1 type=number value=30466963
     
 
