@@ -71,3 +71,29 @@ arg1 type=number value=30460275
 A numeric callback value was observed where shown; its identity and relation to specific players has not been independently checked.
 
 **Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md).
+
+---
+
+## Fifth live capture — November 9, 2026 UTC
+
+**Saved examples:** 2. Cumulative watcher occurrence counters are not independent event frequencies across flushes.
+
+~~~text
+signature=1:number
+shape=number
+event=PLAYER_ENTERED_SECTOR
+arguments=1
+arg1 type=number value=30465805
+~~~
+
+~~~text
+signature=1:number
+shape=number
+event=PLAYER_ENTERED_SECTOR
+arguments=1
+arg1 type=number value=345929
+~~~
+
+The one-number callback appeared with new examples 30465805 and 345929. The number's precise identifier semantics are still provisional.
+
+**Source:** [Fifth live survey](2026-11-09-fifth-live-event-survey.md), `20261109T013130.298625Z-25441-000001.txt`. Identifier meanings remain provisional.

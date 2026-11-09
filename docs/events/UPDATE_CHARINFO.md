@@ -62,3 +62,21 @@ arg1 type=number value=30460009
 One numeric callback argument was observed, with the example above. The captured numbers resemble identifiers but are not independently verified.
 
 **Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md).
+
+---
+
+## Fifth live capture — November 9, 2026 UTC
+
+**Saved examples:** 1. Cumulative watcher occurrence counters are not independent event frequencies across flushes.
+
+~~~text
+signature=1:number
+shape=number
+event=UPDATE_CHARINFO
+arguments=1
+arg1 type=number value=30466963
+~~~
+
+One numeric argument 30466963, which also occurred in `PLAYER_GUILD_TAG_UPDATED`. Matching numbers suggest a shared identity reference, but do not prove exact field semantics.
+
+**Source:** [Fifth live survey](2026-11-09-fifth-live-event-survey.md), `20261109T014630.304410Z-25441-000005.txt`. Identifier meanings remain provisional.

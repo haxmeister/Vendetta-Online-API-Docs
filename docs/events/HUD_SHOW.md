@@ -58,3 +58,21 @@ arg1 type=string value="ship" (bytes=4)
 These are additional observed callback examples. Contextual state and per-callback ordering were not captured for this event.
 
 **Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md).
+
+---
+
+## Fifth live capture — November 9, 2026 UTC
+
+**Saved examples:** 1. Cumulative watcher occurrence counters are not independent event frequencies across flushes.
+
+~~~text
+signature=1:string
+shape=string
+event=HUD_SHOW
+arguments=1
+arg1 type=string value="ship" (bytes=4)
+~~~
+
+One string argument `"ship"`. This is a callback argument, not the event name itself.
+
+**Source:** [Fifth live survey](2026-11-09-fifth-live-event-survey.md), `20261109T013130.298625Z-25441-000001.txt`. Identifier meanings remain provisional.

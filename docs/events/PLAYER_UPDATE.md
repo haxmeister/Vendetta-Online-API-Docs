@@ -82,3 +82,29 @@ arg1 type=number value=345929
 One numeric callback argument was observed, with the example above. The captured numbers resemble identifiers but are not independently verified.
 
 **Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md).
+
+---
+
+## Fifth live capture — November 9, 2026 UTC
+
+**Saved examples:** 2. Cumulative watcher occurrence counters are not independent event frequencies across flushes.
+
+~~~text
+signature=1:number
+shape=number
+event=PLAYER_UPDATE
+arguments=1
+arg1 type=number value=345929
+~~~
+
+~~~text
+signature=1:number
+shape=number
+event=PLAYER_UPDATE
+arguments=1
+arg1 type=number value=1000090299
+~~~
+
+New one-number examples 345929 and 1000090299. The value 1000090299 also appears in `PLAYER_GOT_HIT` argument 2, and 345929 appears in several other player events; this is a cross-event equality, not proof of argument roles.
+
+**Source:** [Fifth live survey](2026-11-09-fifth-live-event-survey.md), `20261109T013130.298625Z-25441-000001.txt`, `20261109T015530.300917Z-25441-000008.txt`. Identifier meanings remain provisional.
