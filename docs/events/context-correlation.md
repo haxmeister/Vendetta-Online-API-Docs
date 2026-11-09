@@ -1,6 +1,6 @@
 # Correlating VO event arguments with game state
 
-**Status:** APIProbe's bounded callback-time correlation mode is implemented. Live-client results for this mode have not been collected yet.
+**Status:** Context correlation has now been verified by a live `api-event-watch-v3` capture (2026-11-09 UTC), with 31 contextual examples across 17 event names. [See the fourth live survey.](2026-11-09-context-live-event-survey.md)
 
 The [broad watcher](broad-watch.md) already records event names, callback argument types and examples. The correlation mode adds **read-only game state values gathered while the sampled event callback is running**, which helps us investigate what its numeric arguments might mean.
 
@@ -80,3 +80,7 @@ Each `context.GetterName` entry contains the **exact number of returned values**
 - These extra getter calls can increase callback work. If they affect gameplay responsiveness, turn context off and use normal broad-watch mode.
 
 When reviewing reports, look for **repeated matches and mismatches** across deliberately different game states before naming a callback field. For example, an event numeric argument matching `GetCurrentSectorid()` across several sector changes is stronger evidence than one matching value.
+
+## First verified live results
+
+The November 9 UTC report established repeated matches for `SECTOR_CHANGED` and `GetCurrentSectorid()`, and documented station and storm state at callback time. It also supplied useful **counterexamples**: a `NAVROUTE_CHANGED` table value differed from the current sector ID, and `TARGET_SCANNED` numeric arguments differed from the contemporaneous target distance. Full values and caveats are preserved in the [live context survey](2026-11-09-context-live-event-survey.md).

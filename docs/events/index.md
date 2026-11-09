@@ -1,12 +1,13 @@
 # Vendetta Online event reference
 
-**214 named events** in the March 2024 historical `Eventtype` catalog; **68 distinct names observed** across two live-client broad-watch sessions on November 8, 2026. One page per name, with status stated explicitly.
+**214 named events** in the March 2024 historical `Eventtype` catalog; **69 distinct names observed** across two live-client broad-watch sessions on November 8, 2026. One page per name, with status stated explicitly.
 
 Each page reports callback arguments, representative values, and available table fields. Unobserved names have placeholders—not invented signatures. Event callback **arguments** are not function return values.
 
 - [First event survey: 42 event names](2026-11-08-live-event-survey.md)
 - [Second event survey: 52 names and 65 examples](2026-11-08-second-live-event-survey.md)
 - [Third event survey: 23 names and 30 examples](2026-11-08-third-live-event-survey.md)
+- [Fourth survey: 58 events, 31 contextual examples](2026-11-09-context-live-event-survey.md)
 - [Run the broad event observer](broad-watch.md)
 - [Correlate event arguments with game state](context-correlation.md)
 - [Documentation and evidence conventions](../reference-conventions.md)
@@ -163,7 +164,7 @@ Each page reports callback arguments, representative values, and available table
 | [`PLAYER_GOT_HIT`](./PLAYER_GOT_HIT.md) | Newly observed in second session (2 callbacks in latest session) |
 | [`PLAYER_GUILD_TAG_UPDATED`](./PLAYER_GUILD_TAG_UPDATED.md) | Newly observed in second session (2 callbacks in latest session) |
 | [`PLAYER_HIT`](./PLAYER_HIT.md) | Historical candidate — not yet observed |
-| [`PLAYER_HOME_CHANGED`](./PLAYER_HOME_CHANGED.md) | Historical candidate — not yet observed |
+| [`PLAYER_HOME_CHANGED`](./PLAYER_HOME_CHANGED.md) | First observed in fourth batch (1 callback) |
 | [`PLAYER_LEFT_SECTOR`](./PLAYER_LEFT_SECTOR.md) | Observed in both sessions (130 callbacks in latest session) |
 | [`PLAYER_LOGGED_OUT`](./PLAYER_LOGGED_OUT.md) | Historical candidate — not yet observed |
 | [`PLAYER_RECEIVED_NEW_ACCOMPLISHMENTS`](./PLAYER_RECEIVED_NEW_ACCOMPLISHMENTS.md) | Historical candidate — not yet observed |
