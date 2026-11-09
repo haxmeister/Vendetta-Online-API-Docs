@@ -8,7 +8,7 @@
 
 | Position | Lua type(s) | Meaning | Recorded example(s) | Meaning confidence |
 | --- | --- | --- | --- | --- |
-| 1 | `string` | Information/question text | `"This mission relays some brief information about where…` | Tentative |
+| 1 | `string` | Information/question text | `"This mission relays some brief information…" (truncated)` | Tentative |
 | 2 | `string` | Short label string | `"Info"` | Tentative |
 | 3 | `string` | Not identified | `"db:1009"` | Unknown |
 | 4 | `number` | Not identified | `1219585` | Unknown |
