@@ -30,12 +30,13 @@ end
 local TCP = {}
 function TCP.Connect(host, port, options)
     assert(host == "127.0.0.1" and port == 54000)
-    local conn = {}
+    local conn = {pendingBytes = 0, disconnects = 0}
     function conn:Send(bytes)
         frames[#frames + 1] = bytes
         return true
     end
     function conn:Disconnect()
+        self.disconnects = self.disconnects + 1
         options.onDisconnect("test disconnect")
     end
     last_connection = {client = conn, options = options}
@@ -339,5 +340,20 @@ for i = before_second + 1, #frames do
 end
 assert(found_second, "fresh watch-all session must capture earlier event forms")
 run("stop")
+
+-- TCP.Send can report success with bytes still queued for later writable
+-- callbacks. A stop must not disconnect until those bytes have drained.
+run("connect")
+last_connection.options.onConnect()
+run("watch", "all")
+watched.SECTOR_CHANGED:OnEvent("SECTOR_CHANGED", 6000)
+local pending_client = last_connection.client
+pending_client.pendingBytes = 42
+run("stop")
+assert(next(watched) == nil, "stop should unregister callbacks immediately")
+assert(pending_client.disconnects == 0, "stop must not drop queued TCP frames")
+pending_client.pendingBytes = 0 -- simulate a later TCP writable callback
+run("stop")
+assert(pending_client.disconnects == 1, "stop should disconnect once queue drains")
 
 print("PASS: APIProbe strict-global scan, getters, context, and event capture")
