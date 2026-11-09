@@ -1,0 +1,6 @@
+# Assistant-controlled, declarative game test plan.
+# The collector accepts only the limited directives documented in docs/research/autopilot.md.
+# Changing this file on GitHub is enough to deliver new guidance to a running session.
+NOTE|Research plan: explore docking, launching, changing sectors, targeting and switching ships.
+CONTEXT|on
+WATCH|all
