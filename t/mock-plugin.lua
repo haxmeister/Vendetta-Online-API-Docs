@@ -198,6 +198,7 @@ end
 -- Broad watch: 214 unique historical event names, few aggregated files.
 local known_events = load_in_env("plugin/APIProbe/events.lua")
 assert(#known_events == 214, "unexpected historical event count")
+run("context", "on")
 run("watch", "all")
 local registered = 0
 for _, event in ipairs(known_events) do
@@ -242,12 +243,22 @@ local whole = ""
 for i = baseline + 1, #frames do
     category, name, body = decode(frames[i])
     assert(category == "snapshot" and name == "event-watch")
-    assert(string.find(body, "format=api-event-watch-v2", 1, true))
+    assert(string.find(body, "format=api-event-watch-v3", 1, true))
     assert(string.find(body, "candidate_count=214", 1, true))
     whole = whole .. body
 end
 assert(string.find(whole, "event=TARGET_CHANGED", 1, true))
 assert(string.find(whole, "event=SECTOR_CHANGED", 1, true))
+assert(string.find(whole, "context=callback-time-approved-getters-v1", 1, true),
+    "context is attached to selected events")
+assert(string.find(whole, "context.GetCurrentSectorid=1[number:42]", 1, true),
+    "callback-time context records allowlisted numeric getter values")
+assert(string.find(whole, "context.GetTargetInfo=4[string,number:0.5,number:100,nil]", 1, true),
+    "context preserves multiple return positions without exposing names")
+assert(string.find(whole, "context.GetTargetDistance=error", 1, true),
+    "context getter failures must not interrupt event capture")
+assert(not string.find(whole, "private player name", 1, true),
+    "context getter strings must not expose target names")
 assert(string.find(whole, "occurrences=30", 1, true))
 assert(string.find(whole, "Asteroid", 1, true), "non-chat samples retain values")
 assert(string.find(whole, '["destination"]="Sedina"', 1, true),
@@ -286,6 +297,7 @@ run("flush")
 assert(#frames == after_flush, "unchanged signatures should not be sent twice")
 run("unwatch", "all")
 assert(next(watched) == nil, "unwatch all should release broad watches")
+run("context", "off")
 run("watch", "CHAT_MSG_PRIVATE")
 watched.CHAT_MSG_PRIVATE:OnEvent("CHAT_MSG_PRIVATE", "secret explicit chat")
 category, name, body = decode(frames[#frames])
