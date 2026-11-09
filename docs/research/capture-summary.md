@@ -14,7 +14,7 @@ These observations do not establish universal API signatures.
 
 - Function records: 0
 - Event records: 0
-- Snapshots: 6
+- Snapshots: 7
 - Notes: 0
 - Chat event payloads redacted: 0
 
@@ -925,5 +925,54 @@ These observations do not establish universal API signatures.
     context=callback-time-approved-getters-v1
     context.PlayerInStation=1[boolean:true]
     context.GetCurrentStationID=1[number:1299457]
+    
+
+### event-watch — 20261109T015230.303380Z-25441-000007.txt
+
+    format=api-event-watch-v3
+    source=historical-event-candidates
+    candidate_count=214
+    observed_events=66
+    part=1
+    signature=1:table
+    occurrences=1
+    shape=redacted
+    event=CHAT_MSG_CHANNEL
+    arguments=1
+    arg1 type=table
+    
+    ---
+    signature=4:number,number,number,number
+    occurrences=2
+    shape=number;number;number;number
+    event=PLAYER_DIED
+    arguments=4
+    arg1 type=number value=1000090141
+    arg2 type=number value=345929
+    arg3 type=number value=173
+    arg4 type=number value=5076
+    context=callback-time-approved-getters-v1
+    context.GetCurrentSectorid=1[number:5076]
+    context.PlayerInStation=1[boolean:false]
+    context.HasActiveShip=1[boolean:true]
+    
+    ---
+    signature=0:
+    occurrences=7
+    shape=
+    event=PLAYER_HIT
+    arguments=0
+    
+    ---
+    signature=2:number,number
+    occurrences=4
+    shape=number;number
+    event=TARGET_HEALTH_UPDATE
+    arguments=2
+    arg1 type=number value=90
+    arg2 type=number value=0
+    context=callback-time-approved-getters-v1
+    context.GetTargetInfo=7[string,number:0.90614457831325,number:138.11795796528,number:9,string,string,nil]
+    context.GetTargetDistance=2[number:138.11795796528,nil]
     
 
