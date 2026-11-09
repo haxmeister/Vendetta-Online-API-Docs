@@ -1,6 +1,6 @@
 # Vendetta Online event reference
 
-**214 named events** in the March 2024 historical `Eventtype` catalog; **69 distinct names observed** across two live-client broad-watch sessions on November 8, 2026. One page per name, with status stated explicitly.
+**214 historical event candidates; 75 distinct event names observed** across five documented live capture batches (November 8–9, 2026 UTC). Each candidate has its own page; unobserved names remain explicitly provisional.
 
 Each page reports callback arguments, representative values, and available table fields. Unobserved names have placeholders—not invented signatures. Event callback **arguments** are not function return values.
 
@@ -8,6 +8,7 @@ Each page reports callback arguments, representative values, and available table
 - [Second event survey: 52 names and 65 examples](2026-11-08-second-live-event-survey.md)
 - [Third event survey: 23 names and 30 examples](2026-11-08-third-live-event-survey.md)
 - [Fourth survey: 58 events, 31 contextual examples](2026-11-09-context-live-event-survey.md)
+- [Fifth survey: 70 events, 43 contextual examples](2026-11-09-fifth-live-event-survey.md)
 - [Run the broad event observer](broad-watch.md)
 - [Correlate event arguments with game state](context-correlation.md)
 - [Documentation and evidence conventions](../reference-conventions.md)
@@ -41,7 +42,7 @@ Each page reports callback arguments, representative values, and available table
 | [`CHAT_MSG_BAR_EMOTE3`](./CHAT_MSG_BAR_EMOTE3.md) | Historical candidate — not yet observed |
 | [`CHAT_MSG_BAR_EMOTE`](./CHAT_MSG_BAR_EMOTE.md) | Historical candidate — not yet observed |
 | [`CHAT_MSG_BUDDYNOTE`](./CHAT_MSG_BUDDYNOTE.md) | Historical candidate — not yet observed |
-| [`CHAT_MSG_CHANNEL`](./CHAT_MSG_CHANNEL.md) | Historical candidate — not yet observed |
+| [`CHAT_MSG_CHANNEL`](./CHAT_MSG_CHANNEL.md) | First observed in fifth live capture (November 9, 2026 UTC) |
 | [`CHAT_MSG_CHANNEL_ACTIVE`](./CHAT_MSG_CHANNEL_ACTIVE.md) | Newly observed in second session (9 callbacks in latest session) |
 | [`CHAT_MSG_CHANNEL_EMOTE`](./CHAT_MSG_CHANNEL_EMOTE.md) | Historical candidate — not yet observed |
 | [`CHAT_MSG_CHANNEL_EMOTE_ACTIVE`](./CHAT_MSG_CHANNEL_EMOTE_ACTIVE.md) | Newly observed in second session (1 callbacks in latest session) |
@@ -141,7 +142,7 @@ Each page reports callback arguments, representative values, and available table
 | [`MISSIONLIST_UPDATED`](./MISSIONLIST_UPDATED.md) | Observed in third batch |
 | [`MISSION_ADDED`](./MISSION_ADDED.md) | Historical candidate — not yet observed |
 | [`MISSION_NOTIFICATION`](./MISSION_NOTIFICATION.md) | Historical candidate — not yet observed |
-| [`MISSION_QUESTION_OPEN`](./MISSION_QUESTION_OPEN.md) | Historical candidate — not yet observed |
+| [`MISSION_QUESTION_OPEN`](./MISSION_QUESTION_OPEN.md) | First observed in fifth live capture (November 9, 2026 UTC) |
 | [`MISSION_REMOVED`](./MISSION_REMOVED.md) | Historical candidate — not yet observed |
 | [`MISSION_TIMER_START`](./MISSION_TIMER_START.md) | Historical candidate — not yet observed |
 | [`MISSION_TIMER_STOP`](./MISSION_TIMER_STOP.md) | Historical candidate — not yet observed |
@@ -163,7 +164,7 @@ Each page reports callback arguments, representative values, and available table
 | [`PLAYER_ENTERED_SECTOR`](./PLAYER_ENTERED_SECTOR.md) | Observed in both sessions (120 callbacks in latest session) |
 | [`PLAYER_GOT_HIT`](./PLAYER_GOT_HIT.md) | Newly observed in second session (2 callbacks in latest session) |
 | [`PLAYER_GUILD_TAG_UPDATED`](./PLAYER_GUILD_TAG_UPDATED.md) | Newly observed in second session (2 callbacks in latest session) |
-| [`PLAYER_HIT`](./PLAYER_HIT.md) | Historical candidate — not yet observed |
+| [`PLAYER_HIT`](./PLAYER_HIT.md) | First observed in fifth live capture (November 9, 2026 UTC) |
 | [`PLAYER_HOME_CHANGED`](./PLAYER_HOME_CHANGED.md) | First observed in fourth batch (1 callback) |
 | [`PLAYER_LEFT_SECTOR`](./PLAYER_LEFT_SECTOR.md) | Observed in both sessions (130 callbacks in latest session) |
 | [`PLAYER_LOGGED_OUT`](./PLAYER_LOGGED_OUT.md) | Historical candidate — not yet observed |
@@ -172,7 +173,7 @@ Each page reports callback arguments, representative values, and available table
 | [`PLAYER_UPDATE`](./PLAYER_UPDATE.md) | Observed in third batch |
 | [`PLAYER_UPDATE_ACCOMPLISHMENTS`](./PLAYER_UPDATE_ACCOMPLISHMENTS.md) | Historical candidate — not yet observed |
 | [`PLAYER_UPDATE_FACTIONSTANDINGS`](./PLAYER_UPDATE_FACTIONSTANDINGS.md) | Historical candidate — not yet observed |
-| [`PLAYER_UPDATE_SKILLS`](./PLAYER_UPDATE_SKILLS.md) | Historical candidate — not yet observed |
+| [`PLAYER_UPDATE_SKILLS`](./PLAYER_UPDATE_SKILLS.md) | First observed in fifth live capture (November 9, 2026 UTC) |
 | [`PLAYER_UPDATE_STATS`](./PLAYER_UPDATE_STATS.md) | Observed in both sessions (8 callbacks in latest session) |
 | [`PLUGINS_LOADED`](./PLUGINS_LOADED.md) | Historical candidate — not yet observed |
 | [`PROXIMITY_ALERT`](./PROXIMITY_ALERT.md) | Historical candidate — not yet observed |
@@ -196,8 +197,8 @@ Each page reports callback arguments, representative values, and available table
 | [`STATION_UPDATE_REQUESTED`](./STATION_UPDATE_REQUESTED.md) | Historical candidate — not yet observed |
 | [`STORM_STARTED`](./STORM_STARTED.md) | Observed in both sessions (1 callbacks in latest session) |
 | [`STORM_STOPPED`](./STORM_STOPPED.md) | Observed in both sessions (7 callbacks in latest session) |
-| [`SYSMENU_TOGGLE`](./SYSMENU_TOGGLE.md) | Historical candidate — not yet observed |
-| [`SYSTEM_BEST_PRICE`](./SYSTEM_BEST_PRICE.md) | Historical candidate — not yet observed |
+| [`SYSMENU_TOGGLE`](./SYSMENU_TOGGLE.md) | First observed in fifth live capture (November 9, 2026 UTC) |
+| [`SYSTEM_BEST_PRICE`](./SYSTEM_BEST_PRICE.md) | First observed in fifth live capture (November 9, 2026 UTC) |
 | [`TARGET_CHANGED`](./TARGET_CHANGED.md) | Observed in both sessions (5 callbacks in latest session) |
 | [`TARGET_HEALTH_UPDATE`](./TARGET_HEALTH_UPDATE.md) | Newly observed in second session (1 callbacks in latest session) |
 | [`TARGET_SCANNED`](./TARGET_SCANNED.md) | Newly observed in second session (21 callbacks in latest session) |

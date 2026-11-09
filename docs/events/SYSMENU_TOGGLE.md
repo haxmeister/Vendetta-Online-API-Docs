@@ -1,18 +1,16 @@
 # SYSMENU_TOGGLE
 
-**Status:** Historical event name; no callback observations recorded yet.
+**Status:** First observed in a live VO client on November 9, 2026 UTC. Argument meanings are provisional.
 
-## Callback arguments and examples
-
-No callback for this name has been observed in the current collection sessions. **Argument count, types and example values are unknown.**
-
-To investigate this historical candidate, use the event watcher while performing the relevant in-game action:
+**Observed callback signature(s):** `0:`.
 
 ~~~text
-/apidocs watch SYSMENU_TOGGLE
+signature=0:
+shape=
+event=SYSMENU_TOGGLE
+arguments=0
 ~~~
 
-## Sources
+No arguments were delivered.
 
-- [Historical event candidates](../../plugin/APIProbe/events.lua) (compiled from the March 2024 `Eventtype` reference).
-
+**Evidence:** [Fifth live survey](2026-11-09-fifth-live-event-survey.md), snapshot `20261109T014330.306885Z-25441-000004.txt`. Original candidate: [historical catalog](../../plugin/APIProbe/events.lua).

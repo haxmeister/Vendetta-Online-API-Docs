@@ -1,18 +1,11 @@
 # CHAT_MSG_CHANNEL
 
-**Status:** Historical event name; no callback observations recorded yet.
+**Status:** First observed in a live VO client on November 9, 2026 UTC. Argument meanings are provisional.
 
-## Callback arguments and examples
+**Observed callback signature(s):** `1:table`.
 
-No callback for this name has been observed in the current collection sessions. **Argument count, types and example values are unknown.**
+Chat-related values and table fields were not recorded to protect privacy.
 
-To investigate this historical candidate, use the event watcher while performing the relevant in-game action:
+One table argument was delivered. All chat fields and values were intentionally redacted.
 
-~~~text
-/apidocs watch CHAT_MSG_CHANNEL
-~~~
-
-## Sources
-
-- [Historical event candidates](../../plugin/APIProbe/events.lua) (compiled from the March 2024 `Eventtype` reference).
-
+**Evidence:** [Fifth live survey](2026-11-09-fifth-live-event-survey.md), snapshot `20261109T015230.303380Z-25441-000007.txt`. Original candidate: [historical catalog](../../plugin/APIProbe/events.lua).

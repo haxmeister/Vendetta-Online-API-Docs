@@ -13,13 +13,13 @@ The notation below describes **observed returns**, not arguments. The table cont
 | `GetCurrentSectorid()` | number | `5597` | Current sector; also observed `4735` |
 | `GetCurrentSystemid()` | number | `22` | Current system; also observed `19` |
 | `GetCurrentStationID()` | number or nil | `1432833` (docked); `nil` (undocked) | Tested in one docked and four undocked rounds |
-| `GetActiveShipName()` | string | `"EC-89"` | Ship name in four recorded rounds |
+| `GetActiveShipName()` | string; also nil in callback context | `"EC-89"`; one `nil` at ship transition | Formal inspections returned strings; callback context also showed one nil |
 | `GetActiveShipSpeed()` | number | `46.928863525391` | Also returned `0` at rest; tiny floating-point noise is possible |
 | `GetActiveShipEnergy()` | number, number | `(167.31474304199, 0.66925895214081)` | Likely current energy and fraction; see examples below |
-| `GetActiveShipHealth()` | eight numbers, nil, nil | `(25, 0, 0, 0, 0, 0, 25, 6000, nil, nil)` | Ten return positions; meanings of individual positions not established |
+| `GetActiveShipHealth()` | ten positions (eight numbers, nil, nil), or zero values in callback context | `(25, 0, 0, 0, 0, 0, 25, 6000, nil, nil)` | Ten values with active ship; zero during a no-active-ship callback |
 | `GetTargetInfo()` | no values without target; seven values with target | `("Asteroid", nil, 1186.8591428641, nil, nil, nil, nil)` | NPC ships returned different populated fields; see below |
 | `GetTargetDistance()` | number or nil, nil | `(394.33755765207, nil)` | `(nil, nil)` when no target |
-| `HasActiveShip()` | boolean | `true` | No observed `false` case yet |
+| `HasActiveShip()` | boolean | `true`, `false` | False was seen during ship-transition callback |
 | `PlayerInStation()` | boolean | `true` (docked), `false` (in space) | Confirmed against observed station ID |
 | `IsStormPresent()` | boolean | `false` | Storm-present `true` case not yet tested |
 
@@ -41,7 +41,7 @@ The second value tracks the first divided by **250** within the precision observ
 
 ## GetActiveShipHealth()
 
-One observed call returned **`(25, 0, 0, 0, 0, 0, 25, 6000, nil, nil)`**. Every observation had **ten** return positions: eight numbers followed by two explicit nils. The first and seventh numbers were both `0` in one observation and `25` in the other four. Positions two through six were `0` throughout; the eighth was `6000` in all five.
+One observed call returned **`(25, 0, 0, 0, 0, 0, 25, 6000, nil, nil)`**. Every observation in the formal getter inspection rounds had **ten** return positions: eight numbers followed by two explicit nils. The first and seventh numbers were both `0` in one observation and `25` in the other four. Positions two through six were `0` throughout; the eighth was `6000` in all five.
 
 A historical reference describes health fields, damage, and maximum health, but these captures **do not establish the meaning of every position**. In particular, do not infer health percentage or segment mapping from one ship.
 
@@ -166,3 +166,14 @@ Position eight varied between these ships; its meaning is not yet proven. The tw
 4. Compare the [live event survey](../events/2026-11-08-live-event-survey.md) with additional sector and target changes; both broad sessions have now observed 54 different events.
 
 The inspector records observations from explicitly approved functions; it does not call arbitrary API names or validate behavior automatically.
+
+## Fifth event session: callback-time getter results (November 9, 2026 UTC)
+
+These results were sampled while events fired and are **not counted** among the 168 successful explicit getter inspections.
+
+- With `HasActiveShip()=false`, `GetActiveShipName()` returned one nil and `GetActiveShipHealth()` returned **zero values** during `SHIP_CHANGED`. With an active ship, health returned ten positions, including trailing nils and eighth-position numbers 7500, 10000, and 20000.
+- `GetTargetInfo()` returned zero values with no target, but seven positions with a target; `GetTargetDistance()` returned two positions, either `(nil,nil)` or a number and nil. A pair of target getters agreed on the distance `1492.4592959274` in one callback.
+- Station context returned `PlayerInStation()=true` with IDs 1219585 and 1299457, and `false` with a nil station ID while leaving.
+- Sector getters agreed with `SECTOR_CHANGED` callback arguments 4735 and 4764, and `PLAYER_DIED` fourth arguments 4780 and 5076. These are strong correlations, not universal contracts.
+
+**Source:** [Fifth live context survey](../events/2026-11-09-fifth-live-event-survey.md). The getter runs during the callback; state transitions might still be underway.
