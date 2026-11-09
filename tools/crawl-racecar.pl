@@ -25,8 +25,9 @@ my $home = $ENV{HOME} // (getpwuid($<))[7] // die "cannot determine home directo
 my $output_dir = File::Spec->catdir($home, 'Documents');
 my $cache_dir = File::Spec->catdir($home, '.cache', 'voapi-racecar');
 my $index_url = 'https://www.vo-wiki.com/racecar2/index.php/API_Index2';
-my ($delay, $timeout, $max_pages, $refresh, $no_index, $help, $allow_host, $proxy) =
-    (1.5, 20, 0, 0, 0, 0, 'www.vo-wiki.com,vo-wiki.com');
+my ($delay, $timeout, $max_pages, $refresh, $no_index, $help, $allow_host, $proxy,
+    $direct, $diagnose, $max_consecutive_errors) =
+    (1.5, 20, 0, 0, 0, 0, 'www.vo-wiki.com,vo-wiki.com', undef, 0, 0, 3);
 GetOptions(
     'seed-file=s'   => \$seed,
     'output-dir=s'  => \$output_dir,
@@ -39,6 +40,9 @@ GetOptions(
     'no-index!'     => \$no_index,
     'allow-host=s'  => \$allow_host,
     'proxy=s'       => \$proxy,
+    'direct!'       => \$direct,
+    'diagnose'      => \$diagnose,
+    'max-consecutive-errors=i' => \$max_consecutive_errors,
     'help'          => \$help,
 ) or die "Run with --help for options\n";
 if ($help) {
@@ -58,7 +62,10 @@ into ~/Documents. Pages are kept in a local cache and are NOT pushed to GitHub.
   --index-url URL    Live index to check for additional API_* links
   --no-index         Only use links from the bundled PDF inventory
   --allow-host CSV   Accepted hosts (default www.vo-wiki.com,vo-wiki.com)
-  --proxy URL        Explicit HTTP(S) proxy, if required by your network
+  --proxy URL        Explicit proxy URL (otherwise respect proxy environment)
+  --direct           Ignore proxy environment and connect directly
+  --diagnose         Test the index once, print real transport errors, then exit
+  --max-consecutive-errors N  Stop after N consecutive page errors (default 3)
 
 The crawler deliberately does not read robots.txt or llms.txt. It avoids
 redlinks, stays on allowed wiki hosts, and makes no authentication attempts.
@@ -69,6 +76,8 @@ HELP
 die "--delay cannot be negative\n" if $delay < 0;
 die "--timeout must be positive\n" if $timeout < 1;
 die "--max-pages cannot be negative\n" if $max_pages < 0;
+die "--max-consecutive-errors must be positive\n" if $max_consecutive_errors < 1;
+die "--proxy and --direct are mutually exclusive\n" if defined($proxy) && $direct;
 my %allowed = map { $_ => 1 } grep { length } split /\s*,\s*/, lc($allow_host);
 die "provide at least one --allow-host\n" unless %allowed;
 make_path($output_dir, $cache_dir);
@@ -78,10 +87,14 @@ my %client_options = (
     max_redirect => 0, # check each redirect destination against the wiki allowlist
     verify_SSL => 1,
 );
-# Avoid malformed environment-proxy settings (notably in game launchers).
-# Users needing a proxy can supply --proxy explicitly.
-if (defined $proxy) { $client_options{proxy} = $proxy; }
-else { @client_options{qw(proxy http_proxy https_proxy)} = (undef, undef, undef); }
+# HTTP::Tiny understands standard proxy environment variables. The previous
+# version unconditionally disabled them, causing HTTP 599 on networks that
+# require a proxy. Respect them by default, with explicit overrides.
+if (defined $proxy) {
+    @client_options{qw(proxy http_proxy https_proxy)} = ($proxy, $proxy, $proxy);
+} elsif ($direct) {
+    @client_options{qw(proxy http_proxy https_proxy)} = (undef, undef, undef);
+}
 my $ua = HTTP::Tiny->new(%client_options);
 my $last_request = 0;
 my @errors;
@@ -148,8 +161,18 @@ sub fetch_html ($url) {
         $target = $next;
     }
     my $status = $response->{status} // 599;
-    return {status=>$status, error=>($response->{reason}//'request failed'), source=>'network'}
-        if !$response->{success};
+    if (!$response->{success}) {
+        my $error = $response->{reason} // 'request failed';
+        if ($status == 599) {
+            # HTTP::Tiny puts the actual SSL/DNS/proxy/timeout exception in
+            # content, NOT in the generic "Internal Exception" reason.
+            my $detail = $response->{content} // '';
+            $detail =~ s/[\x00-\x1f\x7f]+/ /g;
+            $detail = substr($detail, 0, 350);
+            $error .= ": $detail" if length($detail) && $detail ne $error;
+        }
+        return {status=>$status, error=>$error, source=>'network'};
+    }
     my $html = $response->{content} // '';
     return {status=>$status, error=>'empty HTML response', source=>'network'} if !length $html;
     my $ctype = $response->{headers}{'content-type'} // '';
@@ -157,6 +180,27 @@ sub fetch_html ($url) {
         if $ctype ne '' && $ctype !~ m{(?:html|xml|text/plain)}i;
     write_file($cache_path, $html);
     return {status=>$status, content=>$html, source=>'network'};
+}
+
+if ($diagnose) {
+    my @proxy_vars = grep { defined($ENV{$_}) && length($ENV{$_}) }
+        qw(http_proxy https_proxy all_proxy HTTP_PROXY HTTPS_PROXY ALL_PROXY);
+    say "Perl HTTP::Tiny $HTTP::Tiny::VERSION";
+    say "Proxy environment variables present: "
+        . (@proxy_vars ? join(", ", @proxy_vars) : "none");
+    say "Proxy mode: " . ($direct ? 'direct' : defined($proxy) ? 'explicit' : 'environment/default');
+    say "Checking: $index_url";
+    my $r = fetch_html($index_url);
+    if ($r->{content}) {
+        say "OK: $r->{status} ($r->{source}), " . length($r->{content}) . " bytes";
+        exit 0;
+    }
+    warn "FAIL: $r->{status}: " . ($r->{error} // 'unknown error') . "\n";
+    if ($r->{status} == 599) {
+        warn "599 is an HTTP::Tiny transport exception, not a server HTTP status.\n";
+        warn "Compare with: curl -vL --max-time $timeout '$index_url' -o /dev/null\n";
+    }
+    exit 2;
 }
 
 sub html_document ($html) {
@@ -263,17 +307,24 @@ if (!$no_index) {
     } else {
         $live_index={url=>$index_url,status=>$r->{status},error=>$r->{error}};
         push @errors, "Index: HTTP $r->{status}: $r->{error}";
-        warn "Index not available ($r->{status}); using PDF link inventory.\n";
+        warn "Index not available ($r->{status}: $r->{error}); using PDF link inventory.\n";
+        warn "Tip: run --diagnose for a one-request connection check.\n" if $r->{status} == 599;
     }
 }
 
 my @manifest;
 my $attempted=0;
+my $consecutive_errors=0;
+my $abort_fetches=0;
 for my $key (sort keys %pages) {
     my $entry=$pages{$key};
     my $base={%$entry};
     if ($entry->{source} eq 'missing') {
         push @manifest, {%$base,status=>'not-linked-in-2023-pdf'};
+        next;
+    }
+    if ($abort_fetches) {
+        push @manifest, {%$base,status=>'not-attempted-connection-errors'};
         next;
     }
     if ($max_pages && $attempted >= $max_pages) {
@@ -285,9 +336,17 @@ for my $key (sort keys %pages) {
     if (!$r->{content}) {
         push @errors, "$entry->{kind}/$entry->{name}: HTTP $r->{status}: $r->{error}";
         push @manifest, {%$base,status=>'fetch-error',http_status=>$r->{status},error=>$r->{error}};
-        printf STDERR "[%d] FAIL %s %s (HTTP %s)\n", $attempted, $entry->{kind},$entry->{name},$r->{status};
+        printf STDERR "[%d] FAIL %s %s (%s: %s)\n",
+            $attempted, $entry->{kind}, $entry->{name}, $r->{status},
+            $r->{error} // 'unknown error';
+        if (++$consecutive_errors >= $max_consecutive_errors) {
+            $abort_fetches=1;
+            warn "Stopping requests after $consecutive_errors consecutive failures. "
+                . "Remaining pages will be marked unattempted in the manifest.\n";
+        }
         next;
     }
+    $consecutive_errors=0;
     my $sub = $entry->{kind} eq 'function' ? 'functions' : 'tables';
     my $prefix="pages/$sub/$entry->{name}";
     write_file(File::Spec->catfile($root, "$prefix.html"), $r->{content});
@@ -311,7 +370,9 @@ write_file(File::Spec->catfile($root,'manifest.json'),$json->encode({
     source_url=>'https://vo-wiki.com/racecar2/index.php?title=API_Index2&oldid=14148',
     generated_utc=>strftime('%Y-%m-%dT%H:%M:%SZ',gmtime),
     live_index=>$live_index,stats=>{seed_count=>scalar(keys %pages),saved=>$good,
-        unlinked_pdf=>$missing,failed=>$fail,requests=>$requests,cache_hits=>$cache_hits},
+        unlinked_pdf=>$missing,failed=>$fail,requests=>$requests,cache_hits=>$cache_hits,
+    stopped_early=>$abort_fetches ? JSON::PP::true : JSON::PP::false,
+    not_attempted_connection_errors=>scalar(grep {$_->{status} eq 'not-attempted-connection-errors'} @manifest)},
     pages=>\@manifest,
 }));
 write_file(File::Spec->catfile($root,'errors.txt'),join("\n",@errors)."\n");
