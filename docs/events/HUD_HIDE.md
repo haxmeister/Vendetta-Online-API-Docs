@@ -38,3 +38,21 @@ These are representative values from a particular game state, not constants. The
 - Live observation: [second event survey](2026-11-08-second-live-event-survey.md).
 - The broad observer keeps at most two example values per argument shape; the event callback count is not a per-example frequency.
 - Table previews are intentionally bounded, and userdata is not traversed. Chat-related argument values are not recorded.
+
+---
+
+## Fourth live session — November 9, 2026 UTC
+
+**Callbacks:** 21. **Saved examples:** 1.
+**Type signature(s):** `0:`.
+
+~~~text
+event=HUD_HIDE
+arguments=0
+~~~
+
+### Interpretation
+
+These are additional observed callback examples. Contextual state and per-callback ordering were not captured for this event.
+
+**Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md).
