@@ -65,3 +65,29 @@ No callback arguments. At the sampled callback, `PlayerInStation() = true`, stat
 **Limitations:** Getter context was read during the callback, not necessarily before the event transition. A matching number is correlation evidence, not universal field semantics.
 
 **Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.
+
+
+---
+
+## Automated research batch — November 9, 2026 UTC
+
+**Observed callback signatures:** `0:`. **Saved representative examples:** 1. The `occurrences` counters are cumulative within a watching session and must not be added across flushes or treated as per-example frequencies.
+
+### Captured examples
+
+~~~text
+signature=0:
+shape=
+event=ENTERED_STATION
+arguments=0
+context=callback-time-approved-getters-v1
+context.PlayerInStation=1[boolean:true]
+context.GetCurrentStationID=1[number:1219585]
+context.GetCurrentSectorid=1[number:4764]
+~~~
+
+### Interpretation and limits
+
+Argument meanings and ordering beyond the recorded types remain provisional. Callback-time getter context reflects state during the callback, not necessarily before the event.
+
+**Source:** automated capture snapshots `20261109T013130.298625Z-25441-000001.txt`; permanent review: [November 9 automated session](../research/2026-11-09-automated-review.md).
