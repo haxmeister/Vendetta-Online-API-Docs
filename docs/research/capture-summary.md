@@ -14,7 +14,7 @@ These observations do not establish universal API signatures.
 
 - Function records: 0
 - Event records: 0
-- Snapshots: 3
+- Snapshots: 4
 - Notes: 0
 - Chat event payloads redacted: 0
 
@@ -773,5 +773,45 @@ These observations do not establish universal API signatures.
     context=callback-time-approved-getters-v1
     context.GetTargetInfo=7[string,number:1,number:2608.4965976593,number:3,string,string,nil]
     context.GetTargetDistance=2[number:2608.4965976593,nil]
+    
+
+### event-watch — 20261109T014330.306885Z-25441-000004.txt
+
+    format=api-event-watch-v3
+    source=historical-event-candidates
+    candidate_count=214
+    observed_events=57
+    part=1
+    signature=0:
+    occurrences=1
+    shape=redacted
+    event=CHAT_CANCELLED
+    arguments=0
+    
+    ---
+    signature=1:table
+    occurrences=1
+    shape=redacted
+    event=CHAT_MSG_SECTOR
+    arguments=1
+    arg1 type=table
+    
+    ---
+    signature=4:string,string,string,number
+    occurrences=1
+    shape=string;string;string;number
+    event=MISSION_QUESTION_OPEN
+    arguments=4
+    arg1 type=string value="This mission relays some brief information about where to go once you complete you training, and what possibilities await you in the galaxy." (bytes=140)
+    arg2 type=string value="Info" (bytes=4)
+    arg3 type=string value="db:1009" (bytes=7)
+    arg4 type=number value=1219585
+    
+    ---
+    signature=0:
+    occurrences=1
+    shape=
+    event=SYSMENU_TOGGLE
+    arguments=0
     
 
