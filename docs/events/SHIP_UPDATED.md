@@ -54,3 +54,41 @@ A numeric value of `9062` was captured. It also appears in one `SHIP_CHANGED` sa
 **Occurrence-count caveat:** Event counters persist across flushes; do not sum these counts with previous snapshots.
 
 **Source:** [Third event survey](2026-11-08-third-live-event-survey.md), snapshot `20261109T000121.364994Z-24651-000114.txt`.
+
+---
+
+## Fourth live session — callback-time context (November 9, 2026 UTC)
+
+**Callbacks in this session:** 5. **Saved examples:** 2. These are event-wide counts, not frequencies of each sample.
+
+### Observed argument examples and getter context
+
+~~~text
+signature=1:number
+shape=number
+event=SHIP_UPDATED
+arguments=1
+arg1 type=number value=14168
+context=callback-time-approved-getters-v1
+context.GetActiveShipName=1[string]
+context.HasActiveShip=1[boolean:true]
+~~~
+
+~~~text
+signature=1:number
+shape=number
+event=SHIP_UPDATED
+arguments=1
+arg1 type=number value=5866
+context=callback-time-approved-getters-v1
+context.GetActiveShipName=1[string]
+context.HasActiveShip=1[boolean:true]
+~~~
+
+### Evidence and interpretation
+
+The event delivered one number (`14168` or `5866`). Both contextual samples showed an active ship and a string ship name (the string content was intentionally omitted), supporting a relation to ship state but not the precise identity of the numeric argument.
+
+**Limitations:** Getter context was obtained inside the event callback; it does not establish pre-event state or callback ordering.
+
+**Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.

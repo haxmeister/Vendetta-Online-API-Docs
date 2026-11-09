@@ -37,3 +37,39 @@ arguments=0
 These are representative values from a particular game state, not constants. The precise meaning of each field may require further testing.
 
 **Source:** [second event survey](2026-11-08-second-live-event-survey.md), snapshot `20261108T233831.046307Z-24651-000061.txt`.
+
+---
+
+## Fourth live session — callback-time context (November 9, 2026 UTC)
+
+**Callbacks in this session:** 7. **Saved examples:** 2. These are event-wide counts, not frequencies of each sample.
+
+### Observed argument examples and getter context
+
+~~~text
+signature=0:
+shape=
+event=TARGET_CHANGED
+arguments=0
+context=callback-time-approved-getters-v1
+context.GetTargetInfo=7[string,number:0.062409638554217,number:3684.7738058122,number:0,string,string,nil]
+context.GetTargetDistance=2[number:3684.7738058122,nil]
+~~~
+
+~~~text
+signature=0:
+shape=
+event=TARGET_CHANGED
+arguments=0
+context=callback-time-approved-getters-v1
+context.GetTargetInfo=7[string,number:1,number:1860.8920575896,number:0,string,string,nil]
+context.GetTargetDistance=2[number:1860.8920575896,nil]
+~~~
+
+### Evidence and interpretation
+
+The callback still delivered **zero** arguments. Its two contextual `GetTargetInfo()` and `GetTargetDistance()` calls agreed on distance (`3684.7738058122` and `1860.8920575896`), but these are getter values, not event arguments. Target name strings remain type-only in context.
+
+**Limitations:** Getter context was obtained inside the event callback; it does not establish pre-event state or callback ordering.
+
+**Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.

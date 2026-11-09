@@ -70,3 +70,41 @@ The numeric route-table value in this new sample is `4764`, compared with `[1]=4
 **Occurrence-count caveat:** Event counters persist across flushes; do not sum these counts with previous snapshots.
 
 **Source:** [Third event survey](2026-11-08-third-live-event-survey.md), snapshot `20261108T234315.893757Z-24651-000062.txt`.
+
+---
+
+## Fourth live session — callback-time context (November 9, 2026 UTC)
+
+**Callbacks in this session:** 2. **Saved examples:** 2. These are event-wide counts, not frequencies of each sample.
+
+### Observed argument examples and getter context
+
+~~~text
+signature=1:table
+shape=table{1:number}
+event=NAVROUTE_CHANGED
+arguments=1
+arg1 type=table value=table{[1]=4764}
+context=callback-time-approved-getters-v1
+context.GetCurrentSectorid=1[number:5076]
+context.GetCurrentSystemid=1[number:20]
+~~~
+
+~~~text
+signature=1:table
+shape=table{}
+event=NAVROUTE_CHANGED
+arguments=1
+arg1 type=table value=table{}
+context=callback-time-approved-getters-v1
+context.GetCurrentSectorid=1[number:4764]
+context.GetCurrentSystemid=1[number:19]
+~~~
+
+### Evidence and interpretation
+
+The populated route table carried `[1]=4764`, while the callback-time `GetCurrentSectorid()` was `5076` (system `20`). Thus this route value **does not always equal the current sector ID**. A second empty table was observed with current sector `4764` (system `19`).
+
+**Limitations:** Getter context was obtained inside the event callback; it does not establish pre-event state or callback ordering.
+
+**Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.

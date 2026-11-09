@@ -84,3 +84,73 @@ arguments=0
 **Occurrence-count caveat:** The watcher retains event counters across flushes. The counts reported with these examples are cumulative at the time of capture; they cannot be added to counts from earlier snapshots.
 
 **Source:** [Third event survey](2026-11-08-third-live-event-survey.md), captured in `20261109T000121.364994Z-24651-000114.txt`.
+
+---
+
+## Fourth live session — callback-time context (November 9, 2026 UTC)
+
+**Callbacks in this session:** 19. **Saved examples:** 5. These are event-wide counts, not frequencies of each sample.
+
+### Observed argument examples and getter context
+
+~~~text
+signature=0:
+shape=
+event=CINEMATIC_START
+arguments=0
+context=callback-time-approved-getters-v1
+context.PlayerInStation=1[boolean:false]
+context.GetCurrentSectorid=1[number:4764]
+~~~
+
+~~~text
+signature=1:boolean
+shape=boolean
+event=CINEMATIC_START
+arguments=1
+arg1 type=boolean value=false
+context=callback-time-approved-getters-v1
+context.PlayerInStation=1[boolean:false]
+context.GetCurrentSectorid=1[number:4978]
+~~~
+
+~~~text
+signature=1:boolean
+shape=boolean
+event=CINEMATIC_START
+arguments=1
+arg1 type=boolean value=false
+context=callback-time-approved-getters-v1
+context.PlayerInStation=1[boolean:false]
+context.GetCurrentSectorid=1[number:5076]
+~~~
+
+~~~text
+signature=1:number
+shape=number
+event=CINEMATIC_START
+arguments=1
+arg1 type=number value=4
+context=callback-time-approved-getters-v1
+context.PlayerInStation=1[boolean:false]
+context.GetCurrentSectorid=1[number:5076]
+~~~
+
+~~~text
+signature=1:number
+shape=number
+event=CINEMATIC_START
+arguments=1
+arg1 type=number value=6
+context=callback-time-approved-getters-v1
+context.PlayerInStation=1[boolean:false]
+context.GetCurrentSectorid=1[number:4978]
+~~~
+
+### Evidence and interpretation
+
+This session captured **three distinct signatures**: zero arguments, one boolean (`false`), and one number (`4` or `6`). All shown contextual samples had `PlayerInStation() = false`; there is no evidence to assign a meaning to the boolean or numeric values yet.
+
+**Limitations:** Getter context was obtained inside the event callback; it does not establish pre-event state or callback ordering.
+
+**Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.
