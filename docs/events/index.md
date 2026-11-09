@@ -8,6 +8,7 @@ Each page reports callback arguments, representative values, and available table
 - [Second event survey: 52 names and 65 examples](2026-11-08-second-live-event-survey.md)
 - [Third event survey: 23 names and 30 examples](2026-11-08-third-live-event-survey.md)
 - [Run the broad event observer](broad-watch.md)
+- [Correlate event arguments with game state](context-correlation.md)
 - [Documentation and evidence conventions](../reference-conventions.md)
 
 | Event | Evidence status |
