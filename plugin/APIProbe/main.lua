@@ -68,7 +68,7 @@ end
 
 -- Bounded table inspection for documented event payloads. Inspect primitive
 -- values, field names and nested tables without invoking arbitrary __tostring
--- methods or traversing userdata. Chat events bypass this function entirely.
+-- methods or traversing userdata. Chat is captured locally with these bounds.
 local TABLE_PREVIEW_DEPTH = 3
 local TABLE_PREVIEW_KEYS = 12
 local TABLE_PREVIEW_NODES = 64
@@ -212,7 +212,8 @@ end
 -- /apidocs watch all discovers signatures, bounded table shapes and a few
 -- different values for each shape. Unlike the old type-only deduplication,
 -- a new field or value can produce a new example without a focused watch.
--- Chat-related arguments are recorded ONLY by type, never by value/fields.
+-- Chat arguments use the same local bounded captures. Public reports retain
+-- their table schemas but strip conversational string values.
 local function is_chat_event(name)
     return string.match(name, "^CHAT_")
         or string.match(name, "^ACTIVATE_CHAT_")
@@ -280,12 +281,11 @@ local function record_all(event, ...)
         local value = select(i, ...)
         local kind = type(value)
         types[#types + 1] = kind
-        -- Never inspect chat-related table keys or contents.
-        shapes[#shapes + 1] = (chat and kind or event_shape(value))
+        -- Include actual table key names and nested types even for chat.
+        shapes[#shapes + 1] = event_shape(value)
     end
     local signature = n .. ":" .. table.concat(types, ",")
     local shape = table.concat(shapes, ";")
-    if chat then shape = "redacted" end
     local key = signature .. "|" .. shape
     local group = record.shapes[key]
     if not group then
@@ -299,10 +299,11 @@ local function record_all(event, ...)
     for i = 1, math.min(n, 16) do
         local value = select(i, ...)
         local line = "arg" .. i .. " type=" .. type(value)
-        if not chat then
-            line = line .. " value=" .. string.sub(quote(value), 1, 1024)
-        end
+        line = line .. " value=" .. string.sub(quote(value), 1, 1024)
         lines[#lines + 1] = line
+        if chat then
+            lines[#lines + 1] = "arg" .. i .. " schema=" .. event_shape(value)
+        end
     end
     if n > 16 then lines[#lines + 1] = "remaining_arguments=" .. (n - 16) end
     local body = table.concat(lines, "\n")
@@ -417,12 +418,15 @@ function observer:OnEvent(event, ...)
     local n = select("#", ...)
     local lines = {"event=" .. event, "arguments=" .. n}
     local chat = is_chat_event(event)
-    -- Chat payloads are type-only. Other events keep bounded examples.
+    -- Keep bounded chat values locally; public reports strip message text.
     for index = 1, math.min(n, 16) do
         local value = select(index, ...)
         local line = "arg" .. index .. " type=" .. type(value)
-        if not chat then line = line .. " value=" .. quote(value) end
+        line = line .. " value=" .. quote(value)
         lines[#lines + 1] = line
+        if chat then
+            lines[#lines + 1] = "arg" .. index .. " schema=" .. event_shape(value)
+        end
     end
     if n > 16 then lines[#lines + 1] = "remaining_arguments=" .. (n - 16) end
     local body = table.concat(lines, "\n") .. "\n"

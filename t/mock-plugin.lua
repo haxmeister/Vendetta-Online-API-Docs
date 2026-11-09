@@ -234,6 +234,7 @@ route.comment = nil
 route.destination = "Sedina"
 watched.CHAT_MSG_PRIVATE:OnEvent("CHAT_MSG_PRIVATE", {
     message = "private table message", speaker = "private table speaker",
+    meta = {faction = 2, flags = {trusted = true}},
 })
 for i = 1, 30 do
     watched.HUD_UPDATE:OnEvent("HUD_UPDATE", i)
@@ -284,16 +285,22 @@ assert(string.find(whole, '["valid"]=true', 1, true),
 assert(string.find(whole, "<cycle>", 1, true),
     "cycles should be detected without recursion")
 assert(string.find(whole, "event=CHAT_MSG_PRIVATE", 1, true))
-assert(not string.find(whole, "private table message", 1, true),
-    "chat table contents must never be inspected")
-assert(not string.find(whole, "private table speaker", 1, true),
-    "chat table player names must never be inspected")
-assert(not string.find(whole, "private conversation", 1, true),
-    "chat content must not be collected")
-assert(not string.find(whole, "private recipient", 1, true),
-    "chat activation must not expose recipient")
-assert(not string.find(whole, "private table speaker", 1, true),
-    "chat field names and scalar values must stay private")
+assert(string.find(whole, "private table message", 1, true),
+    "local chat capture preserves bounded message examples")
+assert(string.find(whole, "private table speaker", 1, true),
+    "local chat capture preserves representative string values")
+assert(string.find(whole, "private conversation", 1, true),
+    "local scalar chat arguments are captured")
+assert(string.find(whole, "private recipient", 1, true),
+    "local chat activation arguments are captured")
+assert(string.find(whole, '["message"]:string', 1, true),
+    "chat schema exposes table key names and types")
+assert(string.find(whole, '["faction"]:number', 1, true),
+    "chat schema exposes nested fields")
+assert(string.find(whole, '["trusted"]:boolean', 1, true),
+    "chat schema handles nested tables")
+assert(string.find(whole, '["speaker"]="private table speaker"', 1, true),
+    "bounded local previews include representative string values")
 local after_flush = #frames
 run("flush")
 assert(#frames == after_flush, "unchanged signatures should not be sent twice")
@@ -305,8 +312,10 @@ watched.CHAT_MSG_PRIVATE:OnEvent("CHAT_MSG_PRIVATE", "secret explicit chat")
 category, name, body = decode(frames[#frames])
 assert(category == "event" and name == "CHAT_MSG_PRIVATE")
 assert(string.find(body, "arg1 type=string", 1, true))
-assert(not string.find(body, "secret explicit chat", 1, true),
-    "explicit chat capture must also be type-only")
+assert(string.find(body, "secret explicit chat", 1, true),
+    "explicit chat capture keeps bounded raw text locally")
+assert(string.find(body, "arg1 schema=string", 1, true),
+    "explicit chat capture records a schema per argument")
 run("unwatch", "CHAT_MSG_PRIVATE")
 
 -- Focused watches should capture table fields per occurrence.
