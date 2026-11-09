@@ -26,7 +26,7 @@ GetOptions(
     'help'       => \$help,
 ) or die "usage: perl tools/share-observations.pl [--captures DIR] [--output FILE] [--reviewed-file FILE] [--all] [--push]\n";
 if ($help) {
-    say 'usage: perl tools/share-observations.pl [--captures DIR] [--output FILE] [--all] [--push]';
+    say 'usage: perl tools/share-observations.pl [--captures DIR] [--output FILE] [--reviewed-file FILE] [--all] [--push]';
     exit 0;
 }
 die "captures directory not found: $captures\n" if !-d $captures;
@@ -184,7 +184,7 @@ sub run_git (@args) {
 sub chat_event ($name) {
     # Include text entered into chat or slash commands. Other events keep
     # their values; a manual review is still needed before public sharing.
-    return $name =~ /\A(?:CHAT_|EMOTE_ENTERED\z|COMMAND\z)/;
+    return $name =~ /\A(?:CHAT_|ACTIVATE_CHAT_|EMOTE_ENTERED\z|COMMAND\z)/;
 }
 
 sub redact_chat ($body, $name) {
