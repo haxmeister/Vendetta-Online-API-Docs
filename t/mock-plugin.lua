@@ -211,6 +211,7 @@ watched.TARGET_CHANGED:OnEvent("TARGET_CHANGED")
 watched.TARGET_CHANGED:OnEvent("TARGET_CHANGED", "Asteroid", 12)
 watched.TARGET_CHANGED:OnEvent("TARGET_CHANGED", "Another target", 13)
 watched.SECTOR_CHANGED:OnEvent("SECTOR_CHANGED", 5597)
+watched.SECTOR_CHANGED:OnEvent("SECTOR_CHANGED", 5598)
 watched.CHAT_MSG_PRIVATE:OnEvent("CHAT_MSG_PRIVATE", "private conversation")
 watched.ACTIVATE_CHAT_PRIVATE:OnEvent("ACTIVATE_CHAT_PRIVATE", "private recipient")
 local route = {
@@ -318,4 +319,25 @@ run("unwatch", "NAVROUTE_CHANGED")
 
 run("stop")
 assert(next(watched) == nil)
-print("PASS: APIProbe strict-global scan, getters, and bounded all-event capture")
+
+-- A second collection session should sample previously exhausted signatures.
+-- Previously SECTOR_CHANGED used both of its per-shape example slots.
+local before_second = #frames
+run("connect")
+last_connection.options.onConnect()
+run("watch", "all")
+watched.SECTOR_CHANGED:OnEvent("SECTOR_CHANGED", 5597)
+run("flush")
+assert(#frames > before_second, "new session must reset sample quotas")
+local found_second = false
+for i = before_second + 1, #frames do
+    category, name, body = decode(frames[i])
+    if name == "event-watch" and
+        string.find(body, "event=SECTOR_CHANGED", 1, true) then
+        found_second = true
+    end
+end
+assert(found_second, "fresh watch-all session must capture earlier event forms")
+run("stop")
+
+print("PASS: APIProbe strict-global scan, getters, context, and event capture")
