@@ -12,6 +12,17 @@
 
 **Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
 
+## Historical Racecar reference (March 2024)
+
+**Historical description:** Racecar associates this event with processing a message via `print`, including the `/echo` command.
+
+**Historical argument information:** It proposes a table containing message text. Our live captures observed a table but deliberately redacted its fields.
+
+**Evidence priority:** The live callback types in the Arguments section take precedence. Chat contents and table keys remain redacted; historical descriptions do not disclose those values.
+
+**Source:** [Racecar Eventtype, revision 14149](https://vo-wiki.com/racecar2/index.php?title=Eventtype&oldid=14149); last edited March 19, 2024.
+
+
 ---
 
 ## Sources

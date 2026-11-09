@@ -12,6 +12,17 @@ To investigate this historical candidate, use the event watcher while performing
 /apidocs watch CHAT_MSG_NATION
 ~~~
 
+## Historical Racecar reference (March 2024)
+
+**Historical description:** Racecar describes nation chat and labels that route deprecated.
+
+**Historical argument information:** No callback arguments are specified. The deprecation claim is historical and has not been independently checked.
+
+**Evidence priority:** No live callback signature has been recorded. These older claims do not establish an observed argument count, type, or table structure.
+
+**Source:** [Racecar Eventtype, revision 14149](https://vo-wiki.com/racecar2/index.php?title=Eventtype&oldid=14149); last edited March 19, 2024.
+
+
 ## Sources
 
 - [Historical event candidates](../../plugin/APIProbe/events.lua) (compiled from the March 2024 `Eventtype` reference).

@@ -12,6 +12,17 @@ To investigate this historical candidate, use the event watcher while performing
 /apidocs watch CHAT_MSG_CHANNEL_EMOTE
 ~~~
 
+## Historical Racecar reference (March 2024)
+
+**Historical description:** Racecar describes an emote (`/me`) in channel chat.
+
+**Historical argument information:** The old source suggests a table with name, message, faction ID, and channel ID; this schema has not been verified in a live callback.
+
+**Evidence priority:** No live callback signature has been recorded. These older claims do not establish an observed argument count, type, or table structure.
+
+**Source:** [Racecar Eventtype, revision 14149](https://vo-wiki.com/racecar2/index.php?title=Eventtype&oldid=14149); last edited March 19, 2024.
+
+
 ## Sources
 
 - [Historical event candidates](../../plugin/APIProbe/events.lua) (compiled from the March 2024 `Eventtype` reference).
