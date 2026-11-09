@@ -56,3 +56,26 @@ arg1 type=string value="NFZ" (bytes=3)
 The callback carried a string indicating the observed zone. These strings are representative examples, not a guarantee of all possible values.
 
 **Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md).
+
+
+---
+
+## Automated research batch — November 9, 2026 UTC
+
+**Observed callback signatures:** `1:string`. **Saved representative examples:** 1. The `occurrences` counters are cumulative within a watching session and must not be added across flushes or treated as per-example frequencies.
+
+### Captured examples
+
+~~~text
+signature=1:string
+shape=string
+event=ENTER_ZONE_NFZ
+arguments=1
+arg1 type=string value="NFZ" (bytes=3)
+~~~
+
+### Interpretation and limits
+
+Argument meanings and ordering beyond the recorded types remain provisional. Callback-time getter context reflects state during the callback, not necessarily before the event.
+
+**Source:** automated capture snapshots `20261109T013130.298625Z-25441-000001.txt`; permanent review: [November 9 automated session](../research/2026-11-09-automated-review.md).
