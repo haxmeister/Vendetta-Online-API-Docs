@@ -14,7 +14,7 @@ These observations do not establish universal API signatures.
 
 - Function records: 0
 - Event records: 0
-- Snapshots: 8
+- Snapshots: 9
 - Notes: 0
 - Chat event payloads redacted: 0
 
@@ -1055,5 +1055,22 @@ These observations do not establish universal API signatures.
     arg1 type=number value=14177
     arg2 type=number value=380
     arg3 type=number value=506701
+    
+
+### event-watch — 20261109T015830.306827Z-25441-000009.txt
+
+    format=api-event-watch-v3
+    source=historical-event-candidates
+    candidate_count=214
+    observed_events=70
+    part=1
+    signature=0:
+    occurrences=31
+    shape=
+    event=CINEMATIC_START
+    arguments=0
+    context=callback-time-approved-getters-v1
+    context.PlayerInStation=1[boolean:false]
+    context.GetCurrentSectorid=1[number:5076]
     
 
