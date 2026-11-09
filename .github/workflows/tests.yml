@@ -13,8 +13,10 @@ jobs:
       - name: Install Lua for the mock game client
         run: |
           sudo apt-get update
-          sudo apt-get install -y lua5.4
+          sudo apt-get install -y lua5.1 lua5.4
       - name: Run Perl tests
         run: prove -lr t
-      - name: Run APIProbe strict-global mock
+      - name: Run APIProbe strict-global mock (Lua 5.1)
+        run: lua5.1 t/mock-plugin.lua
+      - name: Run APIProbe strict-global mock (Lua 5.4)
         run: lua5.4 t/mock-plugin.lua
