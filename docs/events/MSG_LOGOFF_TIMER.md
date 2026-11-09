@@ -62,3 +62,29 @@ arg1 type=string value="9 seconds to self-destruct." (bytes=27)
 The sampled strings were countdown messages (`10 seconds` and `9 seconds` to self-destruct). The callback interval was not captured.
 
 **Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md).
+
+---
+
+## Fifth live capture — November 9, 2026 UTC
+
+**Saved examples:** 2. Event occurrence counters remain cumulative across flushes, and are not per-example frequencies.
+
+~~~text
+signature=1:string
+shape=string
+event=MSG_LOGOFF_TIMER
+arguments=1
+arg1 type=string value="10 seconds to self-destruct." (bytes=28)
+~~~
+
+~~~text
+signature=1:string
+shape=string
+event=MSG_LOGOFF_TIMER
+arguments=1
+arg1 type=string value="9 seconds to self-destruct." (bytes=27)
+~~~
+
+Captured actual string values `"10 seconds to self-destruct."` and `"9 seconds to self-destruct."`; this does not establish callback cadence.
+
+Examples are not constants or complete schemas; callback-time getter context may reflect transitional state. [Fifth survey](2026-11-09-fifth-live-event-survey.md), snapshots `20261109T013730.312126Z-25441-000003.txt`.

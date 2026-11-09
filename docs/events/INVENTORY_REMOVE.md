@@ -69,3 +69,29 @@ Two numeric examples were recorded (`5867`, `6342`). No getter context is availa
 The context snapshot does not preserve per-callback timing or independent field verification.
 
 **Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.
+
+---
+
+## Fifth live capture — November 9, 2026 UTC
+
+**Saved examples:** 2. Event occurrence counters remain cumulative across flushes, and are not per-example frequencies.
+
+~~~text
+signature=1:number
+shape=number
+event=INVENTORY_REMOVE
+arguments=1
+arg1 type=number value=11122
+~~~
+
+~~~text
+signature=1:number
+shape=number
+event=INVENTORY_REMOVE
+arguments=1
+arg1 type=number value=11123
+~~~
+
+New numeric examples were 11122 and 11123; whether these are item identifiers is not established.
+
+Examples are not constants or complete schemas; callback-time getter context may reflect transitional state. [Fifth survey](2026-11-09-fifth-live-event-survey.md), snapshots `20261109T013730.312126Z-25441-000003.txt`.

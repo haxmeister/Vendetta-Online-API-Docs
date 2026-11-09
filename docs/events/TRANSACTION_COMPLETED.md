@@ -95,3 +95,29 @@ Examples delivered one numeric value, `0` or `1`. Earlier sessions included `6`.
 The context snapshot does not preserve per-callback timing or independent field verification.
 
 **Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.
+
+---
+
+## Fifth live capture — November 9, 2026 UTC
+
+**Saved examples:** 2. Event occurrence counters remain cumulative across flushes, and are not per-example frequencies.
+
+~~~text
+signature=1:number
+shape=number
+event=TRANSACTION_COMPLETED
+arguments=1
+arg1 type=number value=5
+~~~
+
+~~~text
+signature=1:number
+shape=number
+event=TRANSACTION_COMPLETED
+arguments=1
+arg1 type=number value=6
+~~~
+
+This callback supplied one numeric argument, 5 or 6. The code meanings are not established.
+
+Examples are not constants or complete schemas; callback-time getter context may reflect transitional state. [Fifth survey](2026-11-09-fifth-live-event-survey.md), snapshots `20261109T013130.298625Z-25441-000001.txt`.

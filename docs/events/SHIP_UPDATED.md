@@ -92,3 +92,35 @@ The event delivered one number (`14168` or `5866`). Both contextual samples show
 **Limitations:** Getter context was obtained inside the event callback; it does not establish pre-event state or callback ordering.
 
 **Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.
+
+---
+
+## Fifth live capture — November 9, 2026 UTC
+
+**Saved examples:** 2. Event occurrence counters remain cumulative across flushes, and are not per-example frequencies.
+
+~~~text
+signature=1:number
+shape=number
+event=SHIP_UPDATED
+arguments=1
+arg1 type=number value=11824
+context=callback-time-approved-getters-v1
+context.GetActiveShipName=1[string]
+context.HasActiveShip=1[boolean:true]
+~~~
+
+~~~text
+signature=1:number
+shape=number
+event=SHIP_UPDATED
+arguments=1
+arg1 type=number value=14164
+context=callback-time-approved-getters-v1
+context.GetActiveShipName=1[string]
+context.HasActiveShip=1[boolean:true]
+~~~
+
+The callback had one numeric argument, 11824 or 14164. In both examples an active ship existed and the ship-name getter returned a string type; numeric argument semantics remain unknown.
+
+Examples are not constants or complete schemas; callback-time getter context may reflect transitional state. [Fifth survey](2026-11-09-fifth-live-event-survey.md), snapshots `20261109T013130.298625Z-25441-000001.txt`.

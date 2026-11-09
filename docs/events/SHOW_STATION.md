@@ -64,3 +64,33 @@ The callback delivered no arguments. Context showed `PlayerInStation() = true` a
 The context snapshot does not preserve per-callback timing or independent field verification.
 
 **Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.
+
+---
+
+## Fifth live capture — November 9, 2026 UTC
+
+**Saved examples:** 2. Event occurrence counters remain cumulative across flushes, and are not per-example frequencies.
+
+~~~text
+signature=0:
+shape=
+event=SHOW_STATION
+arguments=0
+context=callback-time-approved-getters-v1
+context.PlayerInStation=1[boolean:true]
+context.GetCurrentStationID=1[number:1219585]
+~~~
+
+~~~text
+signature=0:
+shape=
+event=SHOW_STATION
+arguments=0
+context=callback-time-approved-getters-v1
+context.PlayerInStation=1[boolean:true]
+context.GetCurrentStationID=1[number:1299457]
+~~~
+
+No event arguments. Callback-time `PlayerInStation()` was true, with station IDs 1219585 and 1299457 in different samples.
+
+Examples are not constants or complete schemas; callback-time getter context may reflect transitional state. [Fifth survey](2026-11-09-fifth-live-event-survey.md), snapshots `20261109T013130.298625Z-25441-000001.txt`, `20261109T014930.306736Z-25441-000006.txt`.

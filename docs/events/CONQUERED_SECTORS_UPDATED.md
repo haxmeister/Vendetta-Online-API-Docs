@@ -117,3 +117,45 @@ The two table examples contained boolean `true` at numeric keys `[27]` and `[30]
 The context snapshot does not preserve per-callback timing or independent field verification.
 
 **Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.
+
+---
+
+## Fifth live capture — November 9, 2026 UTC
+
+**Saved examples:** 4. Event occurrence counters remain cumulative across flushes, and are not per-example frequencies.
+
+~~~text
+signature=1:table
+shape=table{20:boolean}
+event=CONQUERED_SECTORS_UPDATED
+arguments=1
+arg1 type=table value=table{[20]=true}
+~~~
+
+~~~text
+signature=1:table
+shape=table{27:boolean}
+event=CONQUERED_SECTORS_UPDATED
+arguments=1
+arg1 type=table value=table{[27]=true}
+~~~
+
+~~~text
+signature=1:table
+shape=table{8:boolean}
+event=CONQUERED_SECTORS_UPDATED
+arguments=1
+arg1 type=table value=table{[8]=true}
+~~~
+
+~~~text
+signature=1:table
+shape=table{27:boolean,29:boolean}
+event=CONQUERED_SECTORS_UPDATED
+arguments=1
+arg1 type=table value=table{[27]=true, [29]=true}
+~~~
+
+The table argument contained numeric keys mapped to `true`: `{[20]=true}`, `{[27]=true}`, `{[8]=true}`, and `{[27]=true,[29]=true}`. Missing keys were not checked for meaning; this is not a complete schema.
+
+Examples are not constants or complete schemas; callback-time getter context may reflect transitional state. [Fifth survey](2026-11-09-fifth-live-event-survey.md), snapshots `20261109T013730.312126Z-25441-000003.txt`, `20261109T015530.300917Z-25441-000008.txt`.

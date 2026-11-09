@@ -90,3 +90,35 @@ Two notification examples retained four arguments: message string, number, false
 The context snapshot does not preserve per-callback timing or independent field verification.
 
 **Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.
+
+---
+
+## Fifth live capture — November 9, 2026 UTC
+
+**Saved examples:** 2. Event occurrence counters remain cumulative across flushes, and are not per-example frequencies.
+
+~~~text
+signature=4:string,number,boolean,boolean
+shape=string;number;boolean;boolean
+event=MSG_NOTIFICATION
+arguments=4
+arg1 type=string value="Press the Activate key to dock." (bytes=31)
+arg2 type=number value=5000
+arg3 type=boolean value=false
+arg4 type=boolean value=false
+~~~
+
+~~~text
+signature=4:string,number,boolean,boolean
+shape=string;number;boolean;boolean
+event=MSG_NOTIFICATION
+arguments=4
+arg1 type=string value="Press the Activate key to enter wormhole to Azek." (bytes=49)
+arg2 type=number value=5000
+arg3 type=boolean value=false
+arg4 type=boolean value=false
+~~~
+
+Four arguments occurred with message strings for docking and a wormhole, followed by `5000`, `false`, and `false`. The three nonstring field meanings remain unverified.
+
+Examples are not constants or complete schemas; callback-time getter context may reflect transitional state. [Fifth survey](2026-11-09-fifth-live-event-survey.md), snapshots `20261109T013130.298625Z-25441-000001.txt`, `20261109T014630.304410Z-25441-000005.txt`.

@@ -73,3 +73,33 @@ No callback arguments were recorded. Context showed the current sector and syste
 **Limitations:** Getter context was read during the callback, not necessarily before the event transition. A matching number is correlation evidence, not universal field semantics.
 
 **Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.
+
+---
+
+## Fifth live capture — November 9, 2026 UTC
+
+**Saved examples:** 2. Event occurrence counters remain cumulative across flushes, and are not per-example frequencies.
+
+~~~text
+signature=0:
+shape=
+event=SECTOR_LOADED
+arguments=0
+context=callback-time-approved-getters-v1
+context.GetCurrentSectorid=1[number:4735]
+context.GetCurrentSystemid=1[number:19]
+~~~
+
+~~~text
+signature=0:
+shape=
+event=SECTOR_LOADED
+arguments=0
+context=callback-time-approved-getters-v1
+context.GetCurrentSectorid=1[number:4764]
+context.GetCurrentSystemid=1[number:19]
+~~~
+
+This callback still delivered no arguments. The sector getter reported 4735 or 4764 at callback time; event ordering relative to `SECTOR_CHANGED` is not established.
+
+Examples are not constants or complete schemas; callback-time getter context may reflect transitional state. [Fifth survey](2026-11-09-fifth-live-event-survey.md), snapshots `20261109T013130.298625Z-25441-000001.txt`.

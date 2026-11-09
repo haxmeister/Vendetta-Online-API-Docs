@@ -74,3 +74,33 @@ No callback arguments were delivered. In both contextual samples, `IsStormPresen
 **Limitations:** Getter context was read during the callback, not necessarily before the event transition. A matching number is correlation evidence, not universal field semantics.
 
 **Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.
+
+---
+
+## Fifth live capture — November 9, 2026 UTC
+
+**Saved examples:** 2. Event occurrence counters remain cumulative across flushes, and are not per-example frequencies.
+
+~~~text
+signature=0:
+shape=
+event=STORM_STOPPED
+arguments=0
+context=callback-time-approved-getters-v1
+context.IsStormPresent=1[boolean:false]
+context.GetCurrentSectorid=1[number:4735]
+~~~
+
+~~~text
+signature=0:
+shape=
+event=STORM_STOPPED
+arguments=0
+context=callback-time-approved-getters-v1
+context.IsStormPresent=1[boolean:false]
+context.GetCurrentSectorid=1[number:4764]
+~~~
+
+No arguments. `IsStormPresent()` returned false in sectors 4735 and 4764, consistent with the storm already absent in callback-time state.
+
+Examples are not constants or complete schemas; callback-time getter context may reflect transitional state. [Fifth survey](2026-11-09-fifth-live-event-survey.md), snapshots `20261109T013130.298625Z-25441-000001.txt`.
