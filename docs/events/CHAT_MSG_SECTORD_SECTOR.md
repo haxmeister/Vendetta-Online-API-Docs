@@ -12,6 +12,17 @@
 
 **Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
 
+## Historical Racecar reference (March 2024)
+
+**Historical description:** Racecar describes sector-daemon notices, including temporary hostility standings and ion-storm warnings.
+
+**Historical argument information:** It does not provide a definite argument schema; the live callback's table contents were redacted.
+
+**Evidence priority:** Our own live callback forms and argument values, shown above, supersede these historical claims when they differ. Chat payloads remain redacted.
+
+**Source:** [Racecar Eventtype, revision 14149](https://vo-wiki.com/racecar2/index.php?title=Eventtype&oldid=14149); last edited March 19, 2024.
+
+
 ---
 
 Event callbacks deliver the arguments listed below **after** the event name passed to `OnEvent(event, ...)`. `()` means zero arguments, while `(nil)` means one explicit nil.

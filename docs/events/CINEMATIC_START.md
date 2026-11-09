@@ -12,6 +12,17 @@
 
 **Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
 
+## Historical Racecar reference (March 2024)
+
+**Historical description:** Racecar associates this event with the beginning of an in-game cinematic, including launch and warp animations.
+
+**Historical argument information:** It does not give a fixed argument layout. Live captures show **three forms**, `()`, `(boolean)`, and `(number)`; these live forms are authoritative and the numeric codes remain unidentified.
+
+**Evidence priority:** Our own live callback forms and argument values, shown above, supersede these historical claims when they differ. Chat payloads remain redacted.
+
+**Source:** [Racecar Eventtype, revision 14149](https://vo-wiki.com/racecar2/index.php?title=Eventtype&oldid=14149); last edited March 19, 2024.
+
+
 ---
 
 **Callback arguments:** One argument, but **two types observed**:

@@ -12,6 +12,17 @@
 
 **Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
 
+## Historical Racecar reference (March 2024)
+
+**Historical description:** Racecar describes a mission-related sector-daemon message, also mentioning racetrack top-five standings.
+
+**Historical argument information:** It suggests a table containing a message and mission ID; our callback delivered a table with redacted fields, so its schema is not confirmed.
+
+**Evidence priority:** Our own live callback forms and argument values, shown above, supersede these historical claims when they differ. Chat payloads remain redacted.
+
+**Source:** [Racecar Eventtype, revision 14149](https://vo-wiki.com/racecar2/index.php?title=Eventtype&oldid=14149); last edited March 19, 2024.
+
+
 ---
 
 ## Sources
