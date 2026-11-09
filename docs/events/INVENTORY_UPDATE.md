@@ -30,3 +30,27 @@ A single numeric argument, `14156`, was recorded. Whether it identifies an item,
 - Live observation: [second event survey](2026-11-08-second-live-event-survey.md).
 - The broad observer keeps at most two example values per argument shape; the event callback count is not a per-example frequency.
 - Table previews are intentionally bounded, and userdata is not traversed. Chat-related argument values are not recorded.
+
+---
+
+## New observations — third collection batch (November 8–9, 2026 UTC)
+
+**Stored examples:** 1. **Argument signature(s):** `1:number`.
+
+### Recorded examples
+
+~~~text
+signature=1:number
+shape=number
+event=INVENTORY_UPDATE
+arguments=1
+arg1 type=number value=13304
+~~~
+
+### Interpretation
+
+This session observed the numeric argument `13304`. Previous sessions also observed numeric arguments but did not establish their semantics.
+
+**Occurrence-count caveat:** The observer's event counters persist between flushes. Totals reported with these samples are cumulative, not counts to add to earlier snapshots.
+
+**Source:** [Third event survey](2026-11-08-third-live-event-survey.md), snapshot `20261109T000121.364994Z-24651-000114.txt`.

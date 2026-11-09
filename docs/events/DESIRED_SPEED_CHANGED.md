@@ -32,3 +32,25 @@ To collect more cases (up to 20 individual deliveries), use:
 - [Historical event candidates](../../plugin/APIProbe/events.lua) (compiled from the March 2024 `Eventtype` reference).
 - [November 8 live event survey](2026-11-08-live-event-survey.md), snapshot `20261108T223840.636743Z-24300-000001.txt`.
 
+---
+
+## New observations — third collection batch (November 8–9, 2026 UTC)
+
+**Stored examples:** 1. **Argument signature(s):** `0:`.
+
+### Recorded examples
+
+~~~text
+signature=0:
+shape=
+event=DESIRED_SPEED_CHANGED
+arguments=0
+~~~
+
+### Interpretation
+
+These observations demonstrate example types and values, not guaranteed event-field semantics.
+
+**Occurrence-count caveat:** The observer's event counters persist between flushes. Totals reported with these samples are cumulative, not counts to add to earlier snapshots.
+
+**Source:** [Third event survey](2026-11-08-third-live-event-survey.md), snapshot `20261108T234315.893757Z-24651-000062.txt`.

@@ -1,18 +1,39 @@
 # INVENTORY_ADD
 
-**Status:** Historical event name; no callback observations recorded yet.
-
-## Callback arguments and examples
-
-No callback for this name has been observed in the current collection sessions. **Argument count, types and example values are unknown.**
-
-To investigate this historical candidate, use the event watcher while performing the relevant in-game action:
-
-~~~text
-/apidocs watch INVENTORY_ADD
-~~~
+**Status:** Observed in the third collection batch (November 8–9, 2026 UTC); argument semantics provisional.
 
 ## Sources
 
 - [Historical event candidates](../../plugin/APIProbe/events.lua) (compiled from the March 2024 `Eventtype` reference).
 
+---
+
+## New observations — third collection batch (November 8–9, 2026 UTC)
+
+**Stored examples:** 2. **Argument signature(s):** `1:number`.
+
+### Recorded examples
+
+~~~text
+signature=1:number
+shape=number
+event=INVENTORY_ADD
+arguments=1
+arg1 type=number value=14163
+~~~
+
+~~~text
+signature=1:number
+shape=number
+event=INVENTORY_ADD
+arguments=1
+arg1 type=number value=14165
+~~~
+
+### Interpretation
+
+The callback supplied a numeric value. Observed examples were `14163` and `14165`. Whether they are item IDs or another identifier has not been confirmed.
+
+**Occurrence-count caveat:** The observer's event counters persist between flushes. Totals reported with these samples are cumulative, not counts to add to earlier snapshots.
+
+**Source:** [Third event survey](2026-11-08-third-live-event-survey.md), snapshot `20261109T000121.364994Z-24651-000114.txt`.

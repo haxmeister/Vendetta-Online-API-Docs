@@ -37,3 +37,51 @@ The callback delivered tables with one numeric key and boolean `true`: `[27]=tru
 - Live observation: [second event survey](2026-11-08-second-live-event-survey.md).
 - The broad observer keeps at most two example values per argument shape; the event callback count is not a per-example frequency.
 - Table previews are intentionally bounded, and userdata is not traversed. Chat-related argument values are not recorded.
+
+---
+
+## New observations — third collection batch (November 8–9, 2026 UTC)
+
+**Stored examples:** 4. **Argument signature(s):** `1:table`.
+
+### Recorded examples
+
+~~~text
+signature=1:table
+shape=table{20:boolean,22:boolean}
+event=CONQUERED_SECTORS_UPDATED
+arguments=1
+arg1 type=table value=table{[20]=true, [22]=true}
+~~~
+
+~~~text
+signature=1:table
+shape=table{30:boolean}
+event=CONQUERED_SECTORS_UPDATED
+arguments=1
+arg1 type=table value=table{[30]=true}
+~~~
+
+~~~text
+signature=1:table
+shape=table{6:boolean,8:boolean}
+event=CONQUERED_SECTORS_UPDATED
+arguments=1
+arg1 type=table value=table{[6]=true, [8]=true}
+~~~
+
+~~~text
+signature=1:table
+shape=table{6:boolean}
+event=CONQUERED_SECTORS_UPDATED
+arguments=1
+arg1 type=table value=table{[6]=true}
+~~~
+
+### Interpretation
+
+This session added four example table shapes, including multiple numeric keys mapped to boolean `true`: `[20]` and `[22]` together, plus `[30]`, `[6]` with `[8]`, and `[6]` alone. These are bounded examples, not a complete set of keys or evidence of what `false` means.
+
+**Occurrence-count caveat:** The observer's event counters persist between flushes. Totals reported with these samples are cumulative, not counts to add to earlier snapshots.
+
+**Source:** [Third event survey](2026-11-08-third-live-event-survey.md), snapshot `20261109T000121.364994Z-24651-000114.txt`.
