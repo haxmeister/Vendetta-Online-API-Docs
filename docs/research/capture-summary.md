@@ -14,7 +14,7 @@ These observations do not establish universal API signatures.
 
 - Function records: 0
 - Event records: 0
-- Snapshots: 7
+- Snapshots: 8
 - Notes: 0
 - Chat event payloads redacted: 0
 
@@ -974,5 +974,86 @@ These observations do not establish universal API signatures.
     context=callback-time-approved-getters-v1
     context.GetTargetInfo=7[string,number:0.90614457831325,number:138.11795796528,number:9,string,string,nil]
     context.GetTargetDistance=2[number:138.11795796528,nil]
+    
+
+### event-watch — 20261109T015530.300917Z-25441-000008.txt
+
+    format=api-event-watch-v3
+    source=historical-event-candidates
+    candidate_count=214
+    observed_events=70
+    part=1
+    signature=1:table
+    occurrences=2
+    shape=redacted
+    event=CHAT_MSG_SECTORD
+    arguments=1
+    arg1 type=table
+    
+    ---
+    signature=1:table
+    occurrences=6
+    shape=table{27:boolean,29:boolean}
+    event=CONQUERED_SECTORS_UPDATED
+    arguments=1
+    arg1 type=table value=table{[27]=true, [29]=true}
+    
+    ---
+    signature=6:number,number,number,boolean,number,userdata
+    occurrences=28
+    shape=number;number;number;boolean;number;userdata
+    event=PLAYER_GOT_HIT
+    arguments=6
+    arg1 type=number value=345929
+    arg2 type=number value=1000090299
+    arg3 type=number value=571
+    arg4 type=boolean value=true
+    arg5 type=number value=2
+    arg6 type=userdata value=<userdata>
+    context=callback-time-approved-getters-v1
+    context.GetCurrentSectorid=1[number:5076]
+    context.GetActiveShipHealth=10[number:0,number:0,number:0,number:0,number:0,number:0,number:0,number:19000,nil,nil]
+    
+    ---
+    signature=6:number,number,number,boolean,number,userdata
+    occurrences=28
+    shape=number;number;number;boolean;number;userdata
+    event=PLAYER_GOT_HIT
+    arguments=6
+    arg1 type=number value=345929
+    arg2 type=number value=1000090299
+    arg3 type=number value=572
+    arg4 type=boolean value=true
+    arg5 type=number value=2
+    arg6 type=userdata value=<userdata>
+    context=callback-time-approved-getters-v1
+    context.GetCurrentSectorid=1[number:5076]
+    context.GetActiveShipHealth=10[number:0,number:0,number:0,number:0,number:0,number:0,number:0,number:19000,nil,nil]
+    
+    ---
+    signature=1:number
+    occurrences=33
+    shape=number
+    event=PLAYER_UPDATE
+    arguments=1
+    arg1 type=number value=1000090299
+    
+    ---
+    signature=1:number
+    occurrences=1
+    shape=number
+    event=PLAYER_UPDATE_SKILLS
+    arguments=1
+    arg1 type=number value=345929
+    
+    ---
+    signature=3:number,number,number
+    occurrences=2
+    shape=number;number;number
+    event=SYSTEM_BEST_PRICE
+    arguments=3
+    arg1 type=number value=14177
+    arg2 type=number value=380
+    arg3 type=number value=506701
     
 
