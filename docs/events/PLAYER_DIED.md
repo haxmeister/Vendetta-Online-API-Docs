@@ -2,6 +2,21 @@
 
 **Status:** Observed in the third collection batch (November 8–9, 2026 UTC); argument meaning provisional.
 
+## Arguments
+
+**Observed callback form:** `(number, number, number, number)`. Positions exclude the event name passed to `OnEvent(event, ...)`.
+
+| Position | Lua type(s) | Meaning | Recorded example(s) | Meaning confidence |
+| --- | --- | --- | --- | --- |
+| 1 | `number` | Not identified | `345929`, `1000090141` | Unknown |
+| 2 | `number` | Not identified | `345929` | Unknown |
+| 3 | `number` | Not identified | `0`, `173` | Unknown |
+| 4 | `number` | Sector at death (getter match) | `4764`, `4780` | Strong (provisional) |
+
+**Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
+
+---
+
 ## Sources
 
 - [Historical event candidates](../../plugin/APIProbe/events.lua) (compiled from the March 2024 `Eventtype` reference).

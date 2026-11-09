@@ -2,6 +2,18 @@
 
 **Status:** First observed in a live VO client on November 9, 2026 UTC; argument semantics provisional.
 
+## Arguments
+
+**Observed callback form:** `(number)`. Positions exclude the event name passed to `OnEvent(event, ...)`.
+
+| Position | Lua type(s) | Meaning | Recorded example(s) | Meaning confidence |
+| --- | --- | --- | --- | --- |
+| 1 | `number` | Not identified | `1219585` | Unknown |
+
+**Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
+
+---
+
 Event callback arguments are supplied after the event name to `OnEvent(event, ...)`.
 
 ## Source catalog

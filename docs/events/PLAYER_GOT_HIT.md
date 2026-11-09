@@ -2,6 +2,23 @@
 
 **Status:** Observed for the first time in the second live collection session on November 8, 2026; signature provisional.
 
+## Arguments
+
+**Observed callback form:** `(number, number, number, boolean, number, userdata)`. Positions exclude the event name passed to `OnEvent(event, ...)`.
+
+| Position | Lua type(s) | Meaning | Recorded example(s) | Meaning confidence |
+| --- | --- | --- | --- | --- |
+| 1 | `number` | Not identified | `345929` | Unknown |
+| 2 | `number` | Not identified | `883607`, `1000090299` | Unknown |
+| 3 | `number` | Not identified | `1302`, `1316` | Unknown |
+| 4 | `boolean` | Not identified | `true` | Unknown |
+| 5 | `number` | Not identified | `2` | Unknown |
+| 6 | `userdata` | Not identified | `<userdata>` | Unknown |
+
+**Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
+
+---
+
 Event callbacks deliver the arguments listed below **after** the event name passed to `OnEvent(event, ...)`. `()` means zero arguments, while `(nil)` means one explicit nil.
 
 ## Second live collection — November 8, 2026
