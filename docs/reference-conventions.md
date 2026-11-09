@@ -34,6 +34,19 @@ of field semantics; document repeated matches and counterexamples. The combined 
 
 Events **deliver callback arguments**; these are not values returned by the event handler. Our observer uses `OnEvent(event_name, ...)`, so examples show the arguments **after** the event-name argument.
 
+Each event page begins with an **Arguments** section. A captured event shows its observed callback form(s), followed by a table with **position**, **Lua type**, **meaning**, **real example**, and **confidence in the meaning**. The section is a quick reference; dated evidence and limitations remain below it. An unobserved event states that the count, types, and meanings are unknown. Never invent a zero-argument signature merely because no arguments have yet been captured.
+
+Use these confidence labels for the **meaning**, not for the independently observed Lua type:
+
+- **High**: direct content (such as a notification message or zone marker) or repeated matches to independent getters in several states.
+- **Strong (provisional)**: repeated independent correlations support the meaning but counterexamples or a more controlled test are still needed.
+- **Tentative**: a plausible interpretation supported by limited evidence.
+- **Unknown**: the type/value was captured, but what the argument represents is not established.
+
+A row with **Unknown** confidence is useful: it still documents the captured position, type, and actual values without naming unverified fields. For mixed signatures (e.g. zero-or-one argument), retain each observed form. For privacy-redacted chat events, show argument types but no private values or table keys.
+
+
+
 Example:
 
 ~~~text
@@ -54,7 +67,7 @@ Examples: (false) or (4)
 Meaning of the value: not yet established
 ~~~
 
-Do not invent examples to fill gaps. For chat events, retain the argument types but omit recorded message contents, speaker names, and any other chat payload values. For table arguments, do not invent a table structure when earlier captures recorded only a shallow type preview. APIProbe's broad watcher now collects bounded nested field values and multiple examples when values or shapes differ. Distinguish these newer `api-event-watch-v2` examples from historical type-only previews, record truncation limits, and never infer a missing field was absent outside the captured sample.
+Do not invent examples to fill gaps. For chat events, retain the argument types but omit recorded message contents, speaker names, and any other chat payload values. For table arguments, do not invent a table structure when earlier captures recorded only a shallow type preview. APIProbe's broad watcher now collects bounded nested field values and multiple examples when values or shapes differ. Distinguish newer `api-event-watch-v2` and context-enabled `api-event-watch-v3` examples from historical type-only previews, record truncation limits, and never infer a missing field was absent outside the captured sample.
 
 ## Review and retention
 

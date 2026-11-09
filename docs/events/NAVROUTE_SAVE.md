@@ -2,9 +2,9 @@
 
 **Status:** Historical event name; no callback observations recorded yet.
 
-## Callback arguments and examples
+## Arguments
 
-No callback for this name has been observed in the current collection sessions. **Argument count, types and example values are unknown.**
+**Not yet observed.** No live callback has been captured, so the argument count, Lua types, meanings, and example values are all **unknown**.
 
 To investigate this historical candidate, use the event watcher while performing the relevant in-game action:
 
