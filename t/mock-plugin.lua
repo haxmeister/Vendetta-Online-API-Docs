@@ -356,4 +356,40 @@ pending_client.pendingBytes = 0 -- simulate a later TCP writable callback
 run("stop")
 assert(pending_client.disconnects == 1, "stop should disconnect once queue drains")
 
+-- The one-command session should connect, enable context and watch all.
+local before_autopilot = #frames
+run("start")
+last_connection.options.onConnect()
+assert(watched.SECTOR_CHANGED and watched.NAVROUTE_CHANGED,
+    "start should install broad watches")
+watched.SECTOR_CHANGED:OnEvent("SECTOR_CHANGED", 5597)
+local conn_opts = last_connection.options
+conn_opts.onMessage("APIDOCS|FLUSH")
+assert(#frames > before_autopilot, "collector-requested flush must work")
+category, name, body = decode(frames[#frames])
+assert(category == "snapshot" and name == "event-watch")
+assert(string.find(body, "context.GetCurrentSectorid=1[number:42]", 1, true),
+    "start must enable approved callback-time context")
+
+local before_remote = #frames
+conn_opts.onMessage("APIDOCS|abcdef1234|INSPECT|all")
+assert(#frames == before_remote + #approved,
+    "remote inspection runs only approved getter allowlist")
+conn_opts.onMessage("APIDOCS|abcdef1234|INSPECT|all")
+assert(#frames == before_remote + #approved,
+    "duplicate plan line must not run inspections twice")
+conn_opts.onMessage("APIDOCS|abcdef1234|UNSAFE|loadstring")
+assert(#frames == before_remote + #approved,
+    "unknown remote control actions must not be executed")
+conn_opts.onMessage("APIDOCS|abcdef1234|CONTEXT|off")
+watched.SECTOR_CHANGED:OnEvent("SECTOR_CHANGED", 5600)
+conn_opts.onMessage("APIDOCS|FLUSH")
+category, name, body = decode(frames[#frames])
+assert(string.find(body, "value=5600", 1, true))
+assert(not string.find(body, "context.GetCurrentSectorid=", 1, true),
+    "remote context off prevents subsequent getter snapshots")
+
+run("finish")
+assert(next(watched) == nil, "finish should unregister broad watches")
+
 print("PASS: APIProbe strict-global scan, getters, context, and event capture")
