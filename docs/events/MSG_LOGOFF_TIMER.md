@@ -2,6 +2,18 @@
 
 **Status:** Observed in the third collection batch (November 8–9, 2026 UTC); argument semantics provisional.
 
+## Arguments
+
+**Observed callback form:** `(string)`. Positions exclude the event name passed to `OnEvent(event, ...)`.
+
+| Position | Lua type(s) | Meaning | Recorded example(s) | Meaning confidence |
+| --- | --- | --- | --- | --- |
+| 1 | `string` | Countdown/status text | `"10 seconds to self-destruct."`, `"9 seconds to self-destruct."` | High |
+
+**Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
+
+---
+
 ## Sources
 
 - [Historical event candidates](../../plugin/APIProbe/events.lua) (compiled from the March 2024 `Eventtype` reference).

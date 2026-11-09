@@ -2,6 +2,21 @@
 
 **Status:** First observed in a live VO client on November 9, 2026 UTC. Argument meanings are provisional.
 
+## Arguments
+
+**Observed callback form:** `(string, string, string, number)`. Positions exclude the event name passed to `OnEvent(event, ...)`.
+
+| Position | Lua type(s) | Meaning | Recorded example(s) | Meaning confidence |
+| --- | --- | --- | --- | --- |
+| 1 | `string` | Information/question text | `"This mission relays some brief information about where…` | Tentative |
+| 2 | `string` | Short label string | `"Info"` | Tentative |
+| 3 | `string` | Not identified | `"db:1009"` | Unknown |
+| 4 | `number` | Not identified | `1219585` | Unknown |
+
+**Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
+
+---
+
 **Observed callback signature(s):** `4:string,string,string,number`.
 
 ~~~text
