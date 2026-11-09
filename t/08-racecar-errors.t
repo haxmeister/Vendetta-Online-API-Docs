@@ -66,8 +66,9 @@ END {
 }
 
 my $crawler=File::Spec->catfile($FindBin::Bin,'..','tools','crawl-racecar.pl');
-local @ENV{qw(http_proxy https_proxy all_proxy HTTP_PROXY HTTPS_PROXY ALL_PROXY)}
-    = (undef,undef,undef,undef,undef,undef);
+# HTTP::Tiny interprets existing proxy keys differently from absent
+# keys, even when their values are undef. Delete them for a clean fixture.
+delete @ENV{qw(http_proxy https_proxy all_proxy HTTP_PROXY HTTPS_PROXY ALL_PROXY)};
 local $ENV{no_proxy} = 'localhost,127.0.0.1';
 local $ENV{NO_PROXY} = 'localhost,127.0.0.1';
 
