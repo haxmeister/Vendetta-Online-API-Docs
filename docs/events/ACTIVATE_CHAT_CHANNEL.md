@@ -38,3 +38,19 @@ Only argument types were collected. Chat and command contents, including table v
 - Live observation: [second event survey](2026-11-08-second-live-event-survey.md).
 - The broad observer keeps at most two example values per argument shape; the event callback count is not a per-example frequency.
 - Table previews are intentionally bounded, and userdata is not traversed. Chat-related argument values are not recorded.
+
+---
+
+## Fourth live session — November 9, 2026 UTC
+
+**Callbacks:** 4. **Saved examples:** 1.
+**Type signature(s):** `0:`.
+
+~~~text
+event=ACTIVATE_CHAT_CHANNEL
+arguments=0
+~~~
+
+Chat-related argument values, including any table fields, were deliberately **not inspected or recorded**. These examples establish callback count and types only.
+
+**Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md).

@@ -29,3 +29,20 @@ Only callback argument counts and types were retained. Chat messages, names and 
 **Occurrence-count caveat:** The watcher retains event counters across flushes. The counts reported with these examples are cumulative at the time of capture; they cannot be added to counts from earlier snapshots.
 
 **Source:** [Third event survey](2026-11-08-third-live-event-survey.md), captured in `20261109T000121.364994Z-24651-000114.txt`.
+
+---
+
+## Fourth live session — November 9, 2026 UTC
+
+**Callbacks:** 2. **Saved examples:** 1.
+**Type signature(s):** `1:table`.
+
+~~~text
+event=CHAT_MSG_CONFIRMATION
+arguments=1
+arg1 type=table
+~~~
+
+Chat-related argument values, including any table fields, were deliberately **not inspected or recorded**. These examples establish callback count and types only.
+
+**Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md).

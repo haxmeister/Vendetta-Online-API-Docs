@@ -32,3 +32,18 @@ To collect more cases (up to 20 individual deliveries), use:
 - [Historical event candidates](../../plugin/APIProbe/events.lua) (compiled from the March 2024 `Eventtype` reference).
 - [November 8 live event survey](2026-11-08-live-event-survey.md), snapshot `20261108T223840.636743Z-24300-000001.txt`.
 
+---
+
+## Fourth live session — November 9, 2026 UTC
+
+**Callbacks:** 2. **Saved examples:** 1.
+**Type signature(s):** `0:`.
+
+~~~text
+event=CHAT_CANCELLED
+arguments=0
+~~~
+
+Chat-related argument values, including any table fields, were deliberately **not inspected or recorded**. These examples establish callback count and types only.
+
+**Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md).
