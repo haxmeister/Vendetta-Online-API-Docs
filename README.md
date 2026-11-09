@@ -370,6 +370,24 @@ A local Lua mock test is available:
 texlua t/mock-plugin.lua
 ~~~
 
+## Download the historical Racecar function and table pages
+
+The bundled [Racecar Index2 link inventory](data/racecar/api-index2-links.tsv)
+contains clickable function and table page URLs extracted from the user-supplied
+December 2023 PDF. To download individual detail pages into a timestamped archive
+in your own `~/Documents` folder:
+
+~~~sh
+perl tools/crawl-racecar.pl
+~~~
+
+The crawler uses a Perl HTTP user agent, caches HTML between runs, preserves
+function examples and table keys in readable text, and generates an archive
+with a manifest and error list. See the
+[Racecar crawler guide](docs/research/racecar-crawler.md).
+This reference is historical; **current live captures take precedence** over
+any conflicting historical signatures or descriptions.
+
 ## Licenses
 
 Original reference documentation: CC BY 4.0.
