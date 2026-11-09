@@ -516,6 +516,15 @@ local function stop()
     local names = {}
     for name in pairs(watched) do names[#names + 1] = name end
     for _, name in ipairs(names) do unwatch(name) end
+    -- TCP.Send queues bytes and may leave them pending until later writable
+    -- callbacks. Disconnecting immediately would discard that queue. Stop
+    -- capturing now, but allow pending records to drain before disconnect.
+    if connected and conn and conn.pendingBytes and conn.pendingBytes > 0 then
+        info("capture stopped; " .. conn.pendingBytes
+            .. " TCP bytes remain queued. Keep collector running and use"
+            .. " /apidocs stop again after the queue drains")
+        return
+    end
     if conn then conn:Disconnect(); conn = nil end
     connected = false
     -- A later /apidocs watch all is a NEW session. Do not let the previous
