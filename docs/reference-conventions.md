@@ -25,7 +25,11 @@ Notes: One docked and four undocked observations; IDs change by station.
 
 ## Events
 
-Each event has its own page in the [event reference](events/index.md). The combined survey is an index of observations, not a replacement for per-event documentation.
+Each event has its own page in the [event reference](events/index.md).
+For questions about what an event argument *means*, gather callback-time
+context using the [bounded read-only correlation mode](events/context-correlation.md).
+A matching numeric getter result is evidence of correlation, **not proof**
+of field semantics; document repeated matches and counterexamples. The combined survey is an index of observations, not a replacement for per-event documentation.
 
 
 Events **deliver callback arguments**; these are not values returned by the event handler. Our observer uses `OnEvent(event_name, ...)`, so examples show the arguments **after** the event-name argument.
