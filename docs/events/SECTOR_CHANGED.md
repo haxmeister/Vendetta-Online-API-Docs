@@ -2,6 +2,18 @@
 
 **Status:** Observed in two live client sessions on November 8, 2026.
 
+## Arguments
+
+**Observed callback form:** `(number)`. Positions exclude the event name passed to `OnEvent(event, ...)`.
+
+| Position | Lua type(s) | Meaning | Recorded example(s) | Meaning confidence |
+| --- | --- | --- | --- | --- |
+| 1 | `number` | Current sector ID | `5570`, `4978` | High |
+
+**Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
+
+---
+
 **Callback arguments:** `(number sectorid)`
 
 ~~~text

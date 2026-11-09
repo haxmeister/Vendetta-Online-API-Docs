@@ -2,6 +2,16 @@
 
 **Status:** Observed in two live sessions plus an earlier isolated capture; other contexts may vary.
 
+## Arguments
+
+**Observed callback form:** `()`. Positions exclude the event name passed to `OnEvent(event, ...)`.
+
+No positional callback arguments were observed.
+
+**Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
+
+---
+
 **Arguments:** No additional arguments were recorded after the event name (`arguments=0`).
 
 **Observed behavior:** Earlier testing recorded this event once during travel from Dau L-10 to Dau O-8. A second broad observation session recorded **four additional deliveries**, also with zero arguments, while the client changed sectors.

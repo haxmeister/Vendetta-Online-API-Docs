@@ -2,6 +2,18 @@
 
 **Status:** Observed in the third collection batch (November 8–9, 2026 UTC); argument meaning provisional.
 
+## Arguments
+
+**Observed callback form:** `(number)`. Positions exclude the event name passed to `OnEvent(event, ...)`.
+
+| Position | Lua type(s) | Meaning | Recorded example(s) | Meaning confidence |
+| --- | --- | --- | --- | --- |
+| 1 | `number` | Not identified | `9062`, `9100` | Unknown |
+
+**Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
+
+---
+
 ## Sources
 
 - [Historical event candidates](../../plugin/APIProbe/events.lua) (compiled from the March 2024 `Eventtype` reference).
