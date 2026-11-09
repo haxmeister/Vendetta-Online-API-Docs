@@ -14,7 +14,7 @@ These observations do not establish universal API signatures.
 
 - Function records: 0
 - Event records: 0
-- Snapshots: 5
+- Snapshots: 6
 - Notes: 0
 - Chat event payloads redacted: 0
 
@@ -871,5 +871,59 @@ These observations do not establish universal API signatures.
     event=UPDATE_CHARINFO
     arguments=1
     arg1 type=number value=30466963
+    
+
+### event-watch — 20261109T014930.306736Z-25441-000006.txt
+
+    format=api-event-watch-v3
+    source=historical-event-candidates
+    candidate_count=214
+    observed_events=64
+    part=1
+    signature=1:table
+    occurrences=1
+    shape=redacted
+    event=CHAT_MSG_CHANNEL_EMOTE_ACTIVE
+    arguments=1
+    arg1 type=table
+    
+    ---
+    signature=1:table
+    occurrences=2
+    shape=redacted
+    event=CHAT_MSG_PRINT
+    arguments=1
+    arg1 type=table
+    
+    ---
+    signature=0:
+    occurrences=6
+    shape=
+    event=ENTERED_STATION
+    arguments=0
+    context=callback-time-approved-getters-v1
+    context.PlayerInStation=1[boolean:true]
+    context.GetCurrentStationID=1[number:1299457]
+    context.GetCurrentSectorid=1[number:5076]
+    
+    ---
+    signature=0:
+    occurrences=6
+    shape=
+    event=ENTERING_STATION
+    arguments=0
+    context=callback-time-approved-getters-v1
+    context.PlayerInStation=1[boolean:true]
+    context.GetCurrentStationID=1[number:1299457]
+    
+    ---
+    signature=0:
+    occurrences=6
+    shape=
+    event=SHOW_STATION
+    arguments=0
+    context=callback-time-approved-getters-v1
+    context.PlayerInStation=1[boolean:true]
+    context.GetCurrentStationID=1[number:1299457]
     
 
