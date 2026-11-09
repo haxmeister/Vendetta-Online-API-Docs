@@ -2,6 +2,18 @@
 
 **Status:** Observed in two live client sessions on November 8, 2026; argument meaning unconfirmed.
 
+## Arguments
+
+**Observed callback forms:** `()` or `(boolean)` or `(number)`. Positions exclude the event name passed to `OnEvent(event, ...)`.
+
+| Position | Lua type(s) | Meaning | Recorded example(s) | Meaning confidence |
+| --- | --- | --- | --- | --- |
+| 1 | `boolean` or `number` | Not identified | `false`, `4` | Unknown |
+
+**Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
+
+---
+
 **Callback arguments:** One argument, but **two types observed**:
 
 ~~~text

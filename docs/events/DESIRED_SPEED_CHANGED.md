@@ -2,6 +2,16 @@
 
 **Status:** Observed in the VO client on November 8, 2026; argument signature provisional.
 
+## Arguments
+
+**Observed callback form:** `()`. Positions exclude the event name passed to `OnEvent(event, ...)`.
+
+No positional callback arguments were observed.
+
+**Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
+
+---
+
 **Occurrences:** 120 total in the initial broad-watch session.
 
 ## Observed callback arguments

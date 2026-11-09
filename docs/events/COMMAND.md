@@ -2,6 +2,19 @@
 
 **Status:** Observed in two live collection sessions on November 8, 2026; signature provisional.
 
+## Arguments
+
+**Observed callback forms:** `(number, table)` or `(number)`. Positions exclude the event name passed to `OnEvent(event, ...)`.
+
+| Position | Lua type(s) | Meaning | Recorded example(s) | Meaning confidence |
+| --- | --- | --- | --- | --- |
+| 1 | `number` | Not identified | Redacted | Unknown |
+| 2 | `table` | Not identified | Redacted | Unknown |
+
+**Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
+
+---
+
 Event callbacks deliver the arguments listed below **after** the event name passed to `OnEvent(event, ...)`. `()` means zero arguments, while `(nil)` means one explicit nil.
 
 ## First live collection — November 8, 2026
