@@ -101,3 +101,46 @@ Both saved callbacks delivered **one explicit nil argument**. The same nil form 
 **Limitations:** Getter context was obtained inside the event callback; it does not establish pre-event state or callback ordering.
 
 **Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.
+
+---
+
+## Fifth live capture — November 9, 2026 UTC
+
+**Saved examples:** 3. Counts refer to cumulative event occurrences across flushes, not the number of times each example occurred.
+
+~~~text
+signature=1:nil
+shape=nil
+event=MISSIONLIST_UPDATED
+arguments=1
+arg1 type=nil value=nil
+context=callback-time-approved-getters-v1
+context.PlayerInStation=1[boolean:false]
+context.GetCurrentStationID=1[nil]
+~~~
+
+~~~text
+signature=1:nil
+shape=nil
+event=MISSIONLIST_UPDATED
+arguments=1
+arg1 type=nil value=nil
+context=callback-time-approved-getters-v1
+context.PlayerInStation=1[boolean:true]
+context.GetCurrentStationID=1[number:1219585]
+~~~
+
+~~~text
+signature=1:number
+shape=number
+event=MISSIONLIST_UPDATED
+arguments=1
+arg1 type=number value=3
+context=callback-time-approved-getters-v1
+context.PlayerInStation=1[boolean:true]
+context.GetCurrentStationID=1[number:1219585]
+~~~
+
+The event delivered one **explicit nil** in both a docked and an undocked context; another callback delivered `(3)` while docked. Therefore nil is not a reliable indicator that the player is outside a station.
+
+Getter context was read during event delivery, so these correlations do not establish exact transition ordering. [Fifth context survey](2026-11-09-fifth-live-event-survey.md), snapshots `20261109T013130.298625Z-25441-000001.txt`, `20261109T013430.297695Z-25441-000002.txt`.

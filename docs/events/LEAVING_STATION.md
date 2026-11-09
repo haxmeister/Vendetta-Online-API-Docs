@@ -64,3 +64,23 @@ No callback arguments. At the sampled callback, `PlayerInStation() = false` and 
 **Limitations:** Getter context was read during the callback, not necessarily before the event transition. A matching number is correlation evidence, not universal field semantics.
 
 **Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.
+
+---
+
+## Fifth live capture — November 9, 2026 UTC
+
+**Saved examples:** 1. Counts refer to cumulative event occurrences across flushes, not the number of times each example occurred.
+
+~~~text
+signature=0:
+shape=
+event=LEAVING_STATION
+arguments=0
+context=callback-time-approved-getters-v1
+context.PlayerInStation=1[boolean:false]
+context.GetCurrentStationID=1[nil]
+~~~
+
+The event delivered zero arguments. At callback time `PlayerInStation()` returned false and `GetCurrentStationID()` returned nil, consistent with an already-undocked state.
+
+Getter context was read during event delivery, so these correlations do not establish exact transition ordering. [Fifth context survey](2026-11-09-fifth-live-event-survey.md), snapshots `20261109T013130.298625Z-25441-000001.txt`.
