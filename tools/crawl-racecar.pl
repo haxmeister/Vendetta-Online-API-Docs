@@ -73,7 +73,7 @@ my %allowed = map { $_ => 1 } grep { length } split /\s*,\s*/, lc($allow_host);
 die "provide at least one --allow-host\n" unless %allowed;
 make_path($output_dir, $cache_dir);
 my %client_options = (
-    agent => 'VOAPI-Racecar-Research/0.1 (community documentation crawler)',
+    agent => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36',
     timeout => $timeout,
     max_redirect => 0, # check each redirect destination against the wiki allowlist
     verify_SSL => 1,
