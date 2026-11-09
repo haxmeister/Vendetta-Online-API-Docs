@@ -46,3 +46,28 @@ These are representative values from a particular game state, not constants. The
 - Live observation: [second event survey](2026-11-08-second-live-event-survey.md).
 - The broad observer keeps at most two example values per argument shape; the event callback count is not a per-example frequency.
 - Table previews are intentionally bounded, and userdata is not traversed. Chat-related argument values are not recorded.
+
+---
+
+## Fourth live session — November 9, 2026 UTC
+
+**Callbacks:** 272. **Saved examples:** 2.
+**Type signature(s):** `1:number`.
+
+~~~text
+event=PLAYER_LEFT_SECTOR
+arguments=1
+arg1 type=number value=1000088352
+~~~
+
+~~~text
+event=PLAYER_LEFT_SECTOR
+arguments=1
+arg1 type=number value=30460274
+~~~
+
+### Interpretation
+
+One numeric callback argument was observed, with the example above. The captured numbers resemble identifiers but are not independently verified.
+
+**Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md).

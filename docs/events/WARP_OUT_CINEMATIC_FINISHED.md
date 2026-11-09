@@ -38,3 +38,21 @@ These are representative values from a particular game state, not constants. The
 - Live observation: [second event survey](2026-11-08-second-live-event-survey.md).
 - The broad observer keeps at most two example values per argument shape; the event callback count is not a per-example frequency.
 - Table previews are intentionally bounded, and userdata is not traversed. Chat-related argument values are not recorded.
+
+---
+
+## Fourth live session — November 9, 2026 UTC
+
+**Callbacks:** 8. **Saved examples:** 1.
+**Type signature(s):** `0:`.
+
+~~~text
+event=WARP_OUT_CINEMATIC_FINISHED
+arguments=0
+~~~
+
+### Interpretation
+
+The examples confirm the recorded callback argument count and type. No additional getter context was stored for these events.
+
+**Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md).

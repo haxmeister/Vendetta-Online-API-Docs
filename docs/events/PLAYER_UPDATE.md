@@ -63,3 +63,22 @@ One numeric argument was captured (`462219`). Other sessions supplied different 
 **Occurrence-count caveat:** Event counters persist across flushes; do not sum these counts with previous snapshots.
 
 **Source:** [Third event survey](2026-11-08-third-live-event-survey.md), snapshot `20261109T000121.364994Z-24651-000114.txt`.
+
+---
+
+## Fourth live session — November 9, 2026 UTC
+
+**Callbacks:** 19. **Saved examples:** 1.
+**Type signature(s):** `1:number`.
+
+~~~text
+event=PLAYER_UPDATE
+arguments=1
+arg1 type=number value=345929
+~~~
+
+### Interpretation
+
+One numeric callback argument was observed, with the example above. The captured numbers resemble identifiers but are not independently verified.
+
+**Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md).
