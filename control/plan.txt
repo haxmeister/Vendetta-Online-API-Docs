@@ -1,6 +1,9 @@
 # Declarative test plan. No executable Lua.
-NOTE|Please test targeting and clearing targets, then scan near and far ships.
-NOTE|Try changing your nav route, docking and undocking, and observe mission updates.
-NOTE|If convenient, trigger a cinematic by jumping or launching; note any unusual behavior.
+NOTE|Observe routine sector changes and compare event values with the current sector getter.
+NOTE|Compare TARGET_HEALTH_UPDATE while a target's health changes; do not assume its first number is a percentage.
+NOTE|Compare NAVROUTE_CHANGED with different waypoints while remaining in the same sector.
+NOTE|Scan targets at different distances, including near and far ships.
+NOTE|Dock, launch and change ships to compare station and active-ship getters during callbacks.
+NOTE|If PLAYER_DIED occurs naturally, compare its fourth argument with the current sector. No need to die on purpose.
 CONTEXT|on
 WATCH|all

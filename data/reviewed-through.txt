@@ -1,3 +1,3 @@
 # Latest collection timestamp fully reviewed and consolidated into reference docs.
 # Report generator shares captures newer than this UTC timestamp.
-20261109T004719.408544Z
+20261109T015830.306827Z
