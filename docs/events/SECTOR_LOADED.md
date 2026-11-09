@@ -37,3 +37,39 @@ arguments=0
 No arguments were delivered in any of the eight second-session callbacks. Together with the five earlier observations, this supports a zero-argument callback signature across 13 observed deliveries; other contexts remain untested.
 
 **Source:** [second event survey](2026-11-08-second-live-event-survey.md), snapshot `20261108T233831.046307Z-24651-000061.txt`.
+
+---
+
+## Fourth live session — callback-time context (November 9, 2026 UTC)
+
+**Callbacks in this session:** 8. **Saved examples:** 2. Each `occurrences` total applies to the event, not to each example.
+
+### Observed arguments and game state
+
+~~~text
+signature=0:
+shape=
+event=SECTOR_LOADED
+arguments=0
+context=callback-time-approved-getters-v1
+context.GetCurrentSectorid=1[number:4978]
+context.GetCurrentSystemid=1[number:20]
+~~~
+
+~~~text
+signature=0:
+shape=
+event=SECTOR_LOADED
+arguments=0
+context=callback-time-approved-getters-v1
+context.GetCurrentSectorid=1[number:5823]
+context.GetCurrentSystemid=1[number:23]
+~~~
+
+### Evidence and interpretation
+
+No callback arguments were recorded. Context showed the current sector and system IDs during two deliveries (`4978`/`20`, `5823`/`23`). The aggregate report does not prove timing relative to `SECTOR_CHANGED`.
+
+**Limitations:** Getter context was read during the callback, not necessarily before the event transition. A matching number is correlation evidence, not universal field semantics.
+
+**Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.

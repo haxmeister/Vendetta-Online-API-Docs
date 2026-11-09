@@ -38,3 +38,29 @@ These are representative values from a particular game state, not constants. The
 - Live observation: [second event survey](2026-11-08-second-live-event-survey.md).
 - The broad observer keeps at most two example values per argument shape; the event callback count is not a per-example frequency.
 - Table previews are intentionally bounded, and userdata is not traversed. Chat-related argument values are not recorded.
+
+---
+
+## Fourth live session — callback-time context (November 9, 2026 UTC)
+
+**Callbacks in this session:** 2. **Saved examples:** 1. Each `occurrences` total applies to the event, not to each example.
+
+### Observed arguments and game state
+
+~~~text
+signature=0:
+shape=
+event=ENTERING_STATION
+arguments=0
+context=callback-time-approved-getters-v1
+context.PlayerInStation=1[boolean:true]
+context.GetCurrentStationID=1[number:1219585]
+~~~
+
+### Evidence and interpretation
+
+No callback arguments. The callback-time getters already returned `PlayerInStation() = true` and station ID `1219585`; the name alone must not be used to assume they still describe a pre-docking state.
+
+**Limitations:** Getter context was read during the callback, not necessarily before the event transition. A matching number is correlation evidence, not universal field semantics.
+
+**Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md), snapshot `20261109T004719.408544Z-25087-000001.txt`.
