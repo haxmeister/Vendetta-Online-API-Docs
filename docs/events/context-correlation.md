@@ -20,6 +20,11 @@ Play normally. Changing sectors, docking and undocking, targeting objects, flyin
 /apidocs stop
 ~~~
 
+If stop reports queued TCP bytes, keep the collector and game running. Use
+`/apidocs status` until it reports `TCP pending 0 bytes`, then issue
+`/apidocs stop` again to disconnect. Event callbacks are already unregistered,
+so waiting does not collect more events.
+
 Publish the new report for review:
 
 ~~~sh
