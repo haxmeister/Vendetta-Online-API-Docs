@@ -14,7 +14,7 @@ These observations do not establish universal API signatures.
 
 - Function records: 0
 - Event records: 0
-- Snapshots: 1
+- Snapshots: 2
 - Notes: 0
 - Chat event payloads redacted: 0
 
@@ -557,5 +557,33 @@ These observations do not establish universal API signatures.
     shape=
     event=WARP_OUT_CINEMATIC_FINISHED
     arguments=0
+    
+
+### event-watch — 20261109T013430.297695Z-25441-000002.txt
+
+    format=api-event-watch-v3
+    source=historical-event-candidates
+    candidate_count=214
+    observed_events=39
+    part=1
+    signature=1:number
+    occurrences=16
+    shape=number
+    event=MISSIONLIST_UPDATED
+    arguments=1
+    arg1 type=number value=3
+    context=callback-time-approved-getters-v1
+    context.PlayerInStation=1[boolean:true]
+    context.GetCurrentStationID=1[number:1219585]
+    
+    ---
+    signature=0:
+    occurrences=5
+    shape=
+    event=SHIP_SPAWNED
+    arguments=0
+    context=callback-time-approved-getters-v1
+    context.HasActiveShip=1[boolean:true]
+    context.GetActiveShipHealth=10[number:0,number:0,number:0,number:0,number:0,number:0,number:0,number:10000,nil,nil]
     
 
