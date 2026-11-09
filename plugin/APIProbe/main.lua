@@ -3,6 +3,11 @@
 -- Requires the separate TCP plugin in the sibling TCP/ folder.
 
 local TCP = dofile("../TCP/client.lua")
+-- Whitelisted getters are loaded once and reused for explicit inspection and
+-- context correlation. No arbitrary function names can be invoked.
+local INSPECTIONS = dofile("inspections.lua")
+local INSPECTION_BY_NAME = {}
+for _, entry in ipairs(INSPECTIONS) do INSPECTION_BY_NAME[entry[1]] = entry[2] end
 local conn
 local connected = false
 local watched = {}
@@ -15,6 +20,8 @@ local all_samples = 0
 local MAX_ALL_SHAPES_PER_EVENT = 6
 local MAX_ALL_EXAMPLES_PER_SHAPE = 2
 local MAX_ALL_SAMPLES = 512
+local context_enabled = false
+local CONTEXT_PROBES_PER_EVENT = 12
 
 local function info(message)
     print("[APIProbe] " .. message)
@@ -132,6 +139,67 @@ local function quote(value)
     return text
 end
 
+-- Context is opt-in and only samples explicit read-only, no-argument
+-- getters associated with selected event names. The snapshot is taken while
+-- handling the callback; its timing relative to the game's state update is
+-- not guaranteed. Strings are type-only: never collect target/player names.
+local CONTEXT_RULES = {
+    SECTOR_CHANGED = {"GetCurrentSectorid", "GetCurrentSystemid", "PlayerInStation"},
+    SECTOR_LOADED = {"GetCurrentSectorid", "GetCurrentSystemid"},
+    ENTERING_STATION = {"PlayerInStation", "GetCurrentStationID"},
+    ENTERED_STATION = {"PlayerInStation", "GetCurrentStationID", "GetCurrentSectorid"},
+    LEAVING_STATION = {"PlayerInStation", "GetCurrentStationID"},
+    SHOW_STATION = {"PlayerInStation", "GetCurrentStationID"},
+    TARGET_CHANGED = {"GetTargetInfo", "GetTargetDistance"},
+    TARGET_HEALTH_UPDATE = {"GetTargetInfo", "GetTargetDistance"},
+    TARGET_SCANNED = {"GetTargetInfo", "GetTargetDistance"},
+    SHIP_CHANGED = {"GetActiveShipName", "HasActiveShip", "GetActiveShipHealth"},
+    SHIP_UPDATED = {"GetActiveShipName", "HasActiveShip"},
+    SHIP_SPAWNED = {"HasActiveShip", "GetActiveShipHealth"},
+    PLAYER_GOT_HIT = {"GetCurrentSectorid", "GetActiveShipHealth"},
+    PLAYER_DIED = {"GetCurrentSectorid", "PlayerInStation", "HasActiveShip"},
+    STORM_STARTED = {"IsStormPresent", "GetCurrentSectorid"},
+    STORM_STOPPED = {"IsStormPresent", "GetCurrentSectorid"},
+    MISSIONLIST_UPDATED = {"PlayerInStation", "GetCurrentStationID"},
+    NAVROUTE_CHANGED = {"GetCurrentSectorid", "GetCurrentSystemid"},
+    NAVROUTE_ADD = {"GetCurrentSectorid", "GetCurrentSystemid"},
+    CINEMATIC_START = {"PlayerInStation", "GetCurrentSectorid"},
+}
+local function context_returns(...)
+    local n = select("#", ...)
+    local values = {}
+    for i = 1, math.min(n, 10) do
+        local v = select(i, ...)
+        local kind = type(v)
+        if kind == "number" or kind == "boolean" then
+            values[#values + 1] = kind .. ":" .. tostring(v)
+        else
+            -- Type only for strings, tables and userdata. No private names.
+            values[#values + 1] = kind
+        end
+    end
+    if n > 10 then values[#values + 1] = "..." end
+    return n .. "[" .. table.concat(values, ",") .. "]"
+end
+
+local function event_context(event)
+    if not context_enabled then return nil end
+    local names = CONTEXT_RULES[event]
+    if not names then return nil end
+    local lines = {"context=callback-time-approved-getters-v1"}
+    for _, name in ipairs(names) do
+        local closure = INSPECTION_BY_NAME[name]
+        if closure then
+            local ok, value = pcall(function()
+                return context_returns(closure())
+            end)
+            lines[#lines + 1] = "context." .. name .. "="
+                .. (ok and value or "error")
+        end
+    end
+    return table.concat(lines, "\n")
+end
+
 -- /apidocs watch all discovers signatures, bounded table shapes and a few
 -- different values for each shape. Unlike the old type-only deduplication,
 -- a new field or value can produce a new example without a focused watch.
@@ -189,7 +257,8 @@ end
 local function record_all(event, ...)
     local record = all_observations[event]
     if not record then
-        record = {count = 0, samples = {}, shapes = {}, shape_count = 0}
+        record = {count = 0, samples = {}, shapes = {}, shape_count = 0,
+                  context_probes = 0}
         all_observations[event] = record
     end
     record.count = record.count + 1
@@ -229,7 +298,18 @@ local function record_all(event, ...)
     if n > 16 then lines[#lines + 1] = "remaining_arguments=" .. (n - 16) end
     local body = table.concat(lines, "\n")
     if #body > 4096 then body = string.sub(body, 1, 4096) .. "\n[truncated]" end
-    -- Only include changing examples. Chat events get one type-only example.
+    -- Context is sampled only for selected events and up to a small fixed
+    -- number of times. Never probe chat-related callbacks.
+    if not chat and context_enabled
+            and record.context_probes < CONTEXT_PROBES_PER_EVENT then
+        if CONTEXT_RULES[event] then
+            record.context_probes = record.context_probes + 1
+            local state = event_context(event)
+            if state then body = body .. "\n" .. state end
+        end
+    end
+    -- Different callback-time state can yield another example even if the
+    -- event's own arguments are identical (still at most 2 per shape).
     if group.values[body] then return end
     group.values[body] = true
     group.count = group.count + 1
@@ -276,7 +356,7 @@ local function flush_all()
     local function send_chunk()
         if #chunk == 0 then return true end
         local header = {
-            "format=api-event-watch-v2",
+            "format=api-event-watch-v3",
             "source=historical-event-candidates",
             "candidate_count=" .. #EVENT_NAMES,
             "observed_events=" .. observed,
@@ -432,8 +512,6 @@ end
 -- Candidate closures are generated, so no _G/getfenv lookup is needed.
 -- Only reads their types; never calls candidate functions.
 local CANDIDATES = dofile("candidates.lua")
--- Unlike generated name probes, these explicitly call only approved getters.
-local INSPECTIONS = dofile("inspections.lua")
 
 local function scan()
     if not connected then info("connect first with /apidocs connect"); return end
@@ -605,15 +683,27 @@ local function command(_, args)
         end
     elseif action == "flush" then
         flush_all()
+    elseif action == "context" then
+        if name == "on" then
+            context_enabled = true
+            info("context correlation on (bounded approved getters for selected events)")
+        elseif name == "off" then
+            context_enabled = false
+            info("context correlation off")
+        else
+            info("context is " .. (context_enabled and "on" or "off")
+                .. "; use /apidocs context on or off")
+        end
     elseif action == "status" then
         local n = 0
         for _ in pairs(watched) do n = n + 1 end
         info((connected and "connected" or "not connected")
-            .. "; watching " .. n .. " events")
+            .. "; watching " .. n .. " events"
+            .. "; context " .. (context_enabled and "on" or "off"))
     elseif action == "stop" then
         stop()
     else
-        info("/apidocs connect | test | scan | inspect [list|NAME|all] | watch [EVENT|all] | unwatch [EVENT|all] | flush | status | stop")
+        info("/apidocs connect | test | scan | inspect [list|NAME|all] | watch [EVENT|all] | unwatch [EVENT|all] | context [on|off] | flush | status | stop")
     end
 end
 
