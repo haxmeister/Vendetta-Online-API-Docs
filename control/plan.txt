@@ -1,6 +1,6 @@
-# Assistant-controlled, declarative game test plan.
-# The collector accepts only the limited directives documented in docs/research/autopilot.md.
-# Changing this file on GitHub is enough to deliver new guidance to a running session.
-NOTE|Research plan: explore docking, launching, changing sectors, targeting and switching ships.
+# Declarative test plan. No executable Lua.
+NOTE|Please test targeting and clearing targets, then scan near and far ships.
+NOTE|Try changing your nav route, docking and undocking, and observe mission updates.
+NOTE|If convenient, trigger a cinematic by jumping or launching; note any unusual behavior.
 CONTEXT|on
 WATCH|all
