@@ -20,10 +20,11 @@ my ($captures, $output, $push, $help, $all) =
 GetOptions(
     'captures=s' => \$captures,
     'output=s'   => \$output,
+    'reviewed-file=s' => \$reviewed_file,
     'push'       => \$push,
     'all'        => \$all,
     'help'       => \$help,
-) or die "usage: perl tools/share-observations.pl [--captures DIR] [--output FILE] [--all] [--push]\n";
+) or die "usage: perl tools/share-observations.pl [--captures DIR] [--output FILE] [--reviewed-file FILE] [--all] [--push]\n";
 if ($help) {
     say 'usage: perl tools/share-observations.pl [--captures DIR] [--output FILE] [--all] [--push]';
     exit 0;
