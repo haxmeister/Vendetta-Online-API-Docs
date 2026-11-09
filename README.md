@@ -315,6 +315,11 @@ table shapes, and up to two distinct values per shape (six shapes per event,
 512 total examples per session). `/apidocs flush` or `/apidocs stop` sends
 the buffered examples as bounded snapshots. **You do not need to watch each
 event individually to capture its table fields.**
+To correlate event numbers with read-only game state automatically,
+enable `/apidocs context on` before `/apidocs watch all`. Context is
+off by default, type-redacts returned strings and only samples selected
+events. See [event context correlation](docs/events/context-correlation.md).
+
 This is not a runtime discovery of undocumented event names; see
 [the broad event watcher](docs/events/broad-watch.md).
 For strings, it records quoted Lua text (with newline escapes), byte lengths,
