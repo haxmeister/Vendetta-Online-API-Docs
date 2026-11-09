@@ -15,6 +15,17 @@
 
 **Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
 
+## Historical Racecar reference (March 2024)
+
+**Historical description:** Racecar describes this event as firing when a player in the sector dies.
+
+**Historical argument descriptions:** It calls the first three positions deceased character ID, killer character ID, and weapon ID. Its text does not document the fourth position.
+
+**Live evidence takes precedence:** Our callbacks delivered **four numbers**. Position 4 repeatedly matched the current sector getter (4764, 4780, 5076). The historical names for positions 1–3 are leads, not verified identifications.
+
+**Source:** [Racecar Eventtype, revision 14149](https://vo-wiki.com/racecar2/index.php?title=Eventtype&oldid=14149), last edited March 19, 2024. These claims are not live verification.
+
+
 ---
 
 ## Sources

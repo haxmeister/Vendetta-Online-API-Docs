@@ -12,6 +12,17 @@
 
 **Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
 
+## Historical Racecar reference (March 2024)
+
+**Historical description:** Racecar describes a message received on an inactive chat channel.
+
+**Historical argument descriptions:** It suggests a table containing `name`, `msg`, `faction`, and `channelid`.
+
+**Live evidence:** One table argument was observed, but chat values **and field names** were redacted. The suggested table schema is historical only and must not be described as independently observed.
+
+**Source:** [Racecar Eventtype, revision 14149](https://vo-wiki.com/racecar2/index.php?title=Eventtype&oldid=14149), last edited March 19, 2024. These claims are not live verification.
+
+
 ---
 
 **Observed callback signature(s):** `1:table`.

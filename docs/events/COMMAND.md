@@ -13,6 +13,17 @@
 
 **Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
 
+## Historical Racecar reference (March 2024)
+
+**Historical description:** Racecar says this event fires when a slash command is executed, using `/echo` as an example.
+
+**Historical argument descriptions:** It calls position 1 `command_id` (integer command code) and describes position 2 as a list of string command arguments, with an absent/nil case.
+
+**Live evidence:** We observed `(number)` and `(number, table)` forms. Command data and table values were deliberately redacted. Historical field names are plausible but not verified; do not claim the second argument is always provided or has a known internal schema.
+
+**Source:** [Racecar Eventtype, revision 14149](https://vo-wiki.com/racecar2/index.php?title=Eventtype&oldid=14149), last edited March 19, 2024. These claims are not live verification.
+
+
 ---
 
 Event callbacks deliver the arguments listed below **after** the event name passed to `OnEvent(event, ...)`. `()` means zero arguments, while `(nil)` means one explicit nil.

@@ -12,6 +12,17 @@
 
 **Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
 
+## Historical Racecar reference (March 2024)
+
+**Historical description:** Racecar associates the event with server messages about entering a location.
+
+**Historical argument descriptions:** The older page describes its message argument as a **string**.
+
+**Conflict — live evidence takes precedence:** Our client delivered **one table argument**, not a string. Its contents are privacy-redacted; no table fields can safely be inferred from the older string description.
+
+**Source:** [Racecar Eventtype, revision 14149](https://vo-wiki.com/racecar2/index.php?title=Eventtype&oldid=14149), last edited March 19, 2024. These claims are not live verification.
+
+
 ---
 
 Event callbacks deliver the arguments listed below **after** the event name passed to `OnEvent(event, ...)`. `()` means zero arguments, while `(nil)` means one explicit nil.

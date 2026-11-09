@@ -12,6 +12,17 @@
 
 **Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
 
+## Historical Racecar reference (March 2024)
+
+**Historical description:** Racecar describes the event as reporting players/NPCs in the current sector, including initial entrants when the client enters a sector.
+
+**Historical argument descriptions:** Its old account suggests character IDs and a possible initial `0` marker or multi-value sequence during the initial population listing.
+
+**Live evidence takes precedence for observed cases:** Our captures showed one numeric argument in the sampled callbacks. The older initial-entry/multi-value behavior has not been reproduced; do not present it as a verified callback signature.
+
+**Source:** [Racecar Eventtype, revision 14149](https://vo-wiki.com/racecar2/index.php?title=Eventtype&oldid=14149), last edited March 19, 2024. These claims are not live verification.
+
+
 ---
 
 Event callbacks deliver the arguments listed below **after** the event name passed to `OnEvent(event, ...)`. `()` means zero arguments, while `(nil)` means one explicit nil.

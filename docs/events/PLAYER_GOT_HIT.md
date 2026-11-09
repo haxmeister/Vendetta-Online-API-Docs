@@ -17,6 +17,17 @@
 
 **Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
 
+## Historical Racecar reference (March 2024)
+
+**Historical description:** Racecar describes this event as firing when a player is shot.
+
+**Historical argument descriptions:** The older account labels positions 1 and 2 as attacked character ID and attacker character ID, suggests position 3 is damage-related, and calls position 4 a boolean indicating damage versus healing.
+
+**Live evidence takes precedence:** Our captures delivered **six** positions `(number, number, number, boolean, number, userdata)`, not merely the four discussed by Racecar. The live values confirm the types, but neither character IDs nor the meaning of the two additional positions has been independently established.
+
+**Source:** [Racecar Eventtype, revision 14149](https://vo-wiki.com/racecar2/index.php?title=Eventtype&oldid=14149), last edited March 19, 2024. These claims are not live verification.
+
+
 ---
 
 Event callbacks deliver the arguments listed below **after** the event name passed to `OnEvent(event, ...)`. `()` means zero arguments, while `(nil)` means one explicit nil.

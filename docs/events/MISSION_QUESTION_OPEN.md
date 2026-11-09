@@ -15,6 +15,17 @@
 
 **Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
 
+## Historical Racecar reference (March 2024)
+
+**Historical description:** Racecar describes this event as opening a mission information/acceptance screen or following a call to `RequestMissionExtendedDescription()`.
+
+**Historical argument descriptions:** It lists four positions: extended description string, short label string (historically often `Accept`), mission ID string, and station ID number.
+
+**Live evidence takes precedence:** Four positions of the expected types were observed, but position 2 was `"Info"` and position 3 was `"db:1009"`—**not** the plain decimal mission-ID string illustrated in the old account. Position 4 was `1219585`; its role as a station ID remains supported by the historical description but not independently confirmed within this callback.
+
+**Source:** [Racecar Eventtype, revision 14149](https://vo-wiki.com/racecar2/index.php?title=Eventtype&oldid=14149), last edited March 19, 2024. These claims are not live verification.
+
+
 ---
 
 **Observed callback signature(s):** `4:string,string,string,number`.

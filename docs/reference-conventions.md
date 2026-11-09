@@ -36,6 +36,12 @@ Events **deliver callback arguments**; these are not values returned by the even
 
 Each event page begins with an **Arguments** section. A captured event shows its observed callback form(s), followed by a table with **position**, **Lua type**, **meaning**, **real example**, and **confidence in the meaning**. The section is a quick reference; dated evidence and limitations remain below it. An unobserved event states that the count, types, and meanings are unknown. Never invent a zero-argument signature merely because no arguments have yet been captured.
 
+## Historical source precedence
+
+The [Racecar Eventtype page (March 2024 revision)](https://vo-wiki.com/racecar2/index.php?title=Eventtype&oldid=14149) provides useful event descriptions and suggested argument names. **Our live-client callback captures take precedence when the two disagree.**
+
+Keep distinct: **Observed callback form** (captured types/counts), **Meaning confidence** (inference based on observed evidence), and **Historical Racecar reference** (old descriptions or candidate field names). A historical field name alone does **not** upgrade a meaning's confidence and must not be copied into an observed argument table as an established fact. For unobserved events, historical descriptions may provide a research direction but never create a supposed observed signature. Record concrete conflicts—such as extra arguments, different Lua types, or sample values that contradict old examples—next to the source claim. Continue to redact chat payloads; historical chat table descriptions are not equivalent to observing private fields.
+
 Use these confidence labels for the **meaning**, not for the independently observed Lua type:
 
 - **High**: direct content (such as a notification message or zone marker) or repeated matches to independent getters in several states.

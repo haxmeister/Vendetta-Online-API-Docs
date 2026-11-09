@@ -14,6 +14,17 @@
 
 **Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
 
+## Historical Racecar reference (March 2024)
+
+**Historical description:** Racecar describes a scan-result event that also updates the HUD scan-information display.
+
+**Historical argument descriptions:** It names three positions `scaninfo`, `nodeid`, and `objectid`; it says `scaninfo` is the displayed scan-result text and may contain cargo, ore, or out-of-range messages.
+
+**Live evidence:** The observed form `(string, number, number)` agrees with the historical three-position structure, and position 1 carried real scan messages. The two numeric identifier names are **historical claims only**, not confirmed by an independent comparison. Neither number matched the current target distance.
+
+**Source:** [Racecar Eventtype, revision 14149](https://vo-wiki.com/racecar2/index.php?title=Eventtype&oldid=14149), last edited March 19, 2024. These claims are not live verification.
+
+
 ---
 
 Event callbacks deliver the arguments listed below **after** the event name passed to `OnEvent(event, ...)`. `()` means zero arguments, while `(nil)` means one explicit nil.
