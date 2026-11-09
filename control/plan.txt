@@ -1,9 +1,7 @@
 # Declarative test plan. No executable Lua.
-NOTE|Observe routine sector changes and compare event values with the current sector getter.
-NOTE|Compare TARGET_HEALTH_UPDATE while a target's health changes; do not assume its first number is a percentage.
-NOTE|Compare NAVROUTE_CHANGED with different waypoints while remaining in the same sector.
-NOTE|Scan targets at different distances, including near and far ships.
-NOTE|Dock, launch and change ships to compare station and active-ship getters during callbacks.
-NOTE|If PLAYER_DIED occurs naturally, compare its fourth argument with the current sector. No need to die on purpose.
+RELOAD|APIProbe now records chat table keys and nested types; reload interface to activate the new collector.
+NOTE|For chat schema research, send harmless test messages in sector and a channel; try group, guild, or a private message to yourself if convenient.
+NOTE|Open and close chat and execute a harmless slash command to capture their argument structures.
+NOTE|Captured message text stays local; public research reports preserve table keys, types, and numeric examples.
 CONTEXT|on
 WATCH|all
