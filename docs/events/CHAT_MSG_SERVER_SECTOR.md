@@ -56,3 +56,26 @@ arg1 type=table
 Chat/command argument values and table fields were **not captured**. The type-only record does not reveal message contents or command data.
 
 **Source:** [Fourth live context survey](2026-11-09-context-live-event-survey.md).
+
+
+---
+
+## Automated research batch — November 9, 2026 UTC
+
+**Observed callback signatures:** `1:table`. **Saved representative examples:** 1. The `occurrences` counters are cumulative within a watching session and must not be added across flushes or treated as per-example frequencies.
+
+### Captured examples
+
+~~~text
+signature=1:table
+shape=redacted
+event=CHAT_MSG_SERVER_SECTOR
+arguments=1
+arg1 type=table
+~~~
+
+### Interpretation and limits
+
+Payloads were intentionally redacted. Argument count and type are known, but values and table fields cannot be inferred.
+
+**Source:** automated capture snapshots `20261109T013130.298625Z-25441-000001.txt`; permanent review: [November 9 automated session](../research/2026-11-09-automated-review.md).
