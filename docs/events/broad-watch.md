@@ -6,10 +6,26 @@ The historical Vendetta Lua `Eventtype` reference lists 215 entries, with `PLAYE
 
 ## Usage
 
+For normal discovery:
+
 ~~~text
 /apidocs connect
 /apidocs watch all
 ~~~
+
+To investigate **argument meaning**, you can also enable bounded callback-time
+context. This reads selected approved game-state getters alongside event
+examples:
+
+~~~text
+/apidocs connect
+/apidocs context on
+/apidocs watch all
+~~~
+
+See [event context correlation](context-correlation.md) for the exact getter
+allowlist, safety limits, interpretation and example records. Context is
+**off by default** and can be disabled with `/apidocs context off`.
 
 Play normally: dock/launch, travel, change targets, open the HUD and nav menu. Then:
 
@@ -32,6 +48,11 @@ Watching all 214 names does **not** send every callback to the collector.
 - Up to 16 argument positions are inspected. Nested tables include primitive values, bounded to 3 levels, 12 keys per table, 64 field visits, and 2,048 bytes per table preview. Cyclic references are handled.
 - A global cap of **512 captured examples** bounds memory for the full session. Once an event or session reaches its cap, further occurrences are still counted but their arguments are not sampled.
 - Samples are buffered and sent by `/apidocs flush` or `/apidocs stop` as `snapshot/event-watch` records, in chunks rather than a file per callback.
+- The current broad-watch snapshot format is `api-event-watch-v3`. When
+  context is enabled, relevant selected events have bounded `context.*`
+  getter observations; all earlier `v2` snapshots remain valid historical evidence.
+- After a successful `/apidocs stop`, the next collection session starts
+  with fresh per-event sampling quotas.
 - Chat-related events (`CHAT_*`, `ACTIVATE_CHAT_*`, `COMMAND`, and `EMOTE_ENTERED`) record **argument types only**. Table keys, player names, messages and argument values are not inspected or transmitted.
 - `/apidocs watch EVENT_NAME` is **optional**, for a particularly noisy, rare, or complex event when automatic samples are insufficient. It is no longer required for basic table field discovery.
 
@@ -39,7 +60,7 @@ The event list is based on documentation last edited in March 2024. It includes 
 
 ## Sample snapshot format
 
-The enhanced observer emits `format=api-event-watch-v2`, with an additional `shape=` field. One event can produce multiple samples with **the same argument-type signature** when the values or table layout change.
+Earlier enhanced observations emitted `format=api-event-watch-v2`; new sessions emit `api-event-watch-v3`, with an additional `shape=` field. One event can produce multiple samples with **the same argument-type signature** when the values or table layout change.
 
 ~~~text
 format=api-event-watch-v2
