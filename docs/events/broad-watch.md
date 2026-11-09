@@ -34,7 +34,7 @@ Play normally: dock/launch, travel, change targets, open the HUD and nav menu. T
 /apidocs stop
 ~~~
 
-`/apidocs flush` writes buffered summaries without unregistering. `/apidocs stop` also flushes before disconnecting; `/apidocs unwatch all` flushes and unregisters only the broad watches. `/apidocs watch NAME` still captures individual events in detail (up to 20 samples each).
+`/apidocs flush` writes buffered summaries without unregistering. `/apidocs stop` also flushes before disconnecting; if TCP still has queued bytes, it unregisters callbacks but leaves the connection open to drain. Check `/apidocs status` and run `/apidocs stop` a second time once `TCP pending 0 bytes` is reported. `/apidocs unwatch all` flushes and unregisters only the broad watches. `/apidocs watch NAME` still captures individual events in detail (up to 20 samples each).
 
 **Do not reload the interface before flushing**: unflushed observations are in Lua memory and can be lost on reload.
 
