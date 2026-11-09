@@ -15,6 +15,8 @@ All reference entries should show **actual observed example values**, not just
 types. See the [documentation conventions](docs/reference-conventions.md)
 for how we distinguish function returns from event callback arguments.
 
+For named event meanings, we also preserve [historical Racecar Eventtype notes](docs/research/racecar-eventtype-crosswalk.md), but **live captures override the 2024 reference when they disagree**.
+
 Our first tool is a local **capture collector**, which saves observations to
 files without copying text out of the game UI.
 

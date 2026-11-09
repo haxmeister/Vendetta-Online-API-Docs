@@ -10,6 +10,17 @@ No positional callback arguments were observed.
 
 **Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
 
+## Historical Racecar reference (March 2024)
+
+**Historical description:** Racecar associates the event with finishing the wormhole warp-out cinematic.
+
+**Historical argument information:** The old account gives no argument shape. **Our live client observed a zero-argument callback**, which remains the authoritative observed signature.
+
+**Evidence priority:** The live callback evidence in the Arguments section takes precedence if it differs from this historical statement.
+
+**Source:** [Racecar Eventtype, revision 14149](https://vo-wiki.com/racecar2/index.php?title=Eventtype&oldid=14149); last edited March 19, 2024.
+
+
 ---
 
 Event callbacks deliver the arguments listed below **after** the event name passed to `OnEvent(event, ...)`. `()` means zero arguments, while `(nil)` means one explicit nil.

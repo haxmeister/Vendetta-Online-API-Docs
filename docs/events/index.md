@@ -12,6 +12,7 @@ Each page reports callback arguments, representative values, and available table
 - [Run the broad event observer](broad-watch.md)
 - [Correlate event arguments with game state](context-correlation.md)
 - [Documentation and evidence conventions](../reference-conventions.md)
+- [Historical Racecar descriptions and live-evidence discrepancies](../research/racecar-eventtype-crosswalk.md)
 
 | Event | Evidence status |
 | --- | --- |
