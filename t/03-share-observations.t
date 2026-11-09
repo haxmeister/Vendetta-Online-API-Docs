@@ -42,7 +42,8 @@ write_capture('event', 'CHAT_MSG_PRIVATE', '20261108T210001.000000Z-123-000003.t
 event=CHAT_MSG_PRIVATE
 arguments=2
 arg1 type=string value="private hello from a player"
-arg2 type=table value=table{"sender":"string", "message":"string"}
+arg2 type=table value=table{["sender"]="Private Sender", ["message"]="private table text"}
+arg2 schema=table{"message":string,"sender":string}
 CAPTURE
 write_capture('event', 'CHAT_ENTERED', '20261108T210001.000000Z-123-000004.txt', <<'CAPTURE');
 event=CHAT_ENTERED
@@ -61,6 +62,22 @@ GetTargetInfo	function
 CAPTURE
 write_capture('note', 'connection_test', '20261108T210001.000000Z-123-000007.txt',
     "Test note keeps this text\nSecond line\n");
+write_capture('snapshot', 'event-watch', '20261108T210001.000000Z-123-000008.txt', <<'CAPTURE');
+format=api-event-watch-v3
+candidate_count=214
+signature=1:table
+shape=table{"message":string,"meta":table{"faction":number},"speaker":string}
+event=CHAT_MSG_PRIVATE
+arguments=1
+arg1 type=table value=table{["message"]="private snapshot message", ["speaker"]="Private Sender"}
+arg1 schema=table{"message":string,"meta":table{"faction":number},"speaker":string}
+---
+signature=1:number
+shape=number
+event=TARGET_HEALTH_UPDATE
+arguments=1
+arg1 type=number value=90
+CAPTURE
 
 is(system($^X, $tool, '--captures', $captures, '--output', $report), 0,
     'generates report preserving non-chat observations');
@@ -79,13 +96,21 @@ like($text, qr/candidate_count=398/, 'preserves snapshot inventory');
 like($text, qr/Test note keeps this text/, 'preserves notes');
 like($text, qr/CHAT_MSG_PRIVATE.*?arguments=2.*?arg1 type=string/s,
     'keeps chat event and argument types');
-unlike($text, qr/private hello from a player|typed in chat|sender.*message/s,
-    'redacts chat values including table preview');
-like($text, qr/Chat event payloads redacted: 2/,
-    'counts chat redactions');
+unlike($text, qr/private hello from a player|typed in chat|Private Sender|private table text|private snapshot message/,
+    'omits private chat strings from public report');
+like($text, qr/arg2 schema=table\{"message":string,"sender":string\}/,
+    'retains focused chat table keys and types');
+like($text, qr/shape=table\{"message":string,"meta":table\{"faction":number\},"speaker":string\}/,
+    'retains nested chat table keys and types in snapshots');
+like($text, qr/arg1 schema=table\{"message":string,"meta":table\{"faction":number\},"speaker":string\}/,
+    'retains per-argument chat schema in snapshots');
+like($text, qr/TARGET_HEALTH_UPDATE.*?arg1 type=number value=90/s,
+    'does not redact unrelated events in the same snapshot');
+like($text, qr/Chat event samples sanitized for public sharing: 3/,
+    'counts chat samples from focused captures and snapshots');
 like($text, qr/Function records: 2/, 'function count');
 like($text, qr/Event records: 3/, 'event count');
-like($text, qr/Snapshots: 1/, 'snapshot count');
+like($text, qr/Snapshots: 2/, 'snapshot count');
 like($text, qr/Notes: 1/, 'note count');
 # The default handoff should skip recordings already promoted to docs.
 my $isolated = File::Spec->catdir($tmp, 'isolated');
