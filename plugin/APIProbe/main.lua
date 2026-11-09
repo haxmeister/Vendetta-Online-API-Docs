@@ -500,12 +500,28 @@ local function unwatch_all()
 end
 
 local function stop()
-    if connected then flush_all() end
+    -- Keep buffered observations if a collector failure prevents flushing.
+    local flush_ok = true
+    if connected then
+        flush_ok = flush_all()
+    else
+        for _, observation in pairs(all_observations) do
+            if #observation.samples > 0 then flush_ok = false; break end
+        end
+    end
+    if not flush_ok then
+        info("stop aborted: buffered event examples remain; reconnect and flush")
+        return
+    end
     local names = {}
     for name in pairs(watched) do names[#names + 1] = name end
     for _, name in ipairs(names) do unwatch(name) end
     if conn then conn:Disconnect(); conn = nil end
     connected = false
+    -- A later /apidocs watch all is a NEW session. Do not let the previous
+    -- session's per-shape quotas suppress examples of changed game state.
+    all_observations = {}
+    all_samples = 0
     info("stopped")
 end
 
