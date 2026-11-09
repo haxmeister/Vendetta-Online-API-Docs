@@ -22,6 +22,11 @@ local MAX_ALL_EXAMPLES_PER_SHAPE = 2
 local MAX_ALL_SAMPLES = 512
 local context_enabled = false
 local CONTEXT_PROBES_PER_EVENT = 12
+-- A session is explicitly enabled once with /apidocs start.
+local auto_session = false
+local control_seen = {}
+local begin_research
+local apply_control
 
 local function info(message)
     print("[APIProbe] " .. message)
@@ -43,6 +48,10 @@ local function connect()
         onConnect = function()
             connected = true
             info("connected to local collector")
+            if auto_session and begin_research then begin_research() end
+        end,
+        onMessage = function(message)
+            if apply_control then apply_control(message) end
         end,
         onDisconnect = function(reason)
             connected = false
@@ -531,6 +540,7 @@ local function stop()
     -- session's per-shape quotas suppress examples of changed game state.
     all_observations = {}
     all_samples = 0
+    auto_session = false
     info("stopped")
 end
 
@@ -685,10 +695,54 @@ local function inspect(name)
     info("use /apidocs inspect list")
 end
 
+-- Only the bounded control verbs below are accepted over local TCP.
+-- Neither GitHub text nor the collector may execute arbitrary Lua code.
+begin_research = function()
+    context_enabled = true
+    watch_all()
+    info("research session active; guidance can arrive from the collector")
+end
+
+apply_control = function(message)
+    if message == "APIDOCS|FLUSH" then
+        if auto_session and connected then flush_all() end
+        return
+    end
+    local rev, directive = string.match(message, "^APIDOCS|([0-9a-f]+)|(.+)$")
+    if not rev or #rev > 64 or #directive > 256 then return end
+    local unique = rev .. "|" .. directive
+    if control_seen[unique] then return end
+    control_seen[unique] = true
+
+    local kind, value = string.match(directive, "^([A-Z_]+)|?(.*)$")
+    if kind == "NOTE" then
+        if #value <= 180 then info("guide: " .. value) end
+    elseif kind == "RELOAD" then
+        -- A reload may interrupt the game, so only notify the player.
+        info("plugin update: " .. value)
+        info("when convenient, run /lua ReloadInterface()")
+    elseif kind == "CONTEXT" then
+        if value == "on" then context_enabled = true
+        elseif value == "off" then context_enabled = false end
+    elseif kind == "WATCH" and connected then
+        if value == "all" then watch_all()
+        elseif string.match(value, "^[A-Za-z_][A-Za-z0-9_]*$") then
+            watch(value)
+        end
+    elseif kind == "INSPECT" and connected then
+        if value == "all" then inspect("all") end
+    elseif kind == "SCAN" and connected then
+        scan()
+    end
+end
+
 local function command(_, args)
     local action = args and args[1] and string.lower(args[1]) or "help"
     local name = args and args[2]
-    if action == "connect" then
+    if action == "start" then
+        auto_session = true
+        if connected then begin_research() else connect() end
+    elseif action == "connect" then
         connect()
     elseif action == "test" then
         local ok, err = send_record("note", "connection_test", "First line\nSecond line\n")
@@ -727,10 +781,10 @@ local function command(_, args)
             .. "; watching " .. n .. " events"
             .. "; context " .. (context_enabled and "on" or "off")
             .. "; TCP pending " .. pending .. " bytes")
-    elseif action == "stop" then
+    elseif action == "stop" or action == "finish" then
         stop()
     else
-        info("/apidocs connect | test | scan | inspect [list|NAME|all] | watch [EVENT|all] | unwatch [EVENT|all] | context [on|off] | flush | status | stop")
+        info("/apidocs start | finish | connect | test | scan | inspect [list|NAME|all] | watch [EVENT|all] | unwatch [EVENT|all] | context [on|off] | flush | status | stop")
     end
 end
 
