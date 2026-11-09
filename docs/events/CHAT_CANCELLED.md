@@ -10,6 +10,17 @@ No positional callback arguments were observed.
 
 **Evidence limit:** The Lua types and examples were captured live. Confidence describes the proposed meaning, not a guarantee about future game states.
 
+## Historical Racecar reference (March 2024)
+
+**Historical description:** Racecar says this fires when Escape is pressed in the chat-entry box.
+
+**Historical argument information:** It states there are no callback arguments.
+
+**Evidence priority:** The observed callback form and redaction policy in the Arguments section above take precedence over this older account.
+
+**Source:** [Racecar Eventtype, revision 14149](https://vo-wiki.com/racecar2/index.php?title=Eventtype&oldid=14149); last edited March 19, 2024.
+
+
 ---
 
 **Occurrences:** 1 total in the initial broad-watch session.
