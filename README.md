@@ -5,11 +5,16 @@ A concise, community-maintained reference for the Vendetta Online Lua API.
 This project is independent of Guild Software. We aim to document functions,
 events, argument types, and observed behavior using evidence from the game.
 
-The reference is still being built. Start with our
-[12 observed getter signatures](docs/functions/observed-getters.md), the
-[398-name function survey](docs/research/2026-11-08-full-function-survey.md),
-the [event reference (214 individual pages; 75 observed)](docs/events/index.md),
-and the [first 65-capture review](docs/research/2026-11-08-observation-review.md).
+The reference is still being built. Start with the
+[function reference (584 individual pages)](docs/functions/index.md),
+[table/library reference (63 individual pages)](docs/tables/index.md),
+[historical variables](docs/variables/index.md), and
+[event reference (214 individual pages; 75 observed)](docs/events/index.md).
+
+The function pages retain [12 live-tested getter signatures](docs/functions/observed-getters.md)
+and distinguish them from [historical Racecar descriptions](docs/research/2026-11-10-racecar-archive-review.md).
+The [398-name function survey](docs/research/2026-11-08-full-function-survey.md)
+only checked whether values were accessible, not whether their historical signatures worked.
 
 All reference entries should show **actual observed example values**, not just
 types. Chat table field names and nested field types are now captured too;

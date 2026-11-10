@@ -80,3 +80,30 @@ Do not invent examples to fill gaps. For chat events, keep actual field names an
 The collector keeps raw files locally. A temporary GitHub report can be shared for review; after extracting evidence into these permanent references, advance `data/reviewed-through.txt` and remove the temporary report from the current branch. Prior commits retain historical versions.
 
 Prior observation does **not** imply an API is guaranteed to behave identically across all clients, ships, game states, or future versions.
+
+## Racecar function and table archive (November 2026 handoff)
+
+The [individual function reference](functions/index.md),
+[table/library reference](tables/index.md), and [historical variable list](variables/index.md)
+are derived from the maintainer-provided offline Racecar archive. The 2023
+`API_Index2` index, individual function/library pages (some dated back to
+2009), and **live 2026 observations are distinct levels of evidence**.
+
+For an individual function, put **live observed return forms and genuine values first**,
+then separately label the historical call signature, argument names and any
+historical example. A name appearing in a 2026 function-type scan only
+establishes that a Lua value was accessible; it does not establish that the
+function can safely be called, what it accepts, or what it returns.
+
+Racecar sometimes writes table-return notation such as
+`{ neededlevels = {...}, int price, string icon }`. This documents an
+explicit `neededlevels` assignment and historical labels `price` and `icon`;
+**it does not prove that `price` and `icon` are runtime string keys**.
+Only a real live table inspection establishes the present keys and types.
+Methods shown in historical table pages are similarly unverified until probed.
+
+Historical detail pages can disagree with Index2 or with the live client.
+Preserve both and explain the disagreement instead of silently choosing an
+older signature. The [archive review](research/2026-11-10-racecar-archive-review.md)
+records source coverage and specific conflicts. Do not treat a Racecar sample
+code block as a captured 2026 result.
